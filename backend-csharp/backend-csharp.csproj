@@ -34,12 +34,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\DTOs\" />
     <Folder Include="Application\Mappings\" />
-    <Folder Include="Application\Interfaces\" />
     <Folder Include="Controllers\" />
     <Folder Include="Domain\Exceptions\" />
-    <Folder Include="Infrastructure\Persistence\Interfaces\" />
     <Folder Include="Infrastructure\Persistence\Repositories\" />
   </ItemGroup>
 

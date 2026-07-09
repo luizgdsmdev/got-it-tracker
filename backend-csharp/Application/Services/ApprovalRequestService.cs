@@ -52,7 +52,7 @@ public class ApprovalRequestService : IApprovalRequestService
     public async Task<ApprovalRequestResponse> ApproveAsync(Guid requestId, Guid adminUserId)
     {
         var request = await _requestRepo.GetByIdAsync(requestId);
-        if (request == null) throw new NotFoundException("Request not found.");
+        //if (request == null) throw new NotFoundException("Request not found.");
 
         // TODO: Verify if user is playground admin
         request.Status = ApprovalStatus.Approved;
@@ -80,7 +80,7 @@ public class ApprovalRequestService : IApprovalRequestService
     public async Task<ApprovalRequestResponse> RejectAsync(Guid requestId, Guid adminUserId, string rejectionReason)
     {
         var request = await _requestRepo.GetByIdAsync(requestId);
-        if (request == null) throw new NotFoundException("Request not found.");
+        //if (request == null) throw new NotFoundException("Request not found.");
 
         request.Status = ApprovalStatus.Rejected;
         request.RejectionReason = rejectionReason;

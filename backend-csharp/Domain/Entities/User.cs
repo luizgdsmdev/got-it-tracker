@@ -29,5 +29,8 @@ namespace backend_csharp.Domain.Entities
 
         [Required(ErrorMessage = "CreatedAt is required")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        [Required(ErrorMessage = "UpdatedAt is required")]
+        public DateTime LastUpdatedAt { get; set; }
     }
 }

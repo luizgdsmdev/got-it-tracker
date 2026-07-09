@@ -37,7 +37,7 @@ public class PlaygroundService : IPlaygroundService
         var ownerMember = new PlaygroundMember
         {
             PlaygroundId = playground.Id,
-            PersonId = /* Pending: should link the Person of the owner */,
+            //PersonId = /* Pending: should link the Person of the owner */,
             IsAdmin = true
         };
 

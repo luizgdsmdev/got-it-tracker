@@ -4,6 +4,7 @@ namespace backend_csharp.Application.DTOs.Requests;
 
 public record CreateTransactionRequest(
     Guid PersonId,
+    Guid PlaygroundId,
     string Description,
     decimal Amount,
     TransactionType Type,

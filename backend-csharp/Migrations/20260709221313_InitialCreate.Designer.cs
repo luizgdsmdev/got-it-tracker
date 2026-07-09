@@ -11,7 +11,7 @@ using backend_csharp.Infrastructure.Data;
 namespace backend_csharp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260709183849_InitialCreate")]
+    [Migration("20260709221313_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -202,6 +202,9 @@ namespace backend_csharp.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")

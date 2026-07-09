@@ -1,5 +1,11 @@
+using backend_csharp.Application.Interfaces;
+using backend_csharp.Application.Services;
 using backend_csharp.Infrastructure.Data;
+using backend_csharp.Infrastructure.Persistence.Interfaces;
+using backend_csharp.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,14 +22,23 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("Data Source=expense_tracker.db"));
 
 
+// Repositories
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+// Services
+builder.Services.AddScoped<IUserService, UserService>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapScalarApiReference();
 }
 
 

@@ -2,6 +2,7 @@
 using backend_csharp.Application.DTOs.Requests;
 using backend_csharp.Application.DTOs.Responses;
 using backend_csharp.Application.Interfaces;
+using backend_csharp.Domain.Entities;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
 
 namespace backend_csharp.Application.Services;

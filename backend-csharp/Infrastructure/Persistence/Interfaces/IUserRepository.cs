@@ -4,7 +4,9 @@ namespace backend_csharp.Infrastructure.Persistence.Interfaces;
 
 public interface IUserRepository
 {
+    Task AddAsync(User user);
     Task<User?> GetByIdAsync(Guid id);
     Task<User?> GetByEmailAsync(string email);
-    Task AddAsync(User user);
+    Task<User?> UpdateByIdAsync(Guid id, User user);
+    Task<User?> DeleteByIdAsync(Guid id);
 }

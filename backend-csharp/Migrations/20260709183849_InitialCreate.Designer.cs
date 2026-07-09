@@ -11,7 +11,7 @@ using backend_csharp.Infrastructure.Data;
 namespace backend_csharp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260709175933_InitialCreate")]
+    [Migration("20260709183849_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

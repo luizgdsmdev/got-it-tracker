@@ -6,7 +6,7 @@ namespace backend_csharp.Infrastructure.Data;
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-    : base(options) { }
+        : base(options) { }
 
     public DbSet<User> Users { get; set; }
     public DbSet<Playground> Playgrounds { get; set; }
@@ -17,7 +17,31 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
+
+        // Configurações globais
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+        // Delete Behavior
+        modelBuilder.Entity<PlaygroundMember>()
+            .HasOne(pm => pm.Playground)
+            .WithMany(p => p.Members)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Transaction>()
+            .HasOne(t => t.Playground)
+            .WithMany(p => p.Transactions)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ApprovalRequest>()
+            .HasOne(ar => ar.Playground)
+            .WithMany(p => p.ApprovalRequests)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Quando deletar Person, deleta suas transações
+        modelBuilder.Entity<Transaction>()
+            .HasOne(t => t.Person)
+            .WithMany(p => p.Transactions)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

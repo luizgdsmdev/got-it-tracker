@@ -18,7 +18,7 @@ public class ApprovalRequest
     public Guid PersonId { get; set; }
 
     [Required (ErrorMessage = "RequestedById is required")]
-    public Guid RequestedById { get; set; }           // User who requested
+    public Guid? RequestedById { get; set; }           // User who requested
 
     [Required (ErrorMessage = "ReviewedById is required")]
     public Guid? ReviewedById { get; set; }           // Admin who approved/rejected
@@ -52,15 +52,11 @@ public class ApprovalRequest
     [Required(ErrorMessage = "ReviewedAt is required when status is Approved or Rejected.")]
     public DateTime? ReviewedAt { get; set; }
 
-    [ForeignKey("PersonId")]
     public Person? Person { get; set; }
 
-    [ForeignKey("RequestedById")]
     public User? RequestedBy { get; set; }
 
-    [ForeignKey("ReviewedById")]
     public User? ReviewedBy { get; set; }
 
-    [ForeignKey("PlaygroundId")]
     public Playground? Playground { get; set; }
 }

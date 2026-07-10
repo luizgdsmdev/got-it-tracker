@@ -15,7 +15,6 @@ public class Playground
     public string Name { get; set; } = string.Empty;           // Eg.: "My Playground", "Project X", "Team Y"
 
     [Required(ErrorMessage = "Playground description is required.")]
-    [ForeignKey("OwnerId")]
     public Guid OwnerId { get; set; }                          // Who created the playground
 
     [Required(ErrorMessage = "Playground description is required.")]
@@ -24,6 +23,8 @@ public class Playground
     [Required(ErrorMessage = "Playground description is required.")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    public Guid UserId { get; set; }
+    public User User { get; set; } = null!;
     public ICollection<PlaygroundMember> Members { get; set; } = [];
     public ICollection<Transaction> Transactions { get; set; } = [];
     public ICollection<ApprovalRequest> ApprovalRequests { get; set; } = [];

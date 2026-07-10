@@ -23,6 +23,7 @@ public static class PlayGroundMapping
         {
             Name = request.Name,
             OwnerId = request.OwnerId,
+            UserId = request.OwnerId,
             AskForApproval = request.AskForApproval
         };
     }

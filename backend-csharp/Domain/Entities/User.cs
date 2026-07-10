@@ -32,5 +32,11 @@ namespace backend_csharp.Domain.Entities
 
         [Required(ErrorMessage = "UpdatedAt is required")]
         public DateTime LastUpdatedAt { get; set; }
+
+        public ICollection<Playground> Playgrounds { get; set; } = [];
+
+        public ICollection<ApprovalRequest> RequestedApprovals { get; set; } = [];
+
+        public ICollection<ApprovalRequest> ReviewedApprovals { get; set; } = [];
     }
 }

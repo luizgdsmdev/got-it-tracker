@@ -118,7 +118,12 @@ namespace backend_csharp.Migrations
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Playgrounds");
                 });
@@ -220,7 +225,7 @@ namespace backend_csharp.Migrations
             modelBuilder.Entity("backend_csharp.Domain.Entities.ApprovalRequest", b =>
                 {
                     b.HasOne("backend_csharp.Domain.Entities.Person", "Person")
-                        .WithMany()
+                        .WithMany("ApprovalRequests")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -232,15 +237,15 @@ namespace backend_csharp.Migrations
                         .IsRequired();
 
                     b.HasOne("backend_csharp.Domain.Entities.User", "RequestedBy")
-                        .WithMany()
+                        .WithMany("RequestedApprovals")
                         .HasForeignKey("RequestedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.HasOne("backend_csharp.Domain.Entities.User", "ReviewedBy")
-                        .WithMany()
+                        .WithMany("ReviewedApprovals")
                         .HasForeignKey("ReviewedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("Person");
@@ -250,6 +255,17 @@ namespace backend_csharp.Migrations
                     b.Navigation("RequestedBy");
 
                     b.Navigation("ReviewedBy");
+                });
+
+            modelBuilder.Entity("backend_csharp.Domain.Entities.Playground", b =>
+                {
+                    b.HasOne("backend_csharp.Domain.Entities.User", "User")
+                        .WithMany("Playgrounds")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("backend_csharp.Domain.Entities.PlaygroundMember", b =>
@@ -292,6 +308,8 @@ namespace backend_csharp.Migrations
 
             modelBuilder.Entity("backend_csharp.Domain.Entities.Person", b =>
                 {
+                    b.Navigation("ApprovalRequests");
+
                     b.Navigation("PlaygroundMemberships");
 
                     b.Navigation("Transactions");
@@ -304,6 +322,15 @@ namespace backend_csharp.Migrations
                     b.Navigation("Members");
 
                     b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("backend_csharp.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Playgrounds");
+
+                    b.Navigation("RequestedApprovals");
+
+                    b.Navigation("ReviewedApprovals");
                 });
 #pragma warning restore 612, 618
         }

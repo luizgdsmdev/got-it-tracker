@@ -10,13 +10,11 @@ public class Transaction
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Required(ErrorMessage = "PlaygroundId is required"),
-     ForeignKey("PlaygroundId")]
+    [Required(ErrorMessage = "PlaygroundId is required")]
     public Guid PlaygroundId { get; set; }
 
 
-    [Required(ErrorMessage = "PersonId is required"),
-     ForeignKey("PersonId")]
+    [Required(ErrorMessage = "PersonId is required")]
     public Guid PersonId { get; set; }
 
     [Required(ErrorMessage = "Description is required"),

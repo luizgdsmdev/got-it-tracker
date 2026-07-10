@@ -24,18 +24,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-
 builder.Services.AddScoped<IPlaygroundRepository, PlaygroundRepository>();
-builder.Services.AddScoped<IPlaygroundService, PlaygroundService>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPlaygroundMemberRepository, PlaygroundMemberRepository>();
 
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 // Services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPlaygroundService, PlaygroundService>();
+builder.Services.AddScoped<IPersonService, PersonService>();
+//builder.Services.AddScoped<IPlaygroundMemberService, PlaygroundMemberService>();
 
+
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();
 

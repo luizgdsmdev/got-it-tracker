@@ -12,15 +12,22 @@ public class PlaygroundService : IPlaygroundService
 {
     private readonly IPlaygroundRepository _playgroundRepo;
     private readonly IPlaygroundMemberRepository _memberRepo;
+    private readonly IPersonRepository _personRepo;
+    private readonly IUserRepository _userRepo;
     private readonly IMapper _mapper;
 
     public PlaygroundService(IPlaygroundRepository playgroundRepo,
                              IPlaygroundMemberRepository memberRepo,
+                             IPersonRepository personRepo,
+                             IUserRepository userRepo,
                              IMapper mapper)
     {
         _playgroundRepo = playgroundRepo;
         _memberRepo = memberRepo;
+        _personRepo = personRepo;
+        _userRepo = userRepo;
         _mapper = mapper;
+
     }
 
     public async Task<PlaygroundResponse?> CreateAsync(CreatePlaygroundRequest request)
@@ -32,14 +39,17 @@ public class PlaygroundService : IPlaygroundService
 
 
         // Adds membership from the owner to the playground as admin
-        //var ownerMember = new PlaygroundMember
-        //{
-        //    PlaygroundId = playground.Id,
-        //    //PersonId = /* Pending: should link the Person of the owner */,
-        //    IsAdmin = true
-        //};
+        if (playGround is not null)
+        {
+            // Check for the existence of the owner in the database
+            User? owner = await _userRepo.GetByIdAsync(playGround.OwnerId);
+            if(owner == null)
+                throw new InvalidOperationException("Owner not found");
 
-        //await _memberRepo.AddAsync(ownerMember);
+
+
+            await _memberRepo.AddAsync(playGround.Id, playGround.OwnerId, true);
+        }
 
         return PlayGroundMapping.ToDtoResponse(playGround);
     }

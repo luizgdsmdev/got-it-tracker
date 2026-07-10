@@ -21,6 +21,10 @@ namespace backend_csharp.Domain.Entities
          EmailAddress(ErrorMessage = "Invalid email format")]
         public string? Email { get; set; }
 
+        [Required(ErrorMessage = "Age is required"),
+         Range(1, 150, ErrorMessage = "Age must be between 1 and 150")]
+        public int Age { get; set; }
+
 
         [Required(ErrorMessage = "Password is required"),
          StringLength(100, ErrorMessage = "Password cannot be longer than 100 characters"),

@@ -26,6 +26,21 @@ namespace backend_csharp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Playgrounds",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    OwnerId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    AskForApproval = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Playgrounds", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -39,74 +54,6 @@ namespace backend_csharp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Playgrounds",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    OwnerId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    AskForApproval = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Playgrounds", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Playgrounds_Users_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ApprovalRequests",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PlaygroundId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PersonId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    RequestedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ReviewedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 400, nullable: false),
-                    Amount = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Type = table.Column<int>(type: "INTEGER", nullable: false),
-                    IsPublic = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    RejectionReason = table.Column<string>(type: "TEXT", maxLength: 400, nullable: false),
-                    RequestedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    ReviewedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApprovalRequests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ApprovalRequests_People_PersonId",
-                        column: x => x.PersonId,
-                        principalTable: "People",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ApprovalRequests_Playgrounds_PlaygroundId",
-                        column: x => x.PlaygroundId,
-                        principalTable: "Playgrounds",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ApprovalRequests_Users_RequestedById",
-                        column: x => x.RequestedById,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ApprovalRequests_Users_ReviewedById",
-                        column: x => x.ReviewedById,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -165,6 +112,53 @@ namespace backend_csharp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ApprovalRequests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PlaygroundId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PersonId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RequestedById = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ReviewedById = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 400, nullable: false),
+                    Amount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsPublic = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    RejectionReason = table.Column<string>(type: "TEXT", maxLength: 400, nullable: false),
+                    RequestedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ReviewedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApprovalRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ApprovalRequests_People_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApprovalRequests_Playgrounds_PlaygroundId",
+                        column: x => x.PlaygroundId,
+                        principalTable: "Playgrounds",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApprovalRequests_Users_RequestedById",
+                        column: x => x.RequestedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApprovalRequests_Users_ReviewedById",
+                        column: x => x.ReviewedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ApprovalRequests_PersonId",
                 table: "ApprovalRequests",
@@ -196,11 +190,6 @@ namespace backend_csharp.Migrations
                 column: "PlaygroundId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Playgrounds_OwnerId",
-                table: "Playgrounds",
-                column: "OwnerId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Transactions_PersonId",
                 table: "Transactions",
                 column: "PersonId");
@@ -224,13 +213,13 @@ namespace backend_csharp.Migrations
                 name: "Transactions");
 
             migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
                 name: "People");
 
             migrationBuilder.DropTable(
                 name: "Playgrounds");
-
-            migrationBuilder.DropTable(
-                name: "Users");
         }
     }
 }

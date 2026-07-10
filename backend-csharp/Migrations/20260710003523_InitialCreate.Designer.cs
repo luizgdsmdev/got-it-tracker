@@ -11,7 +11,7 @@ using backend_csharp.Infrastructure.Data;
 namespace backend_csharp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260709221313_InitialCreate")]
+    [Migration("20260710003523_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -122,8 +122,6 @@ namespace backend_csharp.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("Playgrounds");
                 });
@@ -255,17 +253,6 @@ namespace backend_csharp.Migrations
                     b.Navigation("RequestedBy");
 
                     b.Navigation("ReviewedBy");
-                });
-
-            modelBuilder.Entity("backend_csharp.Domain.Entities.Playground", b =>
-                {
-                    b.HasOne("backend_csharp.Domain.Entities.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("backend_csharp.Domain.Entities.PlaygroundMember", b =>

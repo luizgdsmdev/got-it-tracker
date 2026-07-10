@@ -2,4 +2,4 @@
 
 namespace backend_csharp.Application.DTOs.Requests;
 
-public record CreatePlaygroundRequest(string Name, bool AskForApproval);
+public record CreatePlaygroundRequest(Guid OwnerId, string Name, bool AskForApproval);

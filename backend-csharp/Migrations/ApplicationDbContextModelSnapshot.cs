@@ -120,8 +120,6 @@ namespace backend_csharp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
-
                     b.ToTable("Playgrounds");
                 });
 
@@ -252,17 +250,6 @@ namespace backend_csharp.Migrations
                     b.Navigation("RequestedBy");
 
                     b.Navigation("ReviewedBy");
-                });
-
-            modelBuilder.Entity("backend_csharp.Domain.Entities.Playground", b =>
-                {
-                    b.HasOne("backend_csharp.Domain.Entities.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("backend_csharp.Domain.Entities.PlaygroundMember", b =>

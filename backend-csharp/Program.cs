@@ -26,6 +26,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<IPlaygroundRepository, PlaygroundRepository>();
+builder.Services.AddScoped<IPlaygroundService, PlaygroundService>();
+builder.Services.AddScoped<IPlaygroundMemberRepository, PlaygroundMemberRepository>();
+
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 // Services

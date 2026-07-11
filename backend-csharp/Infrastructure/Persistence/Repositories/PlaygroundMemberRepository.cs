@@ -14,33 +14,27 @@ public class PlaygroundMemberRepository : IPlaygroundMemberRepository
         _context = context;
     }
 
-    public async Task<PlaygroundMember?> GetByPlaygroundAndPersonAsync(Guid playgroundId, Guid personId)
+    public Task<PlaygroundMember> CreateAsync(PlaygroundMember member)
     {
-        PlaygroundMember? playgroundMember = await _context.PlaygroundMembers
-                .FirstOrDefaultAsync(m => m.PlaygroundId == playgroundId && m.PersonId == personId);
-
-        if (playgroundMember == null) return null;
-
-        return playgroundMember;
+        throw new NotImplementedException();
     }
 
-    public async Task AddAsync(PlaygroundMember member)
+    public Task<IEnumerable<PlaygroundMember>> DeleteAsync(Guid playgroundId, IEnumerable<Guid> ids)
     {
-        await _context.PlaygroundMembers.AddAsync(member);
-        await _context.SaveChangesAsync();
+        throw new NotImplementedException();
     }
 
-    public async Task RemoveAsync(Guid id)
+    public Task<IEnumerable<PlaygroundMember>> GetAllByPlaygroundAsync(Guid playgroundId)
     {
-        var member = await _context.PlaygroundMembers.FindAsync(id);
-        if (member != null)
-        {
-            _context.PlaygroundMembers.Remove(member);
-            await _context.SaveChangesAsync();
-        }
+        throw new NotImplementedException();
     }
 
-    public Task<PlaygroundMember?> GetByIdAsync(Guid id)
+    public Task<PlaygroundMember> GetByIdAsync(Guid playgroundId, Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<PlaygroundMember>> UpdateAsync(IEnumerable<PlaygroundMember> members)
     {
         throw new NotImplementedException();
     }

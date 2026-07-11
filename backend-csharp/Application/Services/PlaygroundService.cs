@@ -48,8 +48,10 @@ public class PlaygroundService : IPlaygroundService
 
 
 
-            await _memberRepo.AddAsync(playGround.Id, playGround.OwnerId, true);
+            //await _playgroundRepo.AddAsync(playGround.Id, playGround.OwnerId, true);
         }
+
+
 
         return PlayGroundMapping.ToDtoResponse(playGround);
     }

@@ -37,6 +37,7 @@ public class UserRepository : IUserRepository
         // Update the user properties
         userDb.Name = user.Name;
         userDb.Email = user.Email;
+        userDb.Age = user.Age;
         userDb.Password = user.Password;
 
         await _context.SaveChangesAsync();

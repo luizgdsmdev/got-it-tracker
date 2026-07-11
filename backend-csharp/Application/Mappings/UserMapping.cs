@@ -13,6 +13,8 @@ public class UserMapping
             throw new ArgumentNullException(nameof(request), "Request cannot be null");
         if (string.IsNullOrWhiteSpace(request.Name))
             throw new ArgumentException("Name is required");
+        if (request.Age <= 0 || request.Age > 150)
+            throw new ArgumentException("Age is required, must be between 1 and 150");
         if (string.IsNullOrWhiteSpace(request.Email))
             throw new ArgumentException("Email is required");
         if (string.IsNullOrWhiteSpace(request.Password))
@@ -21,6 +23,7 @@ public class UserMapping
         return new User
         {
             Name = request.Name,
+            Age = request.Age,
             Email = request.Email,
             Password = request.Password //TODO: Hash (BCrypt)
         };
@@ -33,11 +36,13 @@ public class UserMapping
             throw new ArgumentNullException(nameof(user), "User cannot be null");
         if (string.IsNullOrWhiteSpace(user.Name))
             throw new ArgumentException("Name is required");
+        if (user.Age <= 0 || user.Age > 150)
+            throw new ArgumentException("Age is required, must be between 1 and 150");
         if (string.IsNullOrWhiteSpace(user.Email))
             throw new ArgumentException("Email is required");
         if (string.IsNullOrWhiteSpace(user.Password))
             throw new ArgumentException("Password is required");
 
-        return new UserResponse(user.Id, user.Name, user.Email);
+        return new UserResponse(user.Id, user.Name, user.Age, user.Email);
     }
 }

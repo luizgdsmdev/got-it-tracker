@@ -20,14 +20,10 @@ public class PersonRepository : IPersonRepository
         return person;
     }
 
-    public async Task<Person?> DeleteAsync(Guid id)
+    public async Task<Person?> GetByIdAsync(Guid id)
     {
-        var person = await GetByIdAsync(id);
-        if (person == null) return null;
-
-        _context.People.Remove(person);
-        await _context.SaveChangesAsync();
-        return person;
+        if (id == Guid.Empty) throw new ArgumentException("Id cannot be empty", nameof(id));
+        return await _context.People.FindAsync(id);
     }
 
     public async Task<IEnumerable<Person?>> GetAllByPlaygroundAsync(Guid playgroundId)
@@ -41,19 +37,28 @@ public class PersonRepository : IPersonRepository
             .ToListAsync();
     }
 
-    public async Task<Person?> GetByIdAsync(Guid id)
-    {
-        return await _context.People.FindAsync(id);
-    }
-
     public async Task<Person?> UpdateAsync(Guid personId, Person person)
     {
         var existingPerson = await GetByIdAsync(personId);
         if (existingPerson == null) return null;
 
         // Update the properties of the existing person with the new values
-        _context.Entry(existingPerson).CurrentValues.SetValues(person);
+        existingPerson.Name = person.Name;
+        existingPerson.Age = person.Age;
+
         await _context.SaveChangesAsync();
         return existingPerson;
     }
+
+    public async Task<Person?> DeleteAsync(Guid id)
+    {
+        Person? person = await GetByIdAsync(id);
+        if (person == null) return null;
+
+        _context.People.Remove(person);
+        await _context.SaveChangesAsync();
+        return person;
+    }
+
+
 }

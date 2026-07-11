@@ -1,6 +1,7 @@
 ﻿using backend_csharp.Application.DTOs.Requests;
 using backend_csharp.Application.DTOs.Responses;
 using backend_csharp.Domain.Entities;
+using System.Collections;
 
 namespace backend_csharp.Application.Mappings;
 
@@ -51,4 +52,10 @@ public class PersonMapping
 
         return new PersonResponse(person.Id, person.Name, person.Age);
     }
+
+    public static IEnumerable<PersonResponse> ToDtoResponse(IEnumerable<Person> people)
+    {
+        return people.Select(ToDtoResponse);
+    }
+
 }

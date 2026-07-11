@@ -29,6 +29,9 @@ public class PersonService : IPersonService
 
     public async Task<PersonResponse?> CreateAsync(CreatePersonRequest request, Guid playgroundId, Guid currentUserId)
     {
+        if (request == null) throw new ArgumentNullException(nameof(request));
+        if (playgroundId == Guid.Empty) throw new ArgumentException("Playground ID cannot be empty");
+        if (currentUserId == Guid.Empty) throw new ArgumentException("Current user ID cannot be empty");
 
         //A person can only be created if the playground exists and the current user is the owner of the playground
         Playground? playground = await _playgroundRepository.GetByIdAsync(playgroundId);
@@ -42,23 +45,44 @@ public class PersonService : IPersonService
         return PersonMapping.ToDtoResponse(person);
     }
 
-    public async Task<PersonResponse?> DeleteAsync(Guid personId, Guid currentUserId)
+    public async Task<PersonResponse?> GetByIdAsync(Guid personId, Guid currentUserId)
     {
-        throw new NotImplementedException();
+        if(personId == Guid.Empty) throw new ArgumentException("Person ID cannot be empty");
+        if (currentUserId == Guid.Empty) throw new ArgumentException("Current user ID cannot be empty");
+
+        Person? person = await _personRepository.GetByIdAsync(personId);
+        if (person == null) throw new InvalidOperationException("Person not found");
+
+        return PersonMapping.ToDtoResponse(person);
     }
 
     public async Task<IEnumerable<PersonResponse>> GetAllByPlaygroundAsync(Guid playgroundId, Guid currentUserId)
     {
-        throw new NotImplementedException();
-    }
+        if (playgroundId == Guid.Empty) throw new ArgumentException("Playground ID cannot be empty");
+        if (currentUserId == Guid.Empty) throw new ArgumentException("Current user ID cannot be empty");
 
-    public async Task<PersonResponse?> GetByIdAsync(Guid personId, Guid currentUserId)
-    {
-        throw new NotImplementedException();
+        List<Person?> people = [.. await _personRepository.GetAllByPlaygroundAsync(playgroundId)];
+        return PersonMapping.ToDtoResponse(people);
     }
 
     public async Task<PersonResponse?> UpdateAsync(Guid personId, CreatePersonRequest request, Guid currentUserId)
     {
-        throw new NotImplementedException();
+        if(personId == Guid.Empty) throw new ArgumentException("Person ID cannot be empty");
+        if(request == null) throw new ArgumentNullException(nameof(request));
+        if(currentUserId == Guid.Empty) throw new ArgumentException("Current user ID cannot be empty");
+        
+        Person? person = await _personRepository.UpdateAsync(personId, PersonMapping.ToPerson(request));
+
+        return person != null ? PersonMapping.ToDtoResponse(person) : null;
     }
+
+    public async Task<PersonResponse?> DeleteAsync(Guid personId, Guid currentUserId)
+    {
+        if(personId == Guid.Empty) throw new ArgumentException("Person ID cannot be empty");
+        if(currentUserId == Guid.Empty) throw new ArgumentException("Current user ID cannot be empty");
+        
+        Person? person = await _personRepository.DeleteAsync(personId);
+        return person != null ? PersonMapping.ToDtoResponse(person) : null;
+    }
+   
 }

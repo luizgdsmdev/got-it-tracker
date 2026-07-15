@@ -30,23 +30,25 @@ public class ApprovalRequestService : IApprovalRequestService
     public async Task<ApprovalRequestResponse> CreateAsync(CreateApprovalRequest request, Guid currentUserId)
     {
         // Validates if if the user is a valid playground member
-        var isMember = await _memberRepo.GetByPlaygroundAndPersonAsync(request.PlaygroundId, request.PersonId);
-        if (isMember == null)
-            throw new UnauthorizedAccessException("You are not a member of this playground.");
+        //var isMember = await _memberRepo.GetByPlaygroundAndPersonAsync(request.PlaygroundId, request.PersonId);
+        //if (isMember == null)
+        //    throw new UnauthorizedAccessException("You are not a member of this playground.");
 
-        var approval = new ApprovalRequest
-        {
-            PlaygroundId = request.PlaygroundId,
-            PersonId = request.PersonId,
-            RequestedById = currentUserId,
-            Description = request.Description,
-            Amount = request.Amount,
-            Type = request.Type,
-            IsPublic = request.IsPublic
-        };
+        //var approval = new ApprovalRequest
+        //{
+        //    PlaygroundId = request.PlaygroundId,
+        //    PersonId = request.PersonId,
+        //    RequestedById = currentUserId,
+        //    Description = request.Description,
+        //    Amount = request.Amount,
+        //    Type = request.Type,
+        //    IsPublic = request.IsPublic
+        //};
 
-        await _requestRepo.AddAsync(approval);
-        return _mapper.Map<ApprovalRequestResponse>(approval);
+        //await _requestRepo.AddAsync(approval);
+        //return _mapper.Map<ApprovalRequestResponse>(approval);
+
+        return null; // Placeholder return statement
     }
 
     public async Task<ApprovalRequestResponse> ApproveAsync(Guid requestId, Guid adminUserId)

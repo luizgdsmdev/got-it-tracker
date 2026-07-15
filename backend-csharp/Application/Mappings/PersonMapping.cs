@@ -28,13 +28,13 @@ public class PersonMapping
         //Basic validation for now
         if (request is null)
             throw new ArgumentNullException(nameof(request), "Request cannot be null");
-        if (string.IsNullOrWhiteSpace(request.Name))
-            throw new ArgumentException("Name is required");
+        if (string.IsNullOrWhiteSpace(request.UserName))
+            throw new ArgumentException("UserName is required");
         if (request.Age is <= 0 or > 150)
             throw new ArgumentException("Age is required, must be between 1 and 150");
         return new Person
         {
-            Name = request.Name,
+            Name = request.UserName,
             Age = request.Age
         };
     }

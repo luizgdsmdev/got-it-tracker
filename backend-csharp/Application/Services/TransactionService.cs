@@ -16,22 +16,24 @@ public class TransactionService : ITransactionService
     public async Task<TransactionResponse> CreateDirectAsync(CreateTransactionRequest request, Guid currentUserId)
     {
         // Verify permission: the user must be a member of the playground to create a transaction
-        var member = await _memberRepo.GetByPlaygroundAndPersonAsync(request.PlaygroundId, request.PersonId);
+        //var member = await _memberRepo.GetByPlaygroundAndPersonAsync(request.PlaygroundId, request.PersonId);
 
-        if (member == null)
-            throw new UnauthorizedAccessException("You are not a member of this playground.");
+        //if (member == null)
+        //    throw new UnauthorizedAccessException("You are not a member of this playground.");
 
-        var transaction = new Transaction
-        {
-            PlaygroundId = request.PlaygroundId,
-            PersonId = request.PersonId,
-            Description = request.Description,
-            Amount = request.Amount,
-            Type = request.Type,
-            Date = request.Date ?? DateTime.UtcNow
-        };
+        //var transaction = new Transaction
+        //{
+        //    PlaygroundId = request.PlaygroundId,
+        //    PersonId = request.PersonId,
+        //    Description = request.Description,
+        //    Amount = request.Amount,
+        //    Type = request.Type,
+        //    Date = request.Date ?? DateTime.UtcNow
+        //};
 
-        await _transactionRepo.AddAsync(transaction);
-        return _mapper.Map<TransactionResponse>(transaction);
+        //await _transactionRepo.AddAsync(transaction);
+        //return _mapper.Map<TransactionResponse>(transaction);
+
+        return null; // Placeholder return statement
     }
 }

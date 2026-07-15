@@ -17,10 +17,12 @@ public class UsersController : ControllerBase
         _userService = userService;
     }
 
+
+    //Create user asynchronously
     [HttpPost]
     public async Task<ActionResult<UserResponse>> Create([FromBody] CreateUserRequest request)
     {
-        return Ok(await _userService.CreateAsync(request));
+        return await _userService.CreateAsync(request);
     }
 
     [HttpGet("{id:guid}", Name = "GetById")]

@@ -4,11 +4,19 @@ using backend_csharp.Application.DTOs.Responses;
 using backend_csharp.Application.Interfaces;
 using backend_csharp.Application.Mappings;
 using backend_csharp.Domain.Entities;
+using backend_csharp.Domain.Exceptions;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace backend_csharp.Application.Services;
 
+
+/**
+ * UserService class implements the IUserService interface and provides methods for managing users.
+ * Holds a reference to an IUserRepository and an IMapper for data access and mapping between entities and DTOs.
+ * Also includes methods for creating, retrieving, updating, and deleting users asynchronously.
+ * Includes bussines logic for user management, such as hashing passwords and mapping between request and response DTOs.
+ */
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
@@ -20,11 +28,30 @@ public class UserService : IUserService
         _mapper = mapper;
     }
 
+
+    /**
+     * Creates a new user asynchronously based on the provided CreateUserRequest.
+     * Maps the request DTO to a User entity, adds it to the repository, and returns a UserResponse DTO.
+     * @param request The CreateUserRequest containing user details.
+     * @returns A UserResponse DTO representing the created user.
+     */
     public async Task<UserResponse> CreateAsync(CreateUserRequest request)
     {
 
         //TODO: Hash (BCrypt)
         User user = UserMapping.ToUser(request);
+
+        //Guard clause to check if a user with the same email already exists in the repository
+        //Avoids propagating duplicate users and ensures email uniqueness
+        if (await GetByEmailAsync(request.Email) != null) throw new ConflictException("This email was already registered, check your email address.");
+
+        //Check user age, if less than 12 throw exception
+        if (request.Age < 12) throw new InvalidOperationException("Users must be at least 12 years old.");
+
+
+
+
+
 
         await _userRepository.AddAsync(user);
 

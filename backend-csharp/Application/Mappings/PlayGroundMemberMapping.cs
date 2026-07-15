@@ -13,7 +13,7 @@ public class PlayGroundMemberMapping
         return new PlaygroundMember
         {
             PlaygroundId = request.playGroundId,
-            PersonId = request.memberID,
+            PersonId = request.currentUserId,
             IsAdmin = request.isAdmin
         };
     }
@@ -27,13 +27,8 @@ public class PlayGroundMemberMapping
 
     public static PlaygroundMemberResponse ToPlaygroundMemberResponse(PlaygroundMember member)
     {
-        return new PlaygroundMemberResponse
-        {
-            Id = member.Id,
-            PlaygroundId = member.PlaygroundId,
-            PersonId = member.PersonId,
-            IsAdmin = member.IsAdmin
-        };
+        // PlaygroundMemberResponse is a positional record; use its primary constructor
+        return new PlaygroundMemberResponse(member.Id, member.PlaygroundId, member.PersonId, member.IsAdmin);
     }
 
 

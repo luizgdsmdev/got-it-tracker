@@ -1,3 +1,3 @@
 ﻿namespace backend_csharp.Application.DTOs.Responses;
 
-public record PlaygroundMemberResponse(Guid membershipId, Guid playGroundId, Guid memberId, bool isAdmin);
+public record PlaygroundMemberResponse(Guid MembershipId, Guid PlayGroundId, Guid MemberId, bool IsAdmin);

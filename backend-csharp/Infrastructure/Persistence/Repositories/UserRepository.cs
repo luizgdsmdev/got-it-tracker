@@ -35,10 +35,9 @@ public class UserRepository : IUserRepository
         if (userDb is null) return null;
 
         // Update the user properties
-        userDb.Name = user.Name;
+        userDb.UserName = user.UserName;
         userDb.Email = user.Email;
         userDb.Age = user.Age;
-        userDb.Password = user.Password;
 
         await _context.SaveChangesAsync();
         return userDb;

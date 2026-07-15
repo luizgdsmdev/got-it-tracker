@@ -1,5 +1,6 @@
 ﻿using backend_csharp.Application.DTOs.Requests;
 using backend_csharp.Application.DTOs.Responses;
+using backend_csharp.Application.DTOs.Responses.Auth;
 using backend_csharp.Domain.Entities;
 
 namespace backend_csharp.Application.Mappings;
@@ -8,41 +9,33 @@ public class UserMapping
 {
     public static User ToUser(CreateUserRequest request)
     {
-        //Basic validation for now
-        if (request is null)
-            throw new ArgumentNullException(nameof(request), "Request cannot be null");
-        if (string.IsNullOrWhiteSpace(request.Name))
-            throw new ArgumentException("Name is required");
-        if (request.Age <= 0 || request.Age > 150)
-            throw new ArgumentException("Age is required, must be between 1 and 150");
-        if (string.IsNullOrWhiteSpace(request.Email))
-            throw new ArgumentException("Email is required");
-        if (string.IsNullOrWhiteSpace(request.Password))
-            throw new ArgumentException("Password is required");
 
         return new User
         {
             Name = request.Name,
+            UserName = request.Email,
             Age = request.Age,
             Email = request.Email,
-            Password = request.Password //TODO: Hash (BCrypt)
+            CreatedAt = DateTime.UtcNow,
+            LastUpdatedAt = DateTime.UtcNow
         };
     }
 
     public static UserResponse ToDtoResponse(User user)
     {
-        //Basic validation for now
-        if (user is null)
-            throw new ArgumentNullException(nameof(user), "User cannot be null");
-        if (string.IsNullOrWhiteSpace(user.Name))
-            throw new ArgumentException("Name is required");
-        if (user.Age <= 0 || user.Age > 150)
-            throw new ArgumentException("Age is required, must be between 1 and 150");
-        if (string.IsNullOrWhiteSpace(user.Email))
-            throw new ArgumentException("Email is required");
-        if (string.IsNullOrWhiteSpace(user.Password))
-            throw new ArgumentException("Password is required");
 
-        return new UserResponse(user.Id, user.Name, user.Age, user.Email);
+        return new UserResponse(user.Id, user.Name!, user.Age, user.Email!);
+    }
+
+    public static LoginResponse ToLoginResponse(User user, string accessToken, string refreshToken, DateTime expiresAt)
+    {
+
+        return new LoginResponse(
+            AccessToken: accessToken,
+            RefreshToken: refreshToken,
+            ExpiresAt: expiresAt,
+            User: ToDtoResponse(user)
+        );
+
     }
 }

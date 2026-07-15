@@ -1,41 +1,32 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend_csharp.Domain.Entities
 {
-    public class User
+    public class User : IdentityUser<Guid>
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
 
-        [Required(ErrorMessage = "Name is required"),
-         StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters"),
-         MinLength(1, ErrorMessage = "Name cannot be empty")]
+        [Required(ErrorMessage = "A UserName is required for person"),
+         MinLength(1, ErrorMessage = "UserName must be at least 1 characters long."),
+         MaxLength(40, ErrorMessage = "UserName must be at most 40 characters long.")]
         public string? Name { get; set; }
 
-        [Required(ErrorMessage = "Email is required"),
-         StringLength(100, ErrorMessage = "Email cannot be longer than 100 characters"),
-         MinLength(1, ErrorMessage = "Email cannot be empty"),
-         EmailAddress(ErrorMessage = "Invalid email format")]
-        public string? Email { get; set; }
-
         [Required(ErrorMessage = "Age is required"),
-         Range(1, 150, ErrorMessage = "Age must be between 1 and 150")]
+         Range(12, 150, ErrorMessage = "Age must be between 12 and 150.")]
         public int Age { get; set; }
 
-
-        [Required(ErrorMessage = "Password is required"),
-         StringLength(100, ErrorMessage = "Password cannot be longer than 100 characters"),
-         MinLength(6, ErrorMessage = "Password must be at least 6 characters long")]
-        public string? Password { get; set; }
 
         [Required(ErrorMessage = "CreatedAt is required")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         [Required(ErrorMessage = "UpdatedAt is required")]
         public DateTime LastUpdatedAt { get; set; }
+
+        public string? RefreshToken { get; set; }
+
+        public DateTime? RefreshTokenExpiryTime { get; set; }
 
         public ICollection<Playground> Playgrounds { get; set; } = [];
 

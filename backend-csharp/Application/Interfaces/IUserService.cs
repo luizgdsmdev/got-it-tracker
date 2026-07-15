@@ -11,4 +11,6 @@ public interface IUserService
     Task<UserResponse?> GetByEmailAsync(string email);
     Task<UserResponse?> UpdateByIdAsync(Guid id, CreateUserRequest userRequest);
     Task<UserResponse?> DeleteByIdAsync(Guid id);
+
+    // TODO: insert user login method and bussines logic
 }

@@ -140,20 +140,35 @@ public class AuthService : IAuthService
         var userIdentity = _tokenService.GetPrincipalFromExpiredToken(accessToken, _configuration);
         if(userIdentity == null) throw new UnauthorizedException("Invalid access token/refresh token");
 
+        foreach (var claim in userIdentity.Claims)
+        {
+            Console.WriteLine($"-----------\n");
+            Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+            Console.WriteLine($"\n-----------\n");
+        }
+
 
         // NameIdentifier here refers to the user Id
-        string userId = userIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value
+        string userId = userIdentity.FindFirst(ClaimTypes.NameIdentifier.ToString())?.Value
                            ?? throw new UnauthorizedException("Invalid access token/refresh token");
 
-        var user = _userManager.Users.FirstOrDefault(u => u.Id.ToString() == userId)
+        var user = await _userManager.FindByIdAsync(userId.ToString())
                        ?? throw new UnauthorizedException("User not found");
 
         // Validate the refresh token and its expiry time related to the user
-        if (user == null || 
-           user.RefreshToken != refreshToken || 
-           user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        if (user == null)
         {
             throw new UnauthorizedException("User not found");
+        }
+
+        if (user.RefreshToken != refreshToken)
+        {
+            throw new UnauthorizedException("Refresh token is invalid");
+        }
+
+        if (user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        {
+            throw new UnauthorizedException("Refresh token has expired");
         }
 
         // Generate a new access token and refresh token

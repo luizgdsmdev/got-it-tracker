@@ -42,7 +42,6 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("refresh-token")]
-    [Authorize]
     public async Task<ActionResult<LoginResponse>> RefreshTokenAsync([FromBody] CreateAcessTokenRequest request)
     {
         var refreshResponse = await _authService.RefreshTokenAsync(request);

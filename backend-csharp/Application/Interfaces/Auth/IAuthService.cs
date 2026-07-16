@@ -1,6 +1,7 @@
-﻿using backend_csharp.Application.DTOs.Requests;
-using backend_csharp.Application.DTOs.Responses;
+﻿using backend_csharp.Application.DTOs.Requests.Auth;
+using backend_csharp.Application.DTOs.Requests.Users;
 using backend_csharp.Application.DTOs.Responses.Auth;
+using backend_csharp.Application.DTOs.Responses.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend_csharp.Application.Interfaces.Auth;

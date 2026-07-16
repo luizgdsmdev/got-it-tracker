@@ -1,5 +1,5 @@
 ﻿using backend_csharp.Application.DTOs.Requests;
-using backend_csharp.Domain.Entities;
+using backend_csharp.Domain.Entities.PlayGround;
 using backend_csharp.Infrastructure.Data;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;

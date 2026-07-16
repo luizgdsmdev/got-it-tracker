@@ -1,4 +1,4 @@
-﻿using backend_csharp.Domain.Entities;
+﻿using backend_csharp.Domain.Entities.Users;
 
 namespace backend_csharp.Infrastructure.Persistence.Interfaces;
 

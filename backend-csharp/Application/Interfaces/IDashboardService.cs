@@ -1,4 +1,4 @@
-﻿using backend_csharp.Application.DTOs.Responses;
+﻿using backend_csharp.Application.DTOs.Responses.Transactions;
 
 namespace backend_csharp.Application.Interfaces;
 

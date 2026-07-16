@@ -1,4 +1,4 @@
-﻿using backend_csharp.Domain.Entities;
+﻿using backend_csharp.Domain.Entities.Transactions;
 using backend_csharp.Infrastructure.Data;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;

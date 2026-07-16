@@ -1,4 +1,4 @@
-﻿using backend_csharp.Domain.Entities;
+﻿using backend_csharp.Domain.Entities.PlayGround;
 
 namespace backend_csharp.Infrastructure.Persistence.Interfaces;
 

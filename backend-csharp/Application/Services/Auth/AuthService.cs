@@ -1,9 +1,10 @@
-﻿using backend_csharp.Application.DTOs.Requests;
-using backend_csharp.Application.DTOs.Responses;
+﻿using backend_csharp.Application.DTOs.Requests.Auth;
+using backend_csharp.Application.DTOs.Requests.Users;
 using backend_csharp.Application.DTOs.Responses.Auth;
+using backend_csharp.Application.DTOs.Responses.Users;
 using backend_csharp.Application.Interfaces.Auth;
-using backend_csharp.Application.Mappings;
-using backend_csharp.Domain.Entities;
+using backend_csharp.Application.Mappings.Users;
+using backend_csharp.Domain.Entities.Users;
 using backend_csharp.Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -139,14 +140,6 @@ public class AuthService : IAuthService
         // Verify the access token and extract the principal (user identity) from it
         var userIdentity = _tokenService.GetPrincipalFromExpiredToken(accessToken, _configuration);
         if(userIdentity == null) throw new UnauthorizedException("Invalid access token/refresh token");
-
-        foreach (var claim in userIdentity.Claims)
-        {
-            Console.WriteLine($"-----------\n");
-            Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
-            Console.WriteLine($"\n-----------\n");
-        }
-
 
         // NameIdentifier here refers to the user Id
         string userId = userIdentity.FindFirst(ClaimTypes.NameIdentifier.ToString())?.Value

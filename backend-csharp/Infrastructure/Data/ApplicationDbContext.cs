@@ -1,4 +1,6 @@
-﻿using backend_csharp.Domain.Entities;
+﻿using backend_csharp.Domain.Entities.PlayGround;
+using backend_csharp.Domain.Entities.Transactions;
+using backend_csharp.Domain.Entities.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

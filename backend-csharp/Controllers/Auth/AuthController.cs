@@ -1,4 +1,5 @@
-﻿using backend_csharp.Application.DTOs.Requests;
+﻿using backend_csharp.Application.DTOs.Requests.Auth;
+using backend_csharp.Application.DTOs.Requests.Users;
 using backend_csharp.Application.DTOs.Responses.Auth;
 using backend_csharp.Application.Interfaces.Auth;
 using backend_csharp.Application.Services.Auth;

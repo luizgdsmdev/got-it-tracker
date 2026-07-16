@@ -1,6 +1,7 @@
 ﻿using backend_csharp.Application.DTOs.Requests.PlayGround;
 using backend_csharp.Application.DTOs.Responses.PlayGround;
 using backend_csharp.Application.Interfaces.PlayGround;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend_csharp.Controllers.PlayGround;
@@ -16,18 +17,17 @@ public class PlaygroundsController : ControllerBase
         _playgroundService = playgroundService;
     }
 
+
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<PlaygroundResponse>> Create([FromBody] CreatePlaygroundRequest playgroundRequest)
     {
-        if(playgroundRequest is null) return BadRequest("Invalid playground request.");
-
-        // TODO: get from JWT afterwards
         var result = await _playgroundService.CreateAsync(playgroundRequest);
-        //return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+
         return Ok(result);
     }
 
-
+    [Authorize]
     [HttpGet("{playGroundId:guid}")]
     public async Task<ActionResult<PlaygroundResponse>> GetById([FromRoute] Guid playGroundId)
     {
@@ -35,6 +35,7 @@ public class PlaygroundsController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
     [HttpGet("user/{userId:guid}")]
     public async Task<ActionResult<IEnumerable<PlaygroundResponse?>>> GetByUser([FromRoute] Guid userId)
     {
@@ -42,6 +43,7 @@ public class PlaygroundsController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
     [HttpPatch("/toggle-approval{playgroundId:guid}")]
     public async Task<ActionResult<PlaygroundResponse>> ToggleAskForApproval([FromRoute] Guid playgroundId)
     {
@@ -49,6 +51,7 @@ public class PlaygroundsController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
     [HttpPut("{playgroundId:guid}")]
     public async Task<ActionResult<PlaygroundResponse>> Update([FromRoute] Guid playgroundId, [FromBody] CreatePlaygroundRequest request)
     {
@@ -56,11 +59,11 @@ public class PlaygroundsController : ControllerBase
         return Ok(result);
     }
 
-
+    [Authorize]
     [HttpDelete("{playgroundId:guid}")]
-    public async Task<ActionResult<PlaygroundResponse>> Delete([FromRoute] Guid playgroundId)
+    public async Task<ActionResult> Delete([FromRoute] Guid playgroundId)
     {
         var result = await _playgroundService.DeleteAsync(playgroundId);
-        return Ok(result);
+        return Ok(result); // Returns only a message such as "new OkObjectResult($"Playground with ID {playgroundId} deleted successfully");"
     }
 }

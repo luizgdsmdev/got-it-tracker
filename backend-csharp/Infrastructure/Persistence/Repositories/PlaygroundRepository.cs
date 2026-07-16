@@ -24,9 +24,11 @@ public class PlaygroundRepository : IPlaygroundRepository
     }
 
     public async Task<Playground?> GetByIdAsync(Guid id)
-        => await _context.Playgrounds.FindAsync(id);
+    {
+        return await _context.Playgrounds.FindAsync(id);
+    }
 
-    public async Task<IEnumerable<Playground>> GetByOwnerIdAsync(Guid ownerId)
+    public async Task<IEnumerable<Playground?>> GetByOwnerIdAsync(Guid ownerId)
     {
         return await _context.Playgrounds
         .Include(p => p.Members)
@@ -56,9 +58,10 @@ public class PlaygroundRepository : IPlaygroundRepository
         if (playground == null)
             return null;
 
-        playground.Name = request.Name;
-        playground.AskForApproval = request.AskForApproval;
         playground.OwnerId = request.OwnerId;
+        playground.Name = request.Name;
+        playground.Description = request.Description;
+        playground.AskForApproval = request.AskForApproval;
 
         await _context.SaveChangesAsync();
 

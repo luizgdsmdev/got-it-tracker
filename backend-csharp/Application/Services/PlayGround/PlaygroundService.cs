@@ -5,7 +5,9 @@ using backend_csharp.Application.Interfaces.PlayGround;
 using backend_csharp.Application.Mappings.PlayGround;
 using backend_csharp.Domain.Entities.PlayGround;
 using backend_csharp.Domain.Entities.Users;
+using backend_csharp.Domain.Exceptions;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace backend_csharp.Application.Services.PlayGround;
 
@@ -31,90 +33,129 @@ public class PlaygroundService : IPlaygroundService
 
     }
 
-    public async Task<PlaygroundResponse?> CreateAsync(CreatePlaygroundRequest request)
+
+    /**
+     * Creates a new playground based on the provided request.
+     *
+     * @param request The request containing the details of the playground to be created.
+     * @return A task that represents the asynchronous operation. The task result contains the response with the created playground details.
+     * @throws ArgumentNullException If the request is null.
+     * @throws PersistenceException If there is an error while persisting the playground to the database.
+     */
+    public async Task<PlaygroundResponse> CreateAsync(CreatePlaygroundRequest request)
     {
-        Playground? playGround = await _playgroundRepo
-                                .AddAsync(
-                                PlayGroundMapping
-                                .ToPlayground(request));
+        ArgumentNullException.ThrowIfNull(request);
+
+        Playground playground = PlayGroundMapping.ToPlayground(request);
+
+        Playground newPlayground = await _playgroundRepo.AddAsync(playground) ??
+                                   throw new PersistenceException("Failed to create playground");
 
 
-        // Adds membership from the owner to the playground as admin
-        if (playGround is not null)
-        {
-            // Check for the existence of the owner in the database
-            User? owner = await _userRepo.GetByIdAsync(playGround.OwnerId);
-            if(owner == null)
-                throw new InvalidOperationException("Owner not found");
+        //TODO: Add the owner as a member of the playground with admin role
 
+        return PlayGroundMapping.ToDtoResponse(newPlayground);
+    }
 
+    /**
+     * Retrieves a playground by its ID.
+     *
+     * @param playgroundId The ID of the playground to retrieve.
+     * @return A task that represents the asynchronous operation. The task result contains the response with the playground details.
+     * @throws ArgumentException If the playground ID is invalid or null.
+     * @throws NotFoundException If the playground with the specified ID is not found.
+     */
+    public async Task<PlaygroundResponse> GetByIdAsync(Guid playgroundId)
+    {
+        if (playgroundId == Guid.Empty) throw new ArgumentException("Invalid or null playground ID");
 
-            //await _playgroundRepo.AddAsync(playGround.Id, playGround.OwnerId, true);
-        }
-
+        Playground? playGround = await _playgroundRepo.GetByIdAsync(playgroundId) ??
+                                 throw new NotFoundException($"Playground with ID {playgroundId} not found");
 
 
         return PlayGroundMapping.ToDtoResponse(playGround);
     }
 
-    public async Task<PlaygroundResponse?> GetByIdAsync(Guid playgroundId)
+    /**
+     * Retrieves all playgrounds associated with a specific user.
+     *
+     * @param userId The ID of the user whose playgrounds are to be retrieved.
+     * @return A task that represents the asynchronous operation. The task result contains a collection of responses with the playground details.
+     * @throws ArgumentException If the user ID is invalid or null.
+     * @throws NotFoundException If no playgrounds are found for the specified user.
+     */
+    public async Task<IEnumerable<PlaygroundResponse>> GetByUserAsync(Guid userId)
     {
-        if (playgroundId == Guid.Empty) return null;
+        if (userId == Guid.Empty) throw new ArgumentException("Invalid or null user ID");
 
-        Playground? playGround = await _playgroundRepo
-                                .GetByIdAsync(playgroundId);
+        var playGround = await _playgroundRepo.GetByOwnerIdAsync(userId) ??
+                         throw new NotFoundException("No playground found for the specified owner");
 
-        if (playGround is null)
-            throw new InvalidOperationException("Playground not found");
+        return PlayGroundMapping.ToDtoResponseList(playGround!);
+    }
+
+    /**
+     * Toggles the "Ask for Approval" status of a playground.
+     *
+     * @param playgroundId The ID of the playground whose approval status is to be toggled.
+     * @return A task that represents the asynchronous operation. The task result contains the response with the updated playground details.
+     * @throws ArgumentException If the playground ID is invalid or null.
+     * @throws NotFoundException If the playground with the specified ID is not found.
+     */
+    public async Task<PlaygroundResponse> ToggleAskForApprovalAsync(Guid playgroundId)
+    {
+        if (playgroundId == Guid.Empty) throw new ArgumentException("Invalid playground ID");
+
+        // Validates for existence of the playground before toggling the approval status
+        Playground updatedPlayground = await _playgroundRepo.ToggleAskForApprovalAsync(playgroundId) ??
+                                       throw new NotFoundException("No playground found for the specified ID");
+
+
+        return PlayGroundMapping.ToDtoResponse(updatedPlayground);
+    }
+
+
+    /**
+     * Updates the details of a playground.
+     *
+     * @param playgroundId The ID of the playground to be updated.
+     * @param request The request containing the updated details of the playground.
+     * @return A task that represents the asynchronous operation. The task result contains the response with the updated playground details.
+     * @throws ArgumentException If the playground ID is invalid or null.
+     * @throws ArgumentNullException If the request is null.
+     * @throws NotFoundException If the playground with the specified ID is not found.
+     */
+    public async Task<PlaygroundResponse> UpdateAsync(Guid playgroundId, CreatePlaygroundRequest request)
+    {
+        if (playgroundId == Guid.Empty) throw new ArgumentException("Invalid playground ID");
+        ArgumentNullException.ThrowIfNull(request);
+
+        // Calls the update function, sends the playGround after mapping
+        Playground requestPlayground = PlayGroundMapping.ToPlayground(request);
+        Playground playGround = await _playgroundRepo.UpdateAsync(
+                                 playgroundId,
+                                 requestPlayground) ??
+                                 throw new NotFoundException("No playground found for the specified ID");
 
         return PlayGroundMapping.ToDtoResponse(playGround);
     }
 
-    public async Task<IEnumerable<PlaygroundResponse?>> GetByUserAsync(Guid userId)
+    /**
+     * Deletes a playground by its ID.
+     *
+     * @param playgroundId The ID of the playground to be deleted.
+     * @return A task that represents the asynchronous operation. The task result contains an ActionResult indicating the success of the deletion.
+     * @throws ArgumentException If the playground ID is invalid or null.
+     * @throws NotFoundException If the playground with the specified ID is not found.
+     */
+    public async Task<ActionResult> DeleteAsync(Guid playgroundId)
     {
-        if (userId == Guid.Empty) return null;
+        if (playgroundId == Guid.Empty) throw new ArgumentException("Invalid playground ID");
 
-        var playGround = await _playgroundRepo.GetByOwnerIdAsync(userId);
+        _ = await _playgroundRepo.DeleteAsync(playgroundId) ??
+                                        throw new NotFoundException("No playground found for the specified ID");
 
-        if (playGround is null)
-            throw new InvalidOperationException("No Playground found");
-
-        return PlayGroundMapping.ToDtoResponseList(playGround);
-    }
-
-    public async Task<PlaygroundResponse?> ToggleAskForApprovalAsync(Guid playgroundId)
-    {
-        if(playgroundId == Guid.Empty)
-            throw new ArgumentException("Invalid playground or user ID");
-
-        Playground? playGround = await _playgroundRepo
-                                .GetByIdAsync(playgroundId);
-
-        Playground? updatedPlayground = await _playgroundRepo.ToggleAskForApprovalAsync(playgroundId);
-        return updatedPlayground != null ? PlayGroundMapping.ToDtoResponse(updatedPlayground) : null;
-    }
-
-    public async Task<PlaygroundResponse?> UpdateAsync(Guid playgroundId, CreatePlaygroundRequest request)
-    {
-        if(playgroundId == Guid.Empty)
-            throw new ArgumentException("Invalid playground ID");
-        if(request == null)
-            throw new ArgumentNullException(nameof(request));
-
-        Playground? playGround = await _playgroundRepo.UpdateAsync(playgroundId, PlayGroundMapping.ToPlayground(request));
-
-        return playGround != null ? PlayGroundMapping.ToDtoResponse(playGround) : null;
-    }
-
-
-    public async Task<PlaygroundResponse?> DeleteAsync(Guid playgroundId)
-    {
-        if (playgroundId == Guid.Empty)
-            throw new ArgumentException("Invalid playground ID");
-
-        Playground? deletedPlayground = await _playgroundRepo.DeleteAsync(playgroundId);
-
-        return deletedPlayground != null ? PlayGroundMapping.ToDtoResponse(deletedPlayground) : null;
+        return new OkObjectResult($"Playground with ID {playgroundId} deleted successfully");
 
     }
 }

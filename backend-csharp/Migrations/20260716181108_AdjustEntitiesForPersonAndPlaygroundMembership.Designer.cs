@@ -11,8 +11,8 @@ using backend_csharp.Infrastructure.Data;
 namespace backend_csharp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260714211906_AdjustIdentityTables")]
-    partial class AdjustIdentityTables
+    [Migration("20260716181108_AdjustEntitiesForPersonAndPlaygroundMembership")]
+    partial class AdjustEntitiesForPersonAndPlaygroundMembership
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -146,7 +146,63 @@ namespace backend_csharp.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("backend_csharp.Domain.Entities.ApprovalRequest", b =>
+            modelBuilder.Entity("backend_csharp.Domain.Entities.PlayGround.Playground", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("AskForApproval")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Playgrounds");
+                });
+
+            modelBuilder.Entity("backend_csharp.Domain.Entities.PlayGround.PlaygroundMember", b =>
+                {
+                    b.Property<Guid>("PlaygroundId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("PlaygroundId", "PersonId");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("PlaygroundMembers");
+                });
+
+            modelBuilder.Entity("backend_csharp.Domain.Entities.Transactions.ApprovalRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -205,83 +261,7 @@ namespace backend_csharp.Migrations
                     b.ToTable("ApprovalRequests");
                 });
 
-            modelBuilder.Entity("backend_csharp.Domain.Entities.Person", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Age")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("People");
-                });
-
-            modelBuilder.Entity("backend_csharp.Domain.Entities.Playground", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("AskForApproval")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("OwnerId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Playgrounds");
-                });
-
-            modelBuilder.Entity("backend_csharp.Domain.Entities.PlaygroundMember", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("PlaygroundId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
-
-                    b.HasIndex("PlaygroundId");
-
-                    b.ToTable("PlaygroundMembers");
-                });
-
-            modelBuilder.Entity("backend_csharp.Domain.Entities.Transaction", b =>
+            modelBuilder.Entity("backend_csharp.Domain.Entities.Transactions.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -319,7 +299,31 @@ namespace backend_csharp.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("backend_csharp.Domain.Entities.User", b =>
+            modelBuilder.Entity("backend_csharp.Domain.Entities.Users.Person", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("People");
+                });
+
+            modelBuilder.Entity("backend_csharp.Domain.Entities.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -415,7 +419,7 @@ namespace backend_csharp.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("backend_csharp.Domain.Entities.User", null)
+                    b.HasOne("backend_csharp.Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -424,7 +428,7 @@ namespace backend_csharp.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("backend_csharp.Domain.Entities.User", null)
+                    b.HasOne("backend_csharp.Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -439,7 +443,7 @@ namespace backend_csharp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend_csharp.Domain.Entities.User", null)
+                    b.HasOne("backend_csharp.Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -448,34 +452,64 @@ namespace backend_csharp.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("backend_csharp.Domain.Entities.User", null)
+                    b.HasOne("backend_csharp.Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("backend_csharp.Domain.Entities.ApprovalRequest", b =>
+            modelBuilder.Entity("backend_csharp.Domain.Entities.PlayGround.Playground", b =>
                 {
-                    b.HasOne("backend_csharp.Domain.Entities.Person", "Person")
+                    b.HasOne("backend_csharp.Domain.Entities.Users.User", "User")
+                        .WithMany("Playgrounds")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("backend_csharp.Domain.Entities.PlayGround.PlaygroundMember", b =>
+                {
+                    b.HasOne("backend_csharp.Domain.Entities.Users.Person", "Person")
+                        .WithMany("PlaygroundMemberships")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backend_csharp.Domain.Entities.PlayGround.Playground", "Playground")
+                        .WithMany("Members")
+                        .HasForeignKey("PlaygroundId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Person");
+
+                    b.Navigation("Playground");
+                });
+
+            modelBuilder.Entity("backend_csharp.Domain.Entities.Transactions.ApprovalRequest", b =>
+                {
+                    b.HasOne("backend_csharp.Domain.Entities.Users.Person", "Person")
                         .WithMany("ApprovalRequests")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend_csharp.Domain.Entities.Playground", "Playground")
+                    b.HasOne("backend_csharp.Domain.Entities.PlayGround.Playground", "Playground")
                         .WithMany("ApprovalRequests")
                         .HasForeignKey("PlaygroundId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend_csharp.Domain.Entities.User", "RequestedBy")
+                    b.HasOne("backend_csharp.Domain.Entities.Users.User", "RequestedBy")
                         .WithMany("RequestedApprovals")
                         .HasForeignKey("RequestedById")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.HasOne("backend_csharp.Domain.Entities.User", "ReviewedBy")
+                    b.HasOne("backend_csharp.Domain.Entities.Users.User", "ReviewedBy")
                         .WithMany("ReviewedApprovals")
                         .HasForeignKey("ReviewedById")
                         .OnDelete(DeleteBehavior.SetNull)
@@ -490,65 +524,36 @@ namespace backend_csharp.Migrations
                     b.Navigation("ReviewedBy");
                 });
 
-            modelBuilder.Entity("backend_csharp.Domain.Entities.Playground", b =>
+            modelBuilder.Entity("backend_csharp.Domain.Entities.Transactions.Transaction", b =>
                 {
-                    b.HasOne("backend_csharp.Domain.Entities.User", "User")
-                        .WithMany("Playgrounds")
-                        .HasForeignKey("UserId")
+                    b.HasOne("backend_csharp.Domain.Entities.Users.Person", "Person")
+                        .WithMany("Transactions")
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("backend_csharp.Domain.Entities.PlayGround.Playground", "Playground")
+                        .WithMany("Transactions")
+                        .HasForeignKey("PlaygroundId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Person");
+
+                    b.Navigation("Playground");
+                });
+
+            modelBuilder.Entity("backend_csharp.Domain.Entities.Users.Person", b =>
+                {
+                    b.HasOne("backend_csharp.Domain.Entities.Users.User", "User")
+                        .WithOne("Person")
+                        .HasForeignKey("backend_csharp.Domain.Entities.Users.Person", "UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("backend_csharp.Domain.Entities.PlaygroundMember", b =>
-                {
-                    b.HasOne("backend_csharp.Domain.Entities.Person", "Person")
-                        .WithMany("PlaygroundMemberships")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("backend_csharp.Domain.Entities.Playground", "Playground")
-                        .WithMany("Members")
-                        .HasForeignKey("PlaygroundId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-
-                    b.Navigation("Playground");
-                });
-
-            modelBuilder.Entity("backend_csharp.Domain.Entities.Transaction", b =>
-                {
-                    b.HasOne("backend_csharp.Domain.Entities.Person", "Person")
-                        .WithMany("Transactions")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("backend_csharp.Domain.Entities.Playground", "Playground")
-                        .WithMany("Transactions")
-                        .HasForeignKey("PlaygroundId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-
-                    b.Navigation("Playground");
-                });
-
-            modelBuilder.Entity("backend_csharp.Domain.Entities.Person", b =>
-                {
-                    b.Navigation("ApprovalRequests");
-
-                    b.Navigation("PlaygroundMemberships");
-
-                    b.Navigation("Transactions");
-                });
-
-            modelBuilder.Entity("backend_csharp.Domain.Entities.Playground", b =>
+            modelBuilder.Entity("backend_csharp.Domain.Entities.PlayGround.Playground", b =>
                 {
                     b.Navigation("ApprovalRequests");
 
@@ -557,8 +562,19 @@ namespace backend_csharp.Migrations
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("backend_csharp.Domain.Entities.User", b =>
+            modelBuilder.Entity("backend_csharp.Domain.Entities.Users.Person", b =>
                 {
+                    b.Navigation("ApprovalRequests");
+
+                    b.Navigation("PlaygroundMemberships");
+
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("backend_csharp.Domain.Entities.Users.User", b =>
+                {
+                    b.Navigation("Person");
+
                     b.Navigation("Playgrounds");
 
                     b.Navigation("RequestedApprovals");

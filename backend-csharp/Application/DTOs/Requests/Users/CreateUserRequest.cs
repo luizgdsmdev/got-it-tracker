@@ -13,7 +13,8 @@ public record CreateUserRequest(
     int Age,
 
     [Required(ErrorMessage = "A email is required for person"),
-     EmailAddress(ErrorMessage = "Invalid email address format.")]
+     EmailAddress(ErrorMessage = "Invalid email address format."),
+     RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email address format.")]
     string Email,
 
     [Required(ErrorMessage = "A password is required for person"),

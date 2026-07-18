@@ -12,9 +12,9 @@ public class PlayGroundMemberMapping
         //Validations were made in the controller, so we can assume that the request is valid here.
         return new PlaygroundMember
         {
-            PlaygroundId = request.playGroundId,
-            PersonId = request.currentUserId,
-            IsAdmin = request.isAdmin
+            //PlaygroundId = request.playGroundId,
+            //PersonId = request.currentUserId,
+            //IsAdmin = request.isAdmin
         };
     }
 
@@ -28,7 +28,7 @@ public class PlayGroundMemberMapping
     public static PlaygroundMemberResponse ToPlaygroundMemberResponse(PlaygroundMember member)
     {
         // PlaygroundMemberResponse is a positional record; use its primary constructor
-        return new PlaygroundMemberResponse(member.Id, member.PlaygroundId, member.PersonId, member.IsAdmin);
+        return new PlaygroundMemberResponse(member.PersonId, member.PlaygroundId, member.PersonId, member.IsAdmin);
     }
 
 

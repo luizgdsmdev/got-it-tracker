@@ -1,13 +1,16 @@
 ﻿using backend_csharp.Application.DTOs.Requests.Users;
 using backend_csharp.Application.DTOs.Responses.Users;
+using backend_csharp.Domain.Entities.Users;
 
 namespace backend_csharp.Application.Interfaces.Users;
 
 public interface IPersonService
 {
-    Task<PersonResponse?> CreateAsync(CreatePersonRequest request, Guid playgroundId, Guid currentUserId);
-    Task<PersonResponse?> GetByIdAsync(Guid personId, Guid currentUserId);
-    Task<PersonResponse?> UpdateAsync(Guid personId, CreatePersonRequest request, Guid currentUserId);
-    Task<PersonResponse?> DeleteAsync(Guid personId, Guid currentUserId);           
-    Task<IEnumerable<PersonResponse>> GetAllByPlaygroundAsync(Guid playgroundId, Guid currentUserId);
+    Task<Person> CreateForUserAsync(User user);
+    Task<Person> CreateGuestAsync(string name, int age);
+    Task<Person?> GetPersonByIdAsync(Guid personId);
+    Task<Person?> GetByUserIdAsync(Guid userId);
+    Task<Person?> UpdateAsync(Guid personId, string name, int aget);
+    Task<Person?> DeleteAsync(Guid personId);
+    Task<IEnumerable<Person>> GetAllByPlaygroundAsync(Guid playgroundId);
 }

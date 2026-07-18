@@ -1,3 +1,16 @@
-﻿namespace backend_csharp.Application.DTOs.Requests.PlayGround;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public record CreatePlaygroundMemberRequest(Guid playGroundId, Guid currentUserId, bool isAdmin);
+namespace backend_csharp.Application.DTOs.Requests.PlayGround;
+
+public record CreatePlaygroundMemberRequest(
+    [Required(ErrorMessage = "PlaygroundId is required")]
+    Guid PlayGroundId,
+
+    [Required(ErrorMessage = "CurrentUserId is required")]
+    Guid CurrentUserId,
+
+
+
+    [Required(ErrorMessage = "IsAdmin is required")]
+    bool IsAdmin);

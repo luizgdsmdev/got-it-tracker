@@ -1,4 +1,5 @@
 ﻿using backend_csharp.Domain.Entities.Users;
+using backend_csharp.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,21 +7,19 @@ namespace backend_csharp.Domain.Entities.PlayGround;
 
 public class PlaygroundMember
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; set; }
-
-    [Required(ErrorMessage = "PlaygroundId is required")]
-    [ForeignKey("PlaygroundId")]
     public Guid PlaygroundId { get; set; }
 
-    [Required(ErrorMessage = "PersonId is required")]
-    [ForeignKey("PersonId")]
     public Guid PersonId { get; set; }
 
-    [Required(ErrorMessage = "IsAdmin is required")]
-    public bool IsAdmin { get; set; } = false;
+    public bool IsAdmin { get; set; }
+
+    public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
+
+
+
+    public PlaygroundRole Role { get; set; }
 
     public Playground Playground { get; set; } = null!;
+
     public Person Person { get; set; } = null!;
 }

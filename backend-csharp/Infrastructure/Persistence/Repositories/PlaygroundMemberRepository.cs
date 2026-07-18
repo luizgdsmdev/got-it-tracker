@@ -23,7 +23,7 @@ public class PlaygroundMemberRepository : IPlaygroundMemberRepository
     public Task<PlaygroundMember?> GetByIdAsync(Guid playgroundId, Guid id)
     {
         return _context.PlaygroundMembers
-            .FirstOrDefaultAsync(m => m.PlaygroundId == playgroundId && m.Id == id);
+            .FirstOrDefaultAsync(m => m.PlaygroundId == playgroundId && m.PersonId == id);
     }
     public Task<IEnumerable<PlaygroundMember?>> GetAllByPlaygroundAsync(Guid playgroundId)
     {

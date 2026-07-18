@@ -25,6 +25,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor(); // Add HttpContextAccessor to access the current HTTP context in services, JWT retrieval mainly for the CurrentUserService
 
 
 // Application Services
@@ -34,6 +35,7 @@ builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IPlayGroundMemberService, PlayGroundMemberService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 

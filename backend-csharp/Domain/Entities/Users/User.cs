@@ -15,6 +15,7 @@ namespace backend_csharp.Domain.Entities.Users
          MaxLength(40, ErrorMessage = "UserName must be at most 40 characters long.")]
         public string? Name { get; set; }
 
+
         [Required(ErrorMessage = "Age is required"),
          Range(12, 150, ErrorMessage = "Age must be between 12 and 150.")]
         public int Age { get; set; }
@@ -23,12 +24,19 @@ namespace backend_csharp.Domain.Entities.Users
         [Required(ErrorMessage = "CreatedAt is required")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+
+
         [Required(ErrorMessage = "UpdatedAt is required")]
         public DateTime LastUpdatedAt { get; set; }
 
+
         public string? RefreshToken { get; set; }
 
+
         public DateTime? RefreshTokenExpiryTime { get; set; }
+
+
+        public Person? Person { get; set; }
 
         public ICollection<Playground> Playgrounds { get; set; } = [];
 

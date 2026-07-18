@@ -13,7 +13,6 @@ public class PersonRepository : IPersonRepository
 
     public async Task<Person?> CreateAsync(Person person)
     {
-        if(person == null) throw new ArgumentNullException(nameof(person));
         _context.People.Add(person);
         await _context.SaveChangesAsync();
 
@@ -22,29 +21,22 @@ public class PersonRepository : IPersonRepository
 
     public async Task<Person?> GetByIdAsync(Guid id)
     {
-        if (id == Guid.Empty) throw new ArgumentException("Id cannot be empty", nameof(id));
         return await _context.People.FindAsync(id);
     }
 
-    public async Task<IEnumerable<Person?>> GetAllByPlaygroundAsync(Guid playgroundId)
+    public async Task<Person?> GetByUserIdAsync(Guid userId)
     {
-        //return await _context.People.Where(p => p.PlaygroundId == playgroundId).ToListAsync();
-        //
-
-        return await _context.People
-            .Include(p => p.PlaygroundMemberships)
-            .Where(p => p.PlaygroundMemberships.Any(pm => pm.PlaygroundId == playgroundId))
-            .ToListAsync();
+        return await _context.People.FirstOrDefaultAsync(p => p.UserId == userId);
     }
 
-    public async Task<Person?> UpdateAsync(Guid personId, Person person)
+    public async Task<Person?> UpdateAsync(Guid personId, string name, int age)
     {
         var existingPerson = await GetByIdAsync(personId);
         if (existingPerson == null) return null;
 
         // Update the properties of the existing person with the new values
-        existingPerson.Name = person.Name;
-        existingPerson.Age = person.Age;
+        existingPerson.Name = name;
+        existingPerson.Age = age;
 
         await _context.SaveChangesAsync();
         return existingPerson;
@@ -60,5 +52,17 @@ public class PersonRepository : IPersonRepository
         return person;
     }
 
+    public async Task<IEnumerable<Person?>> GetAllByPlaygroundAsync(Guid playgroundId)
+    {
+        return await _context.People
+            .Include(p => p.PlaygroundMemberships)
+            .Where(p => p.PlaygroundMemberships.Any(pm => pm.PlaygroundId == playgroundId))
+            .ToListAsync();
+    }
 
+ 
+    public Task<Person?> GetByPlaygroundAndUserAsync(Guid playgroundId, Guid userId)
+    {
+        throw new NotImplementedException();
+    }
 }

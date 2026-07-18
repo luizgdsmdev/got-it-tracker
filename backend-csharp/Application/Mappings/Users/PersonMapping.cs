@@ -1,61 +1,48 @@
 ﻿using backend_csharp.Application.DTOs.Requests.Users;
 using backend_csharp.Application.DTOs.Responses.Users;
 using backend_csharp.Domain.Entities.Users;
+using backend_csharp.Domain.Enums;
 using System.Collections;
 
 namespace backend_csharp.Application.Mappings.Users;
 
 public class PersonMapping
 {
-    public static Person ToPerson(CreatePersonRequest request)
+    // Used only for mapping a guest (non-user) to a Person entity
+    /**
+     * Maps a guest's name and age to a Person entity.
+     *
+     * @param name The name of the guest.
+     * @param age The age of the guest.
+     * @return A new Person entity with the provided name and age, and a null UserId.
+     */
+    public static Person ToGuestPerson(string name, int age)
     {
-        //Basic validation for now
-        if (request is null)
-            throw new ArgumentNullException(nameof(request), "Request cannot be null");
-        if (string.IsNullOrWhiteSpace(request.Name))
-            throw new ArgumentException("Name is required");
-        if (request.Age is <= 0 or > 150)
-            throw new ArgumentException("Age is required, must be between 1 and 150");
         return new Person
         {
-            Name = request.Name,
-            Age = request.Age
+            UserId = null,
+            Name = name,
+            Age = age
         };
     }
 
-    public static Person ToPerson(User request)
+    // Used only for mapping a registered User to a Person entity
+    /**
+     * Maps a registered User to a Person entity.
+     *
+     * @param request The User object containing the user's details.
+     * @return A new Person entity with the UserId, Name, and Age from the User object.
+     */
+    public static Person ToUserPerson(User user)
     {
-        //Basic validation for now
-        if (request is null)
-            throw new ArgumentNullException(nameof(request), "Request cannot be null");
-        if (string.IsNullOrWhiteSpace(request.UserName))
-            throw new ArgumentException("UserName is required");
-        if (request.Age is <= 0 or > 150)
-            throw new ArgumentException("Age is required, must be between 1 and 150");
         return new Person
         {
-            Name = request.UserName,
-            Age = request.Age
+            UserId = user.Id,
+            Name = user.Name!,
+            Age = user.Age
         };
     }
 
 
-    public static PersonResponse ToDtoResponse(Person person)
-    {
-        //Basic validation for now
-        if (person is null)
-            throw new ArgumentNullException(nameof(person), "Person cannot be null");
-        if (string.IsNullOrWhiteSpace(person.Name))
-            throw new ArgumentException("Name is required");
-        if (person.Age is <= 0 or > 150)
-            throw new ArgumentException("Age is required, must be between 1 and 150");
-
-        return new PersonResponse(person.Id, person.Name, person.Age);
-    }
-
-    public static IEnumerable<PersonResponse> ToDtoResponse(IEnumerable<Person> people)
-    {
-        return people.Select(ToDtoResponse);
-    }
 
 }

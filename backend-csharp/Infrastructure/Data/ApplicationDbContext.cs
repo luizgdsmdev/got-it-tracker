@@ -74,111 +74,35 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         modelBuilder.Entity<Playground>()
             .HasOne(p => p.User)
             .WithMany(u => u.Playgrounds)
-            .HasForeignKey(p => p.UserId)
+            .HasForeignKey(p => p.OwnerId)
             .OnDelete(DeleteBehavior.Cascade);
 
 
 
         // ============================================================
-        // PLAYGROUND -> PLAYGROUND MEMBERS
+        // USER -> PERSON
         //
-        // Um membro não existe sem um Playground.
+        // Um User possui uma única Person.
         //
-        // Ao excluir um Playground:
-        // - Todos os membros associados serão removidos.
+        // Uma Person pode existir sem um User
+        // (participante convidado).
         //
-        // ============================================================
-        modelBuilder.Entity<PlaygroundMember>()
-            .HasOne(pm => pm.Playground)
-            .WithMany(p => p.Members)
-            .HasForeignKey(pm => pm.PlaygroundId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-
-
-        // ============================================================
-        // PERSON -> PLAYGROUND MEMBERS
+        // Ao excluir um User:
+        // - O vínculo será removido.
+        // - A Person continuará existindo.
+        // - UserId será definido como NULL.
         //
-        // Uma participação de uma pessoa em um Playground
-        // deixa de existir quando a pessoa é removida.
+        // Exemplo:
         //
-        // Ao excluir uma Person:
-        // - Todos os vínculos dela com Playgrounds serão removidos.
+        // User
+        //   └── Person
         //
         // ============================================================
-        modelBuilder.Entity<PlaygroundMember>()
-            .HasOne(pm => pm.Person)
-            .WithMany(p => p.PlaygroundMemberships)
-            .HasForeignKey(pm => pm.PersonId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-
-
-        // ============================================================
-        // PLAYGROUND -> TRANSACTIONS
-        //
-        // Uma Transaction pertence a um Playground.
-        //
-        // Ao excluir um Playground:
-        // - Todas as Transactions relacionadas serão removidas.
-        //
-        // ============================================================
-        modelBuilder.Entity<Transaction>()
-            .HasOne(t => t.Playground)
-            .WithMany(p => p.Transactions)
-            .HasForeignKey(t => t.PlaygroundId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-
-
-        // ============================================================
-        // PERSON -> TRANSACTIONS
-        //
-        // Uma Transaction pertence a uma Person.
-        //
-        // Ao excluir uma Person:
-        // - Todas as Transactions relacionadas serão removidas.
-        //
-        // ============================================================
-        modelBuilder.Entity<Transaction>()
-            .HasOne(t => t.Person)
-            .WithMany(p => p.Transactions)
-            .HasForeignKey(t => t.PersonId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-
-
-        // ============================================================
-        // PLAYGROUND -> APPROVAL REQUESTS
-        //
-        // Uma ApprovalRequest pertence a um Playground.
-        //
-        // Ao excluir um Playground:
-        // - Todas as solicitações de aprovação serão removidas.
-        //
-        // ============================================================
-        modelBuilder.Entity<ApprovalRequest>()
-            .HasOne(ar => ar.Playground)
-            .WithMany(p => p.ApprovalRequests)
-            .HasForeignKey(ar => ar.PlaygroundId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-
-
-        // ============================================================
-        // PERSON -> APPROVAL REQUESTS
-        //
-        // Uma ApprovalRequest pertence a uma Person.
-        //
-        // Ao excluir uma Person:
-        // - Todas as solicitações criadas para essa pessoa serão removidas.
-        //
-        // ============================================================
-        modelBuilder.Entity<ApprovalRequest>()
-            .HasOne(ar => ar.Person)
-            .WithMany(p => p.ApprovalRequests)
-            .HasForeignKey(ar => ar.PersonId)
-            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Person>()
+            .HasOne(p => p.User)
+            .WithOne(u => u.Person)
+            .HasForeignKey<Person>(p => p.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
 
 
 
@@ -191,7 +115,7 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         // O User pode ter criado solicitações que precisam continuar
         // existindo como histórico.
         //
-        // Caso o usuário seja excluído:
+        // Caso o User seja excluído:
         // RequestedById será definido como NULL.
         //
         // ============================================================
@@ -220,5 +144,121 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
             .WithMany(u => u.ReviewedApprovals)
             .HasForeignKey(ar => ar.ReviewedById)
             .OnDelete(DeleteBehavior.SetNull);
+
+
+        // ============================================================
+        // PERSON -> PLAYGROUND MEMBERS
+        //
+        // Uma participação de uma Person em um Playground
+        // deixa de existir quando a Person é removida.
+        //
+        // Ao excluir uma Person:
+        // - Todos os vínculos dela com Playgrounds serão removidos.
+        //
+        // ============================================================
+        modelBuilder.Entity<PlaygroundMember>()
+            .HasOne(pm => pm.Person)
+            .WithMany(p => p.PlaygroundMemberships)
+            .HasForeignKey(pm => pm.PersonId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // ============================================================
+        // PERSON -> TRANSACTIONS
+        //
+        // Uma Transaction pertence a uma Person.
+        //
+        // Ao excluir uma Person:
+        // - Todas as Transactions relacionadas serão removidas.
+        //
+        // ============================================================
+        modelBuilder.Entity<Transaction>()
+            .HasOne(t => t.Person)
+            .WithMany(p => p.Transactions)
+            .HasForeignKey(t => t.PersonId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+        // ============================================================
+        // PERSON -> APPROVAL REQUESTS
+        //
+        // Uma ApprovalRequest pertence a uma Person.
+        //
+        // Ao excluir uma Person:
+        // - Todas as solicitações criadas para essa Person serão removidas.
+        //
+        // ============================================================
+        modelBuilder.Entity<ApprovalRequest>()
+            .HasOne(ar => ar.Person)
+            .WithMany(p => p.ApprovalRequests)
+            .HasForeignKey(ar => ar.PersonId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+
+        // ============================================================
+        // PLAYGROUND MEMBER
+        //
+        // Chave composta.
+        //
+        // Uma Person só pode participar uma única vez
+        // de um determinado Playground.
+        //
+        // ============================================================
+        modelBuilder.Entity<PlaygroundMember>()
+            .HasKey(pm => new
+            {
+                pm.PlaygroundId,
+                pm.PersonId
+            });
+
+
+
+        // ============================================================
+        // PLAYGROUND -> PLAYGROUND MEMBERS
+        //
+        // Um membro não existe sem um Playground.
+        //
+        // Ao excluir um Playground:
+        // - Todos os membros associados serão removidos.
+        //
+        // ============================================================
+        modelBuilder.Entity<PlaygroundMember>()
+            .HasOne(pm => pm.Playground)
+            .WithMany(p => p.Members)
+            .HasForeignKey(pm => pm.PlaygroundId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+        // ============================================================
+        // PLAYGROUND -> TRANSACTIONS
+        //
+        // Uma Transaction pertence a um Playground.
+        //
+        // Ao excluir um Playground:
+        // - Todas as Transactions relacionadas serão removidas.
+        //
+        // ============================================================
+        modelBuilder.Entity<Transaction>()
+            .HasOne(t => t.Playground)
+            .WithMany(p => p.Transactions)
+            .HasForeignKey(t => t.PlaygroundId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+        // ============================================================
+        // PLAYGROUND -> APPROVAL REQUESTS
+        //
+        // Uma ApprovalRequest pertence a um Playground.
+        //
+        // Ao excluir um Playground:
+        // - Todas as solicitações de aprovação serão removidas.
+        //
+        // ============================================================
+        modelBuilder.Entity<ApprovalRequest>()
+            .HasOne(ar => ar.Playground)
+            .WithMany(p => p.ApprovalRequests)
+            .HasForeignKey(ar => ar.PlaygroundId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
     }
 }

@@ -1,15 +1,8 @@
-﻿using AutoMapper;
-using backend_csharp.Application.DTOs.Requests.Users;
-using backend_csharp.Application.DTOs.Responses.Users;
-using backend_csharp.Application.Interfaces.Users;
+﻿using backend_csharp.Application.Interfaces.Users;
 using backend_csharp.Application.Mappings.Users;
-using backend_csharp.Domain.Entities.PlayGround;
 using backend_csharp.Domain.Entities.Users;
-using backend_csharp.Domain.Enums;
 using backend_csharp.Domain.Exceptions;
-using backend_csharp.Infrastructure.Data;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
-using backend_csharp.Infrastructure.Persistence.Repositories;
 
 namespace backend_csharp.Application.Services.Users;
 
@@ -23,17 +16,11 @@ public class PersonService : IPersonService
 {
 
     private readonly IPersonRepository _personRepository;
-    private readonly IPlaygroundRepository _playgroundRepository;
-    private readonly IMapper _mapper;
 
     public PersonService(
-        IMapper mapper,
-        IPersonRepository personRepository,
-        IPlaygroundRepository playgroundRepository)
+        IPersonRepository personRepository)
     {
-        _mapper = mapper;
         _personRepository = personRepository;
-        _playgroundRepository = playgroundRepository;
     }
 
 

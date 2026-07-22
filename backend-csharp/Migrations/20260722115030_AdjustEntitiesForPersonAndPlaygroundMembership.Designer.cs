@@ -11,7 +11,7 @@ using backend_csharp.Infrastructure.Data;
 namespace backend_csharp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260722005021_AdjustEntitiesForPersonAndPlaygroundMembership")]
+    [Migration("20260722115030_AdjustEntitiesForPersonAndPlaygroundMembership")]
     partial class AdjustEntitiesForPersonAndPlaygroundMembership
     {
         /// <inheritdoc />

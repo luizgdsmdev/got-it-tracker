@@ -1,8 +1,4 @@
-﻿using backend_csharp.Application.DTOs.Requests.Users;
-using backend_csharp.Application.DTOs.Responses.Users;
-using backend_csharp.Domain.Entities.Users;
-using backend_csharp.Domain.Enums;
-using System.Collections;
+﻿using backend_csharp.Domain.Entities.Users;
 
 namespace backend_csharp.Application.Mappings.Users;
 

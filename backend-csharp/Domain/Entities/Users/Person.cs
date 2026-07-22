@@ -1,8 +1,5 @@
 ﻿using backend_csharp.Domain.Entities.PlayGround;
 using backend_csharp.Domain.Entities.Transactions;
-using backend_csharp.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend_csharp.Domain.Entities.Users;
 

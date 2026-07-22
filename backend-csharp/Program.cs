@@ -1,4 +1,3 @@
-using AutoMapper;
 using backend_csharp.Application.Interfaces.Auth;
 using backend_csharp.Application.Interfaces.PlayGround;
 using backend_csharp.Application.Interfaces.Users;
@@ -44,6 +43,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPlaygroundRepository, PlaygroundRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPlaygroundMemberRepository, PlaygroundMemberRepository>();
+builder.Services.AddScoped<IPlaygroundAuthorizationService, PlaygroundAuthorizationService>();
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

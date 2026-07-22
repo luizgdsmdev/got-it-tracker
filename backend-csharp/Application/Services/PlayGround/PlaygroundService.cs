@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using backend_csharp.Application.DTOs.Requests.PlayGround;
+﻿using backend_csharp.Application.DTOs.Requests.PlayGround;
 using backend_csharp.Application.DTOs.Responses.PlayGround;
 using backend_csharp.Application.Interfaces.PlayGround;
 using backend_csharp.Application.Interfaces.Users;
 using backend_csharp.Application.Mappings.PlayGround;
-using backend_csharp.Application.Mappings.Users;
 using backend_csharp.Domain.Entities.PlayGround;
 using backend_csharp.Domain.Entities.Users;
 using backend_csharp.Domain.Enums;
@@ -22,15 +20,13 @@ public class PlaygroundService : IPlaygroundService
     private readonly IPersonRepository _personRepo;
     private readonly IPersonService _personService;
     private readonly IUserRepository _userRepo;
-    private readonly IMapper _mapper;
 
     public PlaygroundService(IPlaygroundRepository playgroundRepo,
                              IPlaygroundMemberRepository memberRepo,
                              ICurrentUserService currentUser,
                              IPersonRepository personRepo,
                              IPersonService personService,
-                             IUserRepository userRepo,
-                             IMapper mapper)
+                             IUserRepository userRepo)
     {
         _playgroundRepo = playgroundRepo;
         _currentUser = currentUser;
@@ -38,7 +34,6 @@ public class PlaygroundService : IPlaygroundService
         _personRepo = personRepo;
         _personService = personService;
         _userRepo = userRepo;
-        _mapper = mapper;
 
     }
 

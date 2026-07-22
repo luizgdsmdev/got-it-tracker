@@ -1,5 +1,4 @@
-﻿using backend_csharp.Domain.Entities;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace backend_csharp.Application.Interfaces.Auth;

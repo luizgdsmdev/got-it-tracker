@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using backend_csharp.Application.DTOs.Requests.Transactions;
+﻿using backend_csharp.Application.DTOs.Requests.Transactions;
 using backend_csharp.Application.DTOs.Responses.Transactions;
 using backend_csharp.Application.Interfaces.Transactions;
-using backend_csharp.Domain.Entities;
 using backend_csharp.Domain.Entities.Transactions;
 using backend_csharp.Domain.Enums;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
@@ -14,18 +12,15 @@ public class ApprovalRequestService : IApprovalRequestService
     private readonly IApprovalRequestRepository _requestRepo;
     private readonly ITransactionRepository _transactionRepo;
     private readonly IPlaygroundMemberRepository _memberRepo;
-    private readonly IMapper _mapper;
 
     public ApprovalRequestService(
         IApprovalRequestRepository requestRepo,
         ITransactionRepository transactionRepo,
-        IPlaygroundMemberRepository memberRepo,
-        IMapper mapper)
+        IPlaygroundMemberRepository memberRepo)
     {
         _requestRepo = requestRepo;
         _transactionRepo = transactionRepo;
         _memberRepo = memberRepo;
-        _mapper = mapper;
     }
 
     public async Task<ApprovalRequestResponse> CreateAsync(CreateApprovalRequest request, Guid currentUserId)
@@ -77,7 +72,8 @@ public class ApprovalRequestService : IApprovalRequestService
 
         await _transactionRepo.AddAsync(transaction);
 
-        return _mapper.Map<ApprovalRequestResponse>(request);
+        //return _mapper.Map<ApprovalRequestResponse>(request);
+        return null; // Placeholder return statement
     }
 
     public async Task<ApprovalRequestResponse> RejectAsync(Guid requestId, Guid adminUserId, string rejectionReason)
@@ -92,7 +88,8 @@ public class ApprovalRequestService : IApprovalRequestService
 
         await _requestRepo.UpdateAsync(request);
 
-        return _mapper.Map<ApprovalRequestResponse>(request);
+        //return _mapper.Map<ApprovalRequestResponse>(request);
+        return null; // Placeholder return statement
     }
 
     public Task<ApprovalRequestResponse> ApproveAsync(Guid requestId, Guid adminUserId, string? notes = null)

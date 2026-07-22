@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using backend_csharp.Application.DTOs.Requests.Transactions;
+﻿using backend_csharp.Application.DTOs.Requests.Transactions;
 using backend_csharp.Application.DTOs.Responses.Transactions;
 using backend_csharp.Application.Interfaces.Transactions;
-using backend_csharp.Domain.Entities;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
 
 namespace backend_csharp.Application.Services.Transactions;
@@ -11,7 +9,6 @@ public class TransactionService : ITransactionService
 {
     private readonly ITransactionRepository _transactionRepo;
     private readonly IPlaygroundMemberRepository _memberRepo;
-    private readonly IMapper _mapper;
 
     public async Task<TransactionResponse> CreateDirectAsync(CreateTransactionRequest request, Guid currentUserId)
     {

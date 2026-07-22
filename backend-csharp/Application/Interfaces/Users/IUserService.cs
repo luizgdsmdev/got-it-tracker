@@ -1,6 +1,5 @@
 ﻿using backend_csharp.Application.DTOs.Requests.Users;
 using backend_csharp.Application.DTOs.Responses.Users;
-using System.ComponentModel.DataAnnotations;
 
 namespace backend_csharp.Application.Interfaces.Users;
 

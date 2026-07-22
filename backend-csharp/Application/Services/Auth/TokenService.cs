@@ -42,6 +42,8 @@ public class TokenService : ITokenService
         return tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
     }
 
+
+
     /**
      * Generates a secure random refresh token.
      *
@@ -57,6 +59,8 @@ public class TokenService : ITokenService
         return Convert.ToBase64String(randomByte);
 
     }
+
+
 
     /**
      * Retrieves the ClaimsPrincipal from an expired JWT token.

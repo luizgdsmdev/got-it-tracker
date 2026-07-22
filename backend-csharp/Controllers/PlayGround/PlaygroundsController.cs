@@ -18,6 +18,7 @@ public class PlaygroundsController : ControllerBase
     }
 
 
+
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<PlaygroundResponse>> Create([FromBody] CreatePlaygroundRequest playgroundRequest)
@@ -27,6 +28,8 @@ public class PlaygroundsController : ControllerBase
         return Ok(result);
     }
 
+
+
     [Authorize]
     [HttpGet("{playGroundId:guid}")]
     public async Task<ActionResult<PlaygroundResponse>> GetById([FromRoute] Guid playGroundId)
@@ -34,6 +37,8 @@ public class PlaygroundsController : ControllerBase
         var result = await _playgroundService.GetByIdAsync(playGroundId);
         return Ok(result);
     }
+
+
 
     [Authorize]
     [HttpGet("user/{userId:guid}")]
@@ -43,6 +48,8 @@ public class PlaygroundsController : ControllerBase
         return Ok(result);
     }
 
+
+
     [Authorize]
     [HttpPatch("/toggle-approval/{playgroundId:guid}")]
     public async Task<ActionResult<PlaygroundResponse>> ToggleAskForApproval([FromRoute] Guid playgroundId)
@@ -51,6 +58,8 @@ public class PlaygroundsController : ControllerBase
         return Ok(result);
     }
 
+
+
     [Authorize]
     [HttpPut("{playgroundId:guid}")]
     public async Task<ActionResult<PlaygroundResponse>> Update([FromRoute] Guid playgroundId, [FromBody] CreatePlaygroundRequest request)
@@ -58,6 +67,8 @@ public class PlaygroundsController : ControllerBase
         var result = await _playgroundService.UpdateAsync(playgroundId, request);
         return Ok(result);
     }
+
+
 
     [Authorize]
     [HttpDelete("{playgroundId:guid}")]

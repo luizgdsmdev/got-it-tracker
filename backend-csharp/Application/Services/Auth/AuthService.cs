@@ -125,6 +125,14 @@ public class AuthService : IAuthService
 
         if(!userResult.Succeeded) throw new ValidationException(string.Join("Error when creating user: ", userResult.Errors.Select(e => e.Description)));
 
+
+        // Creates a new person for the user if it doesn't exist, this is important for the system to work properly
+        // Use the user info to create the person if it doesn't exist
+        var person = await _personService.CreateForUserAsync(newUser) ??
+                                       throw new PersistenceException("Failed to create person");
+
+
+
         // Only returns the new user, redirects to login (front-end) to get the access token and refresh token
         return UserMapping.ToDtoResponse(newUser);
     }
@@ -273,4 +281,20 @@ public class AuthService : IAuthService
             DateTime.UtcNow);
     }
 
+
+    /**
+     * This method retrieves a user by their email address.
+     * It checks if the user exists and returns the user entity.
+     *
+     * @param email The email address of the user to be retrieved.
+     * @return The User entity corresponding to the provided email address.
+     * @throws UnauthorizedException If the user is not found.
+     */
+    public async Task<User> FindByEmailAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email)
+                     ?? throw new UnauthorizedException("User not found");
+
+        return user;
+    }
 }

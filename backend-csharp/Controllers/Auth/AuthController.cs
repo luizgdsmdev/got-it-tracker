@@ -2,11 +2,8 @@
 using backend_csharp.Application.DTOs.Requests.Users;
 using backend_csharp.Application.DTOs.Responses.Auth;
 using backend_csharp.Application.Interfaces.Auth;
-using backend_csharp.Application.Services.Auth;
-using backend_csharp.Domain.Entities;
 using backend_csharp.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend_csharp.Controllers.Auth;
@@ -22,6 +19,8 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+
+
     [HttpPost]
     [Route("login")]
     public async Task<ActionResult<LoginResponse>> LoginAsync([FromBody] CreateLoginRequest request)
@@ -30,6 +29,8 @@ public class AuthController : ControllerBase
 
         return loginResponse == null ? throw new UnauthorizedException("Invalid credentials for login action") : Ok(loginResponse);
     }
+
+
 
     [HttpPost]
     [Route("register")]
@@ -41,6 +42,8 @@ public class AuthController : ControllerBase
 
     }
 
+
+
     [HttpPost]
     [Route("refresh-token")]
     public async Task<ActionResult<LoginResponse>> RefreshTokenAsync([FromBody] CreateAcessTokenRequest request)
@@ -48,6 +51,7 @@ public class AuthController : ControllerBase
         var refreshResponse = await _authService.RefreshTokenAsync(request);
         return refreshResponse == null ? throw new UnauthorizedException("Invalid credentials for refresh token action") : Ok(refreshResponse);
     }
+
 
 
     [Authorize]
@@ -58,6 +62,7 @@ public class AuthController : ControllerBase
         var result = await _authService.RevokeTokenAsync(userId);
         return (ActionResult)(result ?? throw new UnauthorizedException("Invalid credentials for revoke token action"));
     }
+
 
 
     [Authorize]

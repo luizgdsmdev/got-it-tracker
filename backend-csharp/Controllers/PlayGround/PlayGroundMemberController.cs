@@ -1,11 +1,7 @@
 ﻿using backend_csharp.Application.DTOs.Requests.PlayGround;
-using backend_csharp.Application.DTOs.Responses.PlayGround;
 using backend_csharp.Application.Interfaces.PlayGround;
-using backend_csharp.Application.Services.PlayGround;
-using backend_csharp.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace backend_csharp.Controllers.PlayGround;
 
@@ -31,11 +27,44 @@ public class PlayGroundMemberController : ControllerBase
     }
 
 
+
+    [Authorize]
     [HttpGet("{playgroundId:guid}/{memberId:guid}")]
     public async Task<IActionResult> GetById(Guid playgroundId, Guid memberId)
     {
         var member = await _playGroundMemberService.GetByIdAsync(playgroundId, memberId);
 
+        return Ok(member);
+    }
+
+
+
+    [Authorize]
+    [HttpPost("{playgroundId:guid}/invite")]
+    public async Task<IActionResult> Invite(Guid playgroundId, [FromBody] InviteUserRequest request)
+    {
+        var response = await _playGroundMemberService.InviteUserAsync(playgroundId, request);
+
+        return Ok(response);
+    }
+
+
+
+    [Authorize]
+    [HttpPut("{playgroundId:guid}/{memberId:guid}")]
+    public async Task<IActionResult> Update(Guid playgroundId, Guid memberId, [FromBody] UpdatePlaygroundMemberRequest request)
+    {
+        var member = await _playGroundMemberService.UpdateAsync(playgroundId, memberId, request);
+        return Ok(member);
+    }
+
+
+
+    [Authorize]
+    [HttpDelete("{playgroundId:guid}/{memberId:guid}")]
+    public async Task<IActionResult> Delete(Guid playgroundId, Guid memberId)
+    {
+        var member = await _playGroundMemberService.DeleteAsync(playgroundId, memberId);
         return Ok(member);
     }
 

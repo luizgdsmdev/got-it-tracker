@@ -192,6 +192,9 @@ namespace backend_csharp.Migrations
                     b.Property<DateTime>("JoinedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("PlaygroundId", "PersonId");
 
                     b.HasIndex("PersonId");

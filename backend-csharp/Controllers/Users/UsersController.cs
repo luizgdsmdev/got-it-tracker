@@ -20,7 +20,7 @@ public class UsersController : ControllerBase
 
     //Create user asynchronously
     [HttpPost]
-    public async Task<ActionResult<UserResponse>> Create([FromBody] CreateUserRequest request)
+    public async Task<ActionResult<UserResponse>> Create([FromBody] UpdateUserRequest request)
     {
         return await _userService.CreateAsync(request);
     }
@@ -41,7 +41,7 @@ public class UsersController : ControllerBase
 
 
     [HttpPut("{id:guid}", Name = "UpdateById")]
-    public async Task<ActionResult<UserResponse?>> UpdateById(Guid id, [FromBody] CreateUserRequest user)
+    public async Task<ActionResult<UserResponse?>> UpdateById(Guid id, [FromBody] UpdateUserRequest user)
     {
         var updatedUser = await _userService.UpdateByIdAsync(id, user);
         return updatedUser == null ? NotFound("User not fund") : Ok(updatedUser);

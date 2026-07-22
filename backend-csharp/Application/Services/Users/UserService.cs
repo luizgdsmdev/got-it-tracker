@@ -35,7 +35,7 @@ public class UserService : IUserService
      * @param request The CreateUserRequest containing user details.
      * @returns A UserResponse DTO representing the created user.
      */
-    public async Task<UserResponse> CreateAsync(CreateUserRequest request)
+    public async Task<UserResponse> CreateAsync(UpdateUserRequest request)
     {
 
         //TODO: Hash (BCrypt)
@@ -75,7 +75,7 @@ public class UserService : IUserService
         return UserMapping.ToDtoResponse(user);
     }
 
-    public async Task<UserResponse?> UpdateByIdAsync(Guid id, CreateUserRequest userRequest)
+    public async Task<UserResponse?> UpdateByIdAsync(Guid id, UpdateUserRequest userRequest)
     {
         if(userRequest == null) return null;
 

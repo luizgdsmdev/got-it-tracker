@@ -2,7 +2,7 @@
 
 namespace backend_csharp.Application.DTOs.Requests.Users;
 
-public record CreateUserRequest(
+public record UpdateUserRequest(
     [Required(ErrorMessage = "A name is required for person"),
      MinLength(1, ErrorMessage = "Name must be at least 1 characters long."),
      MaxLength(40, ErrorMessage = "Name must be at most 40 characters long.")]

@@ -12,17 +12,18 @@ public static class PlayGroundMapping
      * Maps a CreatePlaygroundRequest to a Playground entity.
      *
      * @param request The CreatePlaygroundRequest to be mapped.
+     * @param ownerId The ID of the owner of the playground.
      * @return A new Playground entity with properties set from the request.
      */
-    public static Playground ToPlayground(CreatePlaygroundRequest request)
+    public static Playground ToPlayground(CreatePlaygroundRequest request, Guid ownerId)
     {
         return new Playground
         {
-            OwnerId = request.OwnerId,
             Name = request.Name,
+            OwnerId = ownerId,
             Description = request.Description,
-            UserId = request.OwnerId,
-            AskForApproval = request.AskForApproval
+            AskForApproval = request.AskForApproval,
+            UserId = ownerId,
         };
     }
 

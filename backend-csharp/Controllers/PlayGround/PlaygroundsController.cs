@@ -44,7 +44,7 @@ public class PlaygroundsController : ControllerBase
     }
 
     [Authorize]
-    [HttpPatch("/toggle-approval{playgroundId:guid}")]
+    [HttpPatch("/toggle-approval/{playgroundId:guid}")]
     public async Task<ActionResult<PlaygroundResponse>> ToggleAskForApproval([FromRoute] Guid playgroundId)
     {
         var result = await _playgroundService.ToggleAskForApprovalAsync(playgroundId);

@@ -4,6 +4,9 @@ using backend_csharp.Application.DTOs.Responses.PlayGround;
 using backend_csharp.Application.Interfaces.PlayGround;
 using backend_csharp.Application.Mappings.PlayGround;
 using backend_csharp.Domain.Entities.PlayGround;
+using backend_csharp.Domain.Entities.Users;
+using backend_csharp.Domain.Enums;
+using backend_csharp.Domain.Exceptions;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
 
 namespace backend_csharp.Application.Services.PlayGround;
@@ -24,13 +27,28 @@ public class PlayGroundMemberService : IPlayGroundMemberService
         _mapper = mapper;
     }
 
-    public async Task<PlaygroundMemberResponse?> CreateAsync(Guid playgroundId, Guid currentUserId, CreatePlaygroundMemberRequest request)
+    // Creates a new playground member through controller request, used for guest members
+    public async Task<PlaygroundMemberResponse?> CreateAsync(Guid playgroundId, CreatePlaygroundMemberRequest request)
     {
        var newMember = await _playgroundMemberRepository
                             .CreateAsync(PlayGroundMemberMapping
                             .ToPlaygroundMember(request));
 
         return PlayGroundMemberMapping.ToPlaygroundMemberResponse(newMember);
+    }
+
+
+    // Used only internally through PlaygroundService, directly creates a owner member on playground creation
+    public async Task<PlaygroundMember> CreateOwnerMembershipAsync(Guid playgroundId, Guid personId, bool isAdmin, PlaygroundRole role)
+    {
+        var memberMap = PlayGroundMemberMapping
+                        .ToPlaygroundOwnerMember(playgroundId, personId, isAdmin, role);
+
+        var newMember = await _playgroundMemberRepository
+                             .CreateAsync(memberMap) ?? 
+                             throw new PersistenceException("Failed to create owner membership");
+
+        return newMember;
     }
 
     public async Task<PlaygroundMemberResponse?> GetByIdAsync(Guid playgroundId, Guid memberId, Guid currentUserId)
@@ -52,6 +70,11 @@ public class PlayGroundMemberService : IPlayGroundMemberService
     }
 
     public Task<IEnumerable<PlaygroundMemberResponse?>> UpdateAsync(Guid playgroundId, Guid memberId, IEnumerable<CreatePlaygroundMemberRequest> requests, Guid currentUserId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<PlaygroundMemberResponse?> CreateAsync(Guid playgroundId, Guid currentUserId, CreatePlaygroundMemberRequest request)
     {
         throw new NotImplementedException();
     }

@@ -2,9 +2,12 @@
 using backend_csharp.Application.DTOs.Requests.PlayGround;
 using backend_csharp.Application.DTOs.Responses.PlayGround;
 using backend_csharp.Application.Interfaces.PlayGround;
+using backend_csharp.Application.Interfaces.Users;
 using backend_csharp.Application.Mappings.PlayGround;
+using backend_csharp.Application.Mappings.Users;
 using backend_csharp.Domain.Entities.PlayGround;
 using backend_csharp.Domain.Entities.Users;
+using backend_csharp.Domain.Enums;
 using backend_csharp.Domain.Exceptions;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -14,20 +17,26 @@ namespace backend_csharp.Application.Services.PlayGround;
 public class PlaygroundService : IPlaygroundService
 {
     private readonly IPlaygroundRepository _playgroundRepo;
+    private readonly ICurrentUserService _currentUser;
     private readonly IPlaygroundMemberRepository _memberRepo;
     private readonly IPersonRepository _personRepo;
+    private readonly IPersonService _personService;
     private readonly IUserRepository _userRepo;
     private readonly IMapper _mapper;
 
     public PlaygroundService(IPlaygroundRepository playgroundRepo,
                              IPlaygroundMemberRepository memberRepo,
+                             ICurrentUserService currentUser,
                              IPersonRepository personRepo,
+                             IPersonService personService,
                              IUserRepository userRepo,
                              IMapper mapper)
     {
         _playgroundRepo = playgroundRepo;
+        _currentUser = currentUser;
         _memberRepo = memberRepo;
         _personRepo = personRepo;
+        _personService = personService;
         _userRepo = userRepo;
         _mapper = mapper;
 
@@ -46,13 +55,41 @@ public class PlaygroundService : IPlaygroundService
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        Playground playground = PlayGroundMapping.ToPlayground(request);
+        // Person creation logic
+        // Current user service to get the current user id (reover from the JWT token)
+        Guid currentUserId = _currentUser.UserId;
 
-        Playground newPlayground = await _playgroundRepo.AddAsync(playground) ??
+
+        // Create a new playground
+        Playground playgroundMap = PlayGroundMapping.ToPlayground(request, currentUserId);
+
+        Playground newPlayground = await _playgroundRepo.AddAsync(playgroundMap) ??
                                    throw new PersistenceException("Failed to create playground");
 
 
-        //TODO: Add the owner as a member of the playground with admin role
+        // Get the current user from the repository
+        User? currentUser = await _userRepo.GetByIdAsync(currentUserId) ??
+                            throw new NotFoundException("Current user not found");
+
+        // Use the user info to create the person if it doesn't exist
+        Person? person = await _personRepo.GetByUserIdAsync(currentUserId);
+        if (person == null)
+        {
+            // Create a new person
+            person = await _personService.CreateForUserAsync(currentUser) ??
+                                       throw new PersistenceException("Failed to create person");
+        }
+
+        // Add the person created or retrieved to the playground members
+        var membership = await _memberRepo.CreateAsync(
+                         PlayGroundMemberMapping
+                         .ToPlaygroundOwnerMember(
+                             newPlayground.Id, 
+                             person.Id, 
+                             true, // isAdmin
+                             PlaygroundRole.Owner)) ??
+                             throw new PersistenceException("Failed to add owner as a member of the playground");
+
 
         return PlayGroundMapping.ToDtoResponse(newPlayground);
     }
@@ -130,8 +167,13 @@ public class PlaygroundService : IPlaygroundService
         if (playgroundId == Guid.Empty) throw new ArgumentException("Invalid playground ID");
         ArgumentNullException.ThrowIfNull(request);
 
+        // Person creation logic
+        // Current user service to get the current user id (reover from the JWT token)
+        Guid currentUserId = _currentUser.UserId;
+
+
         // Calls the update function, sends the playGround after mapping
-        Playground requestPlayground = PlayGroundMapping.ToPlayground(request);
+        Playground requestPlayground = PlayGroundMapping.ToPlayground(request, currentUserId);
         Playground playGround = await _playgroundRepo.UpdateAsync(
                                  playgroundId,
                                  requestPlayground) ??

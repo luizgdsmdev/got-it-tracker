@@ -10,7 +10,9 @@ public interface IAuthService
 {
     public Task<ActionResult<LoginResponse>> LoginAsync(CreateLoginRequest request);
 
-    public Task<ActionResult<UserResponse>> RegisterAsync(CreateUserRequest request);
+    public Task<ActionResult<UserResponse>> RegisterAsync(UpdateUserRequest request);
+
+    public Task<ActionResult<LoginResponse>> UpdateUserAsync(UpdateUserRequest request);
 
     public Task<ActionResult<LoginResponse>> RefreshTokenAsync(CreateAcessTokenRequest request);
 

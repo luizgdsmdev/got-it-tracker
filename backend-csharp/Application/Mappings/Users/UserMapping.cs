@@ -7,7 +7,7 @@ namespace backend_csharp.Application.Mappings.Users;
 
 public class UserMapping
 {
-    public static User ToUser(CreateUserRequest request)
+    public static User ToUser(UpdateUserRequest request)
     {
 
         return new User

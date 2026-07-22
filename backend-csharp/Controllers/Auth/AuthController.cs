@@ -33,7 +33,7 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("register")]
-    public async Task<ActionResult<LoginResponse>> RegisterAsync([FromBody] CreateUserRequest request)
+    public async Task<ActionResult<LoginResponse>> RegisterAsync([FromBody] UpdateUserRequest request)
     {
         var registerResponse = await _authService.RegisterAsync(request);
 
@@ -57,6 +57,16 @@ public class AuthController : ControllerBase
     {
         var result = await _authService.RevokeTokenAsync(userId);
         return (ActionResult)(result ?? throw new UnauthorizedException("Invalid credentials for revoke token action"));
+    }
+
+
+    [Authorize]
+    [HttpPost]
+    [Route("update-user")]
+    public async Task<ActionResult<LoginResponse>> UpdateUserAsync([FromBody] UpdateUserRequest request)
+    {
+        var updateResponse = await _authService.UpdateUserAsync(request);
+        return updateResponse == null ? throw new UnauthorizedException("Invalid credentials for update user action") : Ok(updateResponse);
     }
 
 

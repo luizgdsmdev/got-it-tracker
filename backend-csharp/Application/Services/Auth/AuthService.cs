@@ -3,6 +3,7 @@ using backend_csharp.Application.DTOs.Requests.Users;
 using backend_csharp.Application.DTOs.Responses.Auth;
 using backend_csharp.Application.DTOs.Responses.Users;
 using backend_csharp.Application.Interfaces.Auth;
+using backend_csharp.Application.Interfaces.Users;
 using backend_csharp.Application.Mappings.Users;
 using backend_csharp.Domain.Entities.Users;
 using backend_csharp.Domain.Exceptions;
@@ -18,14 +19,21 @@ public class AuthService : IAuthService
     private readonly UserManager<User> _userManager;
     private readonly ITokenService _tokenService;
     private readonly IConfiguration _configuration;
+    private readonly ICurrentUserService _currentUser;
+    private readonly IPersonService _personService;
+
     public AuthService(
         UserManager<User> userManager, 
         ITokenService tokenService,
+        ICurrentUserService currentUser,
+        IPersonService personService,
         IConfiguration configuration)
     {
         _userManager = userManager;
         _tokenService = tokenService;
         _configuration = configuration;
+        _currentUser = currentUser;
+        _personService = personService;
     }
 
     /**
@@ -98,7 +106,7 @@ public class AuthService : IAuthService
      * @throws ValidationException If the request body is null or if there are errors during user creation.
      * @throws ConflictException If the email is already in use.
      */
-    public async Task<ActionResult<UserResponse>> RegisterAsync(CreateUserRequest request)
+    public async Task<ActionResult<UserResponse>> RegisterAsync(UpdateUserRequest request)
     {
 
         if (request == null) throw new ValidationException("Request body cannot be null");
@@ -203,4 +211,66 @@ public class AuthService : IAuthService
 
         return new OkObjectResult(new { message = "Refresh token revoked successfully." });
     }
+
+    /**
+     * This method handles the process of updating a user's information.
+     * It validates the provided user ID and update request, then updates the user's information in the database.
+     *
+     * @param userId The ID of the user to be updated.
+     * @param request The update request containing the new user information.
+     * @return A LoginResponse with the updated user information.
+     * @throws UnauthorizedException If the user is not found.
+     * @throws ValidationException If the update request is null or invalid.
+     */
+    public async Task<ActionResult<LoginResponse>> UpdateUserAsync(UpdateUserRequest request)
+    {
+        if (request == null) throw new ValidationException("Request body cannot be null");
+
+
+        // Current user service to get the current user id (reover from the JWT token)
+        Guid currentUserId = _currentUser.UserId;
+
+        // Check for user existence
+        User user = await _userManager.FindByIdAsync(currentUserId.ToString())
+                    ?? throw new UnauthorizedException("User not found");
+
+
+        // Update the user's properties based on the request
+        user.UserName = request.Name ?? user.UserName;
+        user.Name = request.Name ?? user.Name;
+        user.Email = request.Email ?? user.Email;
+        user.Age = request.Age != 0 ? request.Age : user.Age;
+        user.LastUpdatedAt = DateTime.UtcNow;
+        user.PasswordHash = request.Password != null ? _userManager.PasswordHasher.HashPassword(user, request.Password) : user.PasswordHash;
+
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
+        {
+            throw new ValidationException(string.Join("Error when updating user: ", updateResult.Errors.Select(e => e.Description)));
+        }
+
+        //---------------------------------------------------
+        // Update the Person entity in the DB
+        var personFromService = await _personService.GetByUserIdAsync(currentUserId);
+
+        // If the person does not exist, create a new one
+        if (personFromService == null)
+        {
+            await _personService.CreateForUserAsync(user);
+        }
+        else
+        {
+            // If the person exists, update its properties
+            await _personService.UpdateAsync(personFromService.Id, user.UserName!, user.Age);
+        }
+        
+
+        // Return the updated user information
+        return UserMapping.ToLoginResponse(
+            user,
+            null,
+            null,
+            DateTime.UtcNow);
+    }
+
 }

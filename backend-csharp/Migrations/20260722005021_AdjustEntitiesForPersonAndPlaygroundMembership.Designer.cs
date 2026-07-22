@@ -11,7 +11,7 @@ using backend_csharp.Infrastructure.Data;
 namespace backend_csharp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260716181108_AdjustEntitiesForPersonAndPlaygroundMembership")]
+    [Migration("20260722005021_AdjustEntitiesForPersonAndPlaygroundMembership")]
     partial class AdjustEntitiesForPersonAndPlaygroundMembership
     {
         /// <inheritdoc />
@@ -194,6 +194,9 @@ namespace backend_csharp.Migrations
 
                     b.Property<DateTime>("JoinedAt")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("PlaygroundId", "PersonId");
 

@@ -2,13 +2,13 @@
 
 public interface IPlaygroundAuthorizationService
 {
-    Task EnsureCanViewPlayground(Guid playgroundId, Guid userId);
+    Task EnsureCanViewPlaygroundAsync(Guid playgroundId, Guid userId);
 
-    Task EnsureCanCreateTransaction(Guid playgroundId, Guid userId);
+    Task EnsureCanCreateTransactionAsync(Guid playgroundId, Guid userId);
 
-    Task EnsureCanApproveTransaction(Guid playgroundId, Guid userId);
+    Task EnsureCanApproveTransactionAsync(Guid playgroundId, Guid userId);
 
-    Task EnsureCanInviteUsers(Guid playgroundId, Guid userId);
+    Task EnsureCanInviteUsersAsync(Guid playgroundId, Guid userId);
 
-    Task EnsureCanManagePlayground(Guid playgroundId, Guid userId);
+    Task EnsureCanManagePlaygroundAsync(Guid playgroundId, Guid userId);
 }

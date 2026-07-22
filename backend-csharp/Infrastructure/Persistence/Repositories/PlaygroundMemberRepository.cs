@@ -1,4 +1,5 @@
 ﻿using backend_csharp.Domain.Entities.PlayGround;
+using backend_csharp.Domain.Exceptions;
 using backend_csharp.Infrastructure.Data;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -23,20 +24,48 @@ public class PlaygroundMemberRepository : IPlaygroundMemberRepository
     public Task<PlaygroundMember?> GetByIdAsync(Guid playgroundId, Guid id)
     {
         return _context.PlaygroundMembers
+            .AsNoTracking()
             .FirstOrDefaultAsync(m => m.PlaygroundId == playgroundId && m.PersonId == id);
     }
-    public Task<IEnumerable<PlaygroundMember?>> GetAllByPlaygroundAsync(Guid playgroundId)
+    
+    
+    public async Task<IEnumerable<PlaygroundMember>> GetAllByPlaygroundAsync(Guid playgroundId)
     {
-        throw new NotImplementedException();
+        return await _context.PlaygroundMembers
+            .Where(pm => pm.PlaygroundId == playgroundId)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
-    public Task<IEnumerable<PlaygroundMember?>> DeleteAsync(Guid playgroundId, IEnumerable<Guid> ids)
+    public async Task<PlaygroundMember> DeleteAsync(Guid playgroundId, Guid memberId)
     {
-        throw new NotImplementedException();
+        PlaygroundMember member = await GetByIdAsync(playgroundId, memberId) ??
+                           throw new NotFoundException("Member not found");
+
+        _context.PlaygroundMembers.Remove(member);
+
+        await _context.SaveChangesAsync();
+
+        return member;
     }
 
-    public Task<IEnumerable<PlaygroundMember?>> UpdateAsync(IEnumerable<PlaygroundMember> members)
+    public async Task<PlaygroundMember> UpdateAsync(PlaygroundMember members)
     {
-        throw new NotImplementedException();
+        _context.PlaygroundMembers.UpdateRange(members);
+
+        await _context.SaveChangesAsync();
+
+        return members;
+    }
+
+    public async Task<PlaygroundMember?> GetMembershipForAuthorizationAsync(Guid playgroundId, Guid userId)
+    {
+        return await _context.PlaygroundMembers
+            .AsNoTracking()
+            .Include(pm => pm.Playground)
+            .Include(pm => pm.Person)
+            .FirstOrDefaultAsync(pm =>
+                pm.PlaygroundId == playgroundId &&
+                pm.Person.UserId == userId);
     }
 }

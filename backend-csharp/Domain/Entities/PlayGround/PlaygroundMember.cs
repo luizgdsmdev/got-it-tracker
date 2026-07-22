@@ -9,7 +9,7 @@ public class PlaygroundMember
 {
     public Guid PlaygroundId { get; set; }
 
-    public Guid PersonId { get; set; }
+    public Guid? PersonId { get; set; }
 
     public bool IsAdmin { get; set; }
 
@@ -21,5 +21,5 @@ public class PlaygroundMember
 
     public Playground Playground { get; set; } = null!;
 
-    public Person Person { get; set; } = null!;
+    public Person? Person { get; set; } = null!;
 }

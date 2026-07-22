@@ -1,16 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using backend_csharp.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend_csharp.Application.DTOs.Requests.PlayGround;
 
 public record CreatePlaygroundMemberRequest(
-    [Required(ErrorMessage = "PlaygroundId is required")]
-    Guid PlayGroundId,
-
-    [Required(ErrorMessage = "CurrentUserId is required")]
-    Guid CurrentUserId,
+    [Required(ErrorMessage = "Name is required")]
+    string Name,
 
 
-
-    [Required(ErrorMessage = "IsAdmin is required")]
-    bool IsAdmin);
+    [Required(ErrorMessage = "Age is required")]
+    int Age
+);

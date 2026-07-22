@@ -10,14 +10,16 @@ namespace backend_csharp.Application.Mappings.PlayGround;
 public class PlayGroundMemberMapping
 {
 
-    public static PlaygroundMember ToPlaygroundMember(CreatePlaygroundMemberRequest request)
+    public static PlaygroundMember ToPlaygroundMember(Guid playgroundId, Guid personId, bool IsAdmin, PlaygroundRole role)
     {
         //Validations were made in the controller, so we can assume that the request is valid here.
         return new PlaygroundMember
         {
-            //PlaygroundId = request.playGroundId,
-            //PersonId = request.currentUserId,
-            //IsAdmin = request.isAdmin
+            PlaygroundId = playgroundId,
+            PersonId = personId,
+            IsAdmin = IsAdmin,
+            JoinedAt = DateTime.UtcNow,
+            Role = role
         };
     }
 
@@ -29,32 +31,20 @@ public class PlayGroundMemberMapping
             PlaygroundId = playgroundId,
             PersonId = personId,
             IsAdmin = isAdmin,
+            JoinedAt = DateTime.UtcNow,
             Role = role
         };
     }
 
-    public static PlaygroundMember ToPlaygroundMember(User user, Guid playgroundId)
-    {
-        //Validations were made in the controller, so we can assume that the request is valid here.
-        return new PlaygroundMember
-        {
-            PlaygroundId = playgroundId,
-            PersonId = user.Id,
-            IsAdmin = true
-        };
-    }
-
-    public static IEnumerable<PlaygroundMember> ToPlaygroundMembers(IEnumerable<CreatePlaygroundMemberRequest> requests)
-    {
-        //Validations were made in the controller, so we can assume that the request is valid here.
-        return requests.Select(ToPlaygroundMember);
-    }
-
-
     public static PlaygroundMemberResponse ToPlaygroundMemberResponse(PlaygroundMember member)
     {
         // PlaygroundMemberResponse is a positional record; use its primary constructor
-        return new PlaygroundMemberResponse(member.PersonId, member.PlaygroundId, member.PersonId, member.IsAdmin);
+        return new PlaygroundMemberResponse(
+            member.PlaygroundId, 
+            member.PersonId, 
+            member.IsAdmin, 
+            member.JoinedAt, 
+            member.Role);
     }
 
 

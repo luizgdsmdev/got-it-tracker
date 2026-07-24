@@ -13,18 +13,19 @@ public class Transaction
 
     public Guid PersonId { get; set; }
 
-    public string? Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     public decimal Amount { get; set; }
 
     public TransactionType Type { get; set; }
 
-    public DateTime? Date { get; set; }
+    public bool IsPublic { get; set; } = true;
 
-    public DateTime? CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
+
+    public ApprovalStatus ApprovalStatus { get; set; }
 
     public Playground Playground { get; set; } = null!;
 
-    [Required(ErrorMessage = "Person is required")]
     public Person Person { get; set; } = null!;
 }

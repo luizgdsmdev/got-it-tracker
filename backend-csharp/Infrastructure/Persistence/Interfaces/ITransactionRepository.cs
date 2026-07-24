@@ -4,8 +4,10 @@ namespace backend_csharp.Infrastructure.Persistence.Interfaces;
 
 public interface ITransactionRepository
 {
-    Task<Transaction?> GetByIdAsync(Guid id);
+    Task<Transaction?> CreateAsync(Transaction transaction);
+    Task<Transaction?> UpdateAsync(Transaction transaction);
+    Task<Transaction?> GetByIdAsync(Guid playgroundId, Guid transactionId);
     Task<IEnumerable<Transaction>> GetByPlaygroundIdAsync(Guid playgroundId);
     Task<IEnumerable<Transaction>> GetByPersonIdAsync(Guid personId);
-    Task AddAsync(Transaction transaction);
+    Task<Transaction> DeleteByIdAsync(Guid playgroundId, Guid transactionId);
 }

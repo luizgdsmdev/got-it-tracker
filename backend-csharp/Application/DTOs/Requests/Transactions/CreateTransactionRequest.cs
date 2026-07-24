@@ -7,6 +7,10 @@ public record CreateTransactionRequest(
     [Required(ErrorMessage = "PlaygroundId is required")]
     Guid PlaygroundId,
 
+
+    [Required(ErrorMessage = "PersonId is required")]
+    Guid PersonId,
+
     [Required(ErrorMessage = "Description is required"),
      MaxLength(900, ErrorMessage = "Description must be at most 900 characters long.")]
     string Description,
@@ -21,6 +25,6 @@ public record CreateTransactionRequest(
     TransactionType Type,
 
 
-    [Required(ErrorMessage = "Date is required")]
-    DateTime? Date
+    [Required(ErrorMessage = "IsPublic is required")]
+    bool IsPublic
 );

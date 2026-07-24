@@ -25,10 +25,9 @@ public class ApprovalRequest
 
     public bool IsPublic { get; set; } = true;        // Visibility for non-admins
 
-    [Required(ErrorMessage = "Status is required")]
     public ApprovalStatus Status { get; set; } = ApprovalStatus.Pending;
 
-    public string? RejectionReason { get; set; }
+    public string? ReasonDescription { get; set; }
 
     public DateTime? RequestedAt { get; set; }
 

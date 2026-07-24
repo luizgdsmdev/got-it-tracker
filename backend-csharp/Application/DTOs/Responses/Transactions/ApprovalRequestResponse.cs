@@ -1,4 +1,5 @@
-﻿using backend_csharp.Domain.Enums;
+﻿using backend_csharp.Domain.Entities.Users;
+using backend_csharp.Domain.Enums;
 
 namespace backend_csharp.Application.DTOs.Responses.Transactions;
 
@@ -11,5 +12,8 @@ public record ApprovalRequestResponse(
     ApprovalStatus Status,
     bool IsPublic,
     DateTime RequestedAt,
-    string? RejectionReason
+    DateTime ReviewedAt,
+    User RequestedBy,
+    User ReviewedBy,
+    string? ReasonDescription
 );

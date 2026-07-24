@@ -11,8 +11,8 @@ using backend_csharp.Infrastructure.Data;
 namespace backend_csharp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260722115030_AdjustEntitiesForPersonAndPlaygroundMembership")]
-    partial class AdjustEntitiesForPersonAndPlaygroundMembership
+    [Migration("20260723065958_AdjustEntitiesForTransactions")]
+    partial class AdjustEntitiesForTransactions
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -160,12 +160,10 @@ namespace backend_csharp.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(400)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("OwnerId")
@@ -215,8 +213,6 @@ namespace backend_csharp.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(400)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsPublic")
@@ -228,21 +224,19 @@ namespace backend_csharp.Migrations
                     b.Property<Guid>("PlaygroundId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("RejectionReason")
-                        .IsRequired()
-                        .HasMaxLength(400)
+                    b.Property<string>("ReasonDescription")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("RequestedAt")
+                    b.Property<DateTime?>("RequestedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("RequestedById")
+                    b.Property<Guid?>("RequestedById")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("ReviewedAt")
+                    b.Property<DateTime?>("ReviewedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ReviewedById")
+                    b.Property<Guid?>("ReviewedById")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -273,16 +267,18 @@ namespace backend_csharp.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("ApprovalStatus")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(400)
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("PersonId")
                         .HasColumnType("TEXT");
@@ -362,8 +358,6 @@ namespace backend_csharp.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(40)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedEmail")
@@ -509,14 +503,12 @@ namespace backend_csharp.Migrations
                     b.HasOne("backend_csharp.Domain.Entities.Users.User", "RequestedBy")
                         .WithMany("RequestedApprovals")
                         .HasForeignKey("RequestedById")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("backend_csharp.Domain.Entities.Users.User", "ReviewedBy")
                         .WithMany("ReviewedApprovals")
                         .HasForeignKey("ReviewedById")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Person");
 

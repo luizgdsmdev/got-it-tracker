@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace backend_csharp.Migrations
 {
     /// <inheritdoc />
-    public partial class AdjustEntitiesForPersonAndPlaygroundMembership : Migration
+    public partial class AdjustEntitiesForTransactions : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,7 +30,7 @@ namespace backend_csharp.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 40, nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
                     Age = table.Column<int>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -187,9 +187,9 @@ namespace backend_csharp.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     OwnerId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 400, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
                     AskForApproval = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false)
@@ -212,16 +212,16 @@ namespace backend_csharp.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     PlaygroundId = table.Column<Guid>(type: "TEXT", nullable: false),
                     PersonId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    RequestedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ReviewedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 400, nullable: false),
+                    RequestedById = table.Column<Guid>(type: "TEXT", nullable: true),
+                    ReviewedById = table.Column<Guid>(type: "TEXT", nullable: true),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
                     Amount = table.Column<decimal>(type: "TEXT", nullable: false),
                     Type = table.Column<int>(type: "INTEGER", nullable: false),
                     IsPublic = table.Column<bool>(type: "INTEGER", nullable: false),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    RejectionReason = table.Column<string>(type: "TEXT", maxLength: 400, nullable: false),
-                    RequestedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    ReviewedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    ReasonDescription = table.Column<string>(type: "TEXT", nullable: true),
+                    RequestedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    ReviewedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -286,11 +286,12 @@ namespace backend_csharp.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     PlaygroundId = table.Column<Guid>(type: "TEXT", nullable: false),
                     PersonId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 400, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
                     Amount = table.Column<decimal>(type: "TEXT", nullable: false),
                     Type = table.Column<int>(type: "INTEGER", nullable: false),
-                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    IsPublic = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ApprovalStatus = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

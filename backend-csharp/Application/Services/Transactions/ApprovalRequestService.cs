@@ -1,109 +1,236 @@
-﻿using backend_csharp.Application.DTOs.Requests.Transactions;
-using backend_csharp.Application.DTOs.Responses.Transactions;
+﻿using backend_csharp.Application.DTOs.Responses.Transactions;
+using backend_csharp.Application.Interfaces.Auth;
 using backend_csharp.Application.Interfaces.Transactions;
+using backend_csharp.Application.Interfaces.Users;
+using backend_csharp.Application.Mappings.Transactions;
 using backend_csharp.Domain.Entities.Transactions;
 using backend_csharp.Domain.Enums;
+using backend_csharp.Domain.Exceptions;
+using backend_csharp.Infrastructure.Data;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend_csharp.Application.Services.Transactions;
 
 public class ApprovalRequestService : IApprovalRequestService
 {
-    private readonly IApprovalRequestRepository _requestRepo;
+    private readonly IApprovalRequestRepository _approvalRepository;
     private readonly ITransactionRepository _transactionRepo;
-    private readonly IPlaygroundMemberRepository _memberRepo;
+    private readonly IPlaygroundAuthorizationService _authorizationService;
+    private readonly ICurrentUserService _currentUser;
+    private readonly ApplicationDbContext _context;
 
     public ApprovalRequestService(
-        IApprovalRequestRepository requestRepo,
+        IApprovalRequestRepository approvalRepository,
         ITransactionRepository transactionRepo,
-        IPlaygroundMemberRepository memberRepo)
+        IPlaygroundAuthorizationService authorizationService,
+        ICurrentUserService currentUser,
+        ApplicationDbContext context)
     {
-        _requestRepo = requestRepo;
+        _authorizationService = authorizationService;
+        _approvalRepository = approvalRepository;
         _transactionRepo = transactionRepo;
-        _memberRepo = memberRepo;
+        _currentUser = currentUser;
+        _context = context;
     }
 
-    public async Task<ApprovalRequestResponse> CreateAsync(CreateApprovalRequest request, Guid currentUserId)
+
+    /**
+     * Creates an approval request for a transaction if it is needed.
+     * 
+     * @param transaction The transaction for which the approval request is to be created.
+     * @returns The created approval request response.
+     * @throws InvalidOperationException If the transaction is not pending approval.
+     * @throws PersistenceException If the creation of the approval request fails.
+     */
+    public async Task<ApprovalRequestResponse?> CreateIfNeededAsync(Transaction transaction)
     {
-        // Validates if if the user is a valid playground member
-        //var isMember = await _memberRepo.GetByPlaygroundAndPersonAsync(request.PlaygroundId, request.PersonId);
-        //if (isMember == null)
-        //    throw new UnauthorizedAccessException("You are not a member of this playground.");
 
-        //var approval = new ApprovalRequest
-        //{
-        //    PlaygroundId = request.PlaygroundId,
-        //    PersonId = request.PersonId,
-        //    RequestedById = currentUserId,
-        //    Description = request.Description,
-        //    Amount = request.Amount,
-        //    Type = request.Type,
-        //    IsPublic = request.IsPublic
-        //};
+        // Since this is a transaction that requires approval, it can only be at pending status.
+        // If it's not pending, we should not create an approval request.
+        if (transaction.ApprovalStatus != ApprovalStatus.Pending) return null;
 
-        //await _requestRepo.AddAsync(approval);
-        //return _mapper.Map<ApprovalRequestResponse>(approval);
+        // Mapping and creation/persistence of the approval
+        ApprovalRequest request = ApprovalRequestMapping.ToEntity(transaction);
 
-        return null; // Placeholder return statement
+        ApprovalRequest createdRequest = await _approvalRepository.CreateAsync(request) ??
+                                         throw new PersistenceException("Failed to create approval request.");
+
+
+        return ApprovalRequestMapping.ToResponse(createdRequest);
     }
 
-    public async Task<ApprovalRequestResponse> ApproveAsync(Guid requestId, Guid adminUserId)
+
+    /**
+     * Retrieves an approval request by its ID.
+     * 
+     * @param id The ID of the approval request to retrieve.
+     * @returns The approval request response.
+     * @throws NotFoundException If the approval request is not found.
+     * @throws UnauthorizedAccessException If the current user does not have permission to view the approval request.
+     */
+    public async Task<ApprovalRequestResponse> GetByIdAsync(Guid id)
     {
-        var request = await _requestRepo.GetByIdAsync(requestId);
-        //if (request == null) throw new NotFoundException("Request not found.");
+        // Only users with the appropriate permissions can approve transactions.
+        // This is checked in the authorization service that checks the user's permissions.
+        Guid currentUserId = _currentUser.UserId;
 
-        // TODO: Verify if user is playground admin
-        request.Status = ApprovalStatus.Approved;
-        request.ReviewedById = adminUserId;
-        request.ReviewedAt = DateTime.UtcNow;
+        // Check for existence
+        var request = await _approvalRepository.GetByIdAsync(id) ?? 
+                      throw new NotFoundException("Approval request not found.");
 
-        await _requestRepo.UpdateAsync(request);
+        // Check for permissions
+        await _authorizationService.EnsureCanViewPlaygroundAsync(request.PlaygroundId, currentUserId);
 
-        // Create Transaction automatically
-        var transaction = new Transaction
+
+        return ApprovalRequestMapping.ToResponse(request);
+    }
+
+
+
+    /**
+     * Approves an approval request and updates the associated transaction's status to approved.
+     * 
+     * @param approvalRequestId The ID of the approval request to approve.
+     * @returns The updated approval request response.
+     * @throws NotFoundException If the approval request or associated transaction is not found.
+     * @throws UnauthorizedAccessException If the current user does not have permission to approve the transaction.
+     */
+    public async Task<ApprovalRequestResponse> ApproveAsync(Guid approvalRequestId)
+    {
+        // Only users with the appropriate permissions can approve transactions.
+        // This is checked in the authorization service that checks the user's permissions.
+        Guid currentUserId = _currentUser.UserId;
+
+
+        // CHekc for existence
+        ApprovalRequest request = await _approvalRepository.GetByIdAsync(approvalRequestId) ?? 
+                                  throw new NotFoundException("Approval request not found.");
+
+        if (request.Status == ApprovalStatus.Approved)
         {
-            PlaygroundId = request.PlaygroundId,
-            PersonId = request.PersonId,
-            Description = request.Description,
-            Amount = request.Amount,
-            Type = request.Type,
-            Date = DateTime.UtcNow
-        };
+            throw new InvalidOperationException("This approval request has already been approved.");
+        }
 
-        await _transactionRepo.AddAsync(transaction);
+        // Check for permissions
+        await _authorizationService.EnsureCanApproveTransactionAsync(request.PlaygroundId, currentUserId);
 
-        //return _mapper.Map<ApprovalRequestResponse>(request);
-        return null; // Placeholder return statement
-    }
+        // Recover the transaction associated with the approval request
+        // Will be used to update the transaction status to approved after the approval request is approved.
+        Transaction transaction = await _transactionRepo.GetByIdAsync(request.PlaygroundId, request.Id) ?? 
+                                  throw new NotFoundException("Transaction not found.");
 
-    public async Task<ApprovalRequestResponse> RejectAsync(Guid requestId, Guid adminUserId, string rejectionReason)
-    {
-        var request = await _requestRepo.GetByIdAsync(requestId);
-        //if (request == null) throw new NotFoundException("Request not found.");
 
-        request.Status = ApprovalStatus.Rejected;
-        request.RejectionReason = rejectionReason;
-        request.ReviewedById = adminUserId;
+        // Begin a database transaction to ensure atomicity of the approval process
+        // Avoids potential issues where the approval request is approved but the transaction is not updated, or vice versa.
+        await using var dbTransaction = await _context.Database.BeginTransactionAsync();
+
+        // Update the approval request to approved
+        request.Status = ApprovalStatus.Approved;
+        request.ReviewedById = currentUserId;
         request.ReviewedAt = DateTime.UtcNow;
 
-        await _requestRepo.UpdateAsync(request);
+        // Update the transaction to approved
+        transaction.ApprovalStatus = ApprovalStatus.Approved;
 
-        //return _mapper.Map<ApprovalRequestResponse>(request);
-        return null; // Placeholder return statement
+        try
+        {
+            await _approvalRepository.UpdateAsync(request);
+            await _transactionRepo.UpdateAsync(transaction);
+
+            await dbTransaction.CommitAsync();
+        }
+        catch
+        {
+            await dbTransaction.RollbackAsync();
+            throw;
+        }
+
+        return ApprovalRequestMapping.ToResponse(request);
     }
 
-    public Task<ApprovalRequestResponse> ApproveAsync(Guid requestId, Guid adminUserId, string? notes = null)
+
+    /**
+     * Rejects an approval request and updates the associated transaction's status to rejected.
+     * 
+     * @param approvalRequestId The ID of the approval request to reject.
+     * @returns The updated approval request response.
+     * @throws NotFoundException If the approval request or associated transaction is not found.
+     * @throws UnauthorizedAccessException If the current user does not have permission to reject the transaction.
+     */
+    public async Task<ApprovalRequestResponse> RejectAsync(Guid approvalRequestId)
     {
-        throw new NotImplementedException();
+        // Only users with the appropriate permissions can approve transactions.
+        // This is checked in the authorization service that checks the user's permissions.
+        Guid currentUserId = _currentUser.UserId;
+
+        // Check for existence
+        ApprovalRequest request = await _approvalRepository.GetByIdAsync(approvalRequestId) ?? 
+                                  throw new NotFoundException("Approval request not found.");
+
+        if (request.Status == ApprovalStatus.Rejected)
+        {
+            throw new InvalidOperationException(
+                "This approval request has already been rejected.");
+        }
+
+        // Check for permissions
+        await _authorizationService.EnsureCanApproveTransactionAsync(request.PlaygroundId, currentUserId);
+
+        // Recover the transaction associated with the approval request
+        // Will be used to update the transaction status to approved after the approval request is approved.
+        Transaction transaction = await _transactionRepo.GetByIdAsync(request.PlaygroundId, request.Id) ?? 
+                                  throw new NotFoundException("Transaction not found.");
+
+
+        // Begin a database transaction to ensure atomicity of the approval process
+        // Avoids potential issues where the approval request is approved but the transaction is not updated, or vice versa.
+        await using var dbTransaction = await _context.Database.BeginTransactionAsync();
+
+        // Update the approval request to rejected
+        request.Status = ApprovalStatus.Rejected;
+        request.ReviewedById = currentUserId;
+        request.ReviewedAt = DateTime.UtcNow;
+
+        // Update the transaction to rejected
+        transaction.ApprovalStatus = ApprovalStatus.Rejected;
+
+        try
+        {
+            await _approvalRepository.UpdateAsync(request);
+            await _transactionRepo.UpdateAsync(transaction);
+
+            await dbTransaction.CommitAsync();
+        }
+        catch
+        {
+            await dbTransaction.RollbackAsync();
+            throw;
+        }
+
+        return ApprovalRequestMapping.ToResponse(request);
     }
 
-    public Task<IEnumerable<ApprovalRequestResponse>> GetPendingAsync(Guid playgroundId, Guid currentUserId)
-    {
-        throw new NotImplementedException();
-    }
 
-    public Task<IEnumerable<ApprovalRequestResponse>> GetMyRequestsAsync(Guid userId)
+    /**
+     * Retrieves all pending approval requests for a specific playground.
+     * 
+     * @param playgroundId The ID of the playground for which to retrieve pending approval requests.
+     * @returns A collection of pending approval request responses.
+     * @throws UnauthorizedAccessException If the current user does not have permission to view the approval requests for the specified playground.
+     */
+    public async Task<IEnumerable<ApprovalRequestResponse>> GetPendingByPlaygroundAsync(Guid playgroundId)
     {
-        throw new NotImplementedException();
+        // Only users with the appropriate permissions can approve transactions.
+        // This is checked in the authorization service that checks the user's permissions.
+        Guid currentUserId = _currentUser.UserId;
+
+        // Check for permissions
+        await _authorizationService.EnsureCanApproveTransactionAsync(playgroundId, currentUserId);
+
+        // Retrieve all pending approval requests for the specified playground
+        var requests = await _approvalRepository.GetPendingByPlaygroundAsync(playgroundId);
+
+        return ApprovalRequestMapping.ToResponse(requests);
     }
 }

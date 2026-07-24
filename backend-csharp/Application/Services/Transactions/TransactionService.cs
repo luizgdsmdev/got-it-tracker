@@ -1,36 +1,253 @@
 ﻿using backend_csharp.Application.DTOs.Requests.Transactions;
 using backend_csharp.Application.DTOs.Responses.Transactions;
+using backend_csharp.Application.Interfaces.Auth;
 using backend_csharp.Application.Interfaces.Transactions;
+using backend_csharp.Application.Interfaces.Users;
+using backend_csharp.Application.Mappings.Transactions;
+using backend_csharp.Domain.Entities.PlayGround;
+using backend_csharp.Domain.Entities.Transactions;
+using backend_csharp.Domain.Entities.Users;
+using backend_csharp.Domain.Enums;
+using backend_csharp.Domain.Exceptions;
+using backend_csharp.Domain.Extensions;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
 
 namespace backend_csharp.Application.Services.Transactions;
 
 public class TransactionService : ITransactionService
 {
-    private readonly ITransactionRepository _transactionRepo;
-    private readonly IPlaygroundMemberRepository _memberRepo;
+    private readonly ITransactionRepository _transactionRepository;
+    private readonly IPersonRepository _personRepository;
+    private readonly IPlaygroundMemberRepository _memberRepository;
+    private readonly IPlaygroundAuthorizationService _authorizationService;
+    private readonly IApprovalRequestService _approvalRequestService;
+    private readonly ICurrentUserService _currentUser;
 
-    public async Task<TransactionResponse> CreateDirectAsync(CreateTransactionRequest request, Guid currentUserId)
+    public TransactionService(
+        ITransactionRepository transactionRepository,
+        IPersonRepository personRepository,
+        IPlaygroundMemberRepository memberRepository,
+        IPlaygroundAuthorizationService authorizationService,
+        IApprovalRequestService approvalRequestService,
+        ICurrentUserService currentUser)
     {
-        // Verify permission: the user must be a member of the playground to create a transaction
-        //var member = await _memberRepo.GetByPlaygroundAndPersonAsync(request.PlaygroundId, request.PersonId);
-
-        //if (member == null)
-        //    throw new UnauthorizedAccessException("You are not a member of this playground.");
-
-        //var transaction = new Transaction
-        //{
-        //    PlaygroundId = request.PlaygroundId,
-        //    PersonId = request.PersonId,
-        //    Description = request.Description,
-        //    Amount = request.Amount,
-        //    Type = request.Type,
-        //    Date = request.Date ?? DateTime.UtcNow
-        //};
-
-        //await _transactionRepo.AddAsync(transaction);
-        //return _mapper.Map<TransactionResponse>(transaction);
-
-        return null; // Placeholder return statement
+        _transactionRepository = transactionRepository;
+        _personRepository = personRepository;
+        _memberRepository = memberRepository;
+        _authorizationService = authorizationService;
+        _approvalRequestService = approvalRequestService;
+        _currentUser = currentUser;
     }
+
+
+    /**
+     * Determines the initial approval status of a transaction based on the playground's settings and the user's role.
+     *
+     * @param playground The playground in which the transaction is being created.
+     * @param role The role of the user creating the transaction.
+     * @return The initial approval status for the transaction.
+     */
+    private static ApprovalStatus GetInitialStatus(Playground playground, PlaygroundRole role)
+    {
+        // Check if the playground requires approval for transactions (if not, auto-approve)
+        // Otherwise simply approve the transaction if the user has the right role
+        if (!playground.AskForApproval) return ApprovalStatus.Approved;
+
+
+        // Check if the user's role allows them to approve transactions, in this case 
+        // we can set the transaction as approved, otherwise it will be pending approval
+        return role.CanApproveTransactions() ? ApprovalStatus.Approved : ApprovalStatus.Pending;
+    }
+
+
+    /**
+     * Creates a new transaction in the specified playground.
+     *
+     * @param playgroundId The ID of the playground where the transaction will be created.
+     * @param request The request object containing the details of the transaction to be created.
+     * @return A response object containing the details of the created transaction.
+     * @throws NotFoundException If the person does not exist or does not belong to the playground.
+     * @throws ValidationException If the person does not belong to the playground.
+     * @throws PersistenceException If there is an error while creating the transaction in the repository.
+     */
+    public async Task<TransactionResponse> CreateAsync(Guid playgroundId, CreateTransactionRequest request)
+    {
+        // Ensure the current user is authorized to create a transaction in the specified playground
+        // So we recover its id
+        Guid currentUserId = _currentUser.UserId;
+
+        // Check for permission
+        PlaygroundMember membership = await _authorizationService
+                                      .EnsureCanCreateTransactionAsync(playgroundId, currentUserId);
+
+
+
+        // Check if the person exists and belongs to the playground
+        Person person = await _personRepository.GetByIdAsync(request.PersonId) ?? 
+                        throw new NotFoundException("Person not found.");
+
+        bool belongs = await _memberRepository.ExistsAsync(playgroundId, person.Id);
+        if (!belongs) throw new ValidationException("Person does not belong to this playground.");
+
+
+
+        // Check if the playground requires approval for transactions (if not, auto-approve)
+        // The same is true for the user role, with auto-approval if the user has the right role
+        // Otherwise, pending approval status is set for the transaction
+        ApprovalStatus status = GetInitialStatus(membership.Playground, membership.Role);
+
+
+        // Mapping and persistence
+        Transaction transaction = TransactionMapping.ToEntity(playgroundId, request, status);
+
+        Transaction createdTransaction = await _transactionRepository.CreateAsync(transaction) ?? 
+                                         throw new PersistenceException("Failed to create transaction.");
+
+
+        // If the transaction is pending approval, create an approval request for it
+        await _approvalRequestService.CreateIfNeededAsync(createdTransaction);
+
+        return TransactionMapping.ToResponse(createdTransaction);
+    }
+
+
+    /**
+     * Retrieves a transaction by its ID within the specified playground.
+     *
+     * @param playgroundId The ID of the playground where the transaction is located.
+     * @param transactionId The ID of the transaction to retrieve.
+     * @return A response object containing the details of the retrieved transaction.
+     * @throws NotFoundException If the transaction does not exist in the specified playground.
+     */
+    public async Task<TransactionResponse> GetByIdAsync(Guid playgroundId, Guid transactionId)
+    {
+        // Ensure the current user is authorized to create a transaction in the specified playground
+        // So we recover its id
+        Guid currentUserId = _currentUser.UserId;
+
+        // Check for permission
+        await _authorizationService.EnsureCanViewPlaygroundAsync(playgroundId, currentUserId);
+
+        // Recover the transaction from the repository
+        Transaction transaction = await _transactionRepository.GetByIdAsync(playgroundId, transactionId) ?? 
+                                  throw new NotFoundException("Transaction not found.");
+
+        return TransactionMapping.ToResponse(transaction);
+    }
+
+
+    /**
+     * Retrieves all transactions associated with the currently authenticated user.
+     *
+     * @return A collection of response objects containing the details of the retrieved transactions.
+     * @throws NotFoundException If no person is found for the current user.
+     */
+    public async Task<IEnumerable<TransactionResponse>> GetAllTransactionsAsync()
+    {
+        // Recover current authenticated user
+        Guid currentUserId = _currentUser.UserId;
+
+        // Recover the Person associated with the authenticated user
+        Person person = await _personRepository.GetByUserIdAsync(currentUserId)
+                        ?? throw new NotFoundException("Person not found for current user.");
+
+        // Recover all transactions from this person
+        IEnumerable<Transaction> transactions = await _transactionRepository.GetByPersonIdAsync(person.Id);
+
+        return TransactionMapping.ToResponse(transactions);
+    }
+
+
+
+    /**
+     * Retrieves all transactions within the specified playground.
+     *
+     * @param playgroundId The ID of the playground for which to retrieve transactions.
+     * @return A collection of response objects containing the details of the retrieved transactions.
+     * @throws NotFoundException If no transactions are found for the specified playground.
+     */
+    public async Task<IEnumerable<TransactionResponse>> GetAllAsync(Guid playgroundId)
+    {
+        // Ensure the current user is authorized to create a transaction in the specified playground
+        // So we recover its id
+        Guid currentUserId = _currentUser.UserId;
+
+        // Check for permission
+        await _authorizationService.EnsureCanViewPlaygroundAsync(playgroundId, currentUserId);
+
+        // Retrieve all transactions for the specified playground
+        var transactions = await _transactionRepository.GetByPlaygroundIdAsync(playgroundId) ??
+                           throw new NotFoundException("No transactions found for this playground.");
+
+        return TransactionMapping.ToResponse(transactions);
+    }
+
+
+
+    /**
+     * Updates an existing transaction in the specified playground.
+     *
+     * @param playgroundId The ID of the playground where the transaction is located.
+     * @param transactionId The ID of the transaction to update.
+     * @param request The request object containing the updated details of the transaction.
+     * @return A response object containing the details of the updated transaction.
+     * @throws NotFoundException If the transaction does not exist in the specified playground.
+     * @throws ValidationException If the transaction is already approved and cannot be edited.
+     */
+    public async Task<TransactionResponse> UpdateAsync(Guid playgroundId, Guid transactionId, UpdateTransactionRequest request)
+    {
+        // Ensure the current user is authorized to create a transaction in the specified playground
+        // So we recover its id
+        Guid currentUserId = _currentUser.UserId;
+
+
+        // Check for permission
+        await _authorizationService.EnsureCanCreateTransactionAsync(playgroundId, currentUserId);
+
+        // Recover the transaction from the repository and validates is ApprovalStatus
+        Transaction transaction = await _transactionRepository.GetByIdAsync(playgroundId, transactionId)
+                                        ?? throw new NotFoundException("Transaction not found.");
+
+        if (transaction.ApprovalStatus == ApprovalStatus.Approved)
+            throw new ValidationException("Approved transactions cannot be edited.");
+
+
+        // Update the transaction properties and persist the changes
+        transaction.Description = request.Description;
+        transaction.Amount = request.Amount;
+        transaction.Type = request.Type;
+        transaction.CreatedAt = request.TransactionDate; // Set in case a transaction is set to another date, eg.: next month, in this case does not affect dashboard
+
+        await _transactionRepository.UpdateAsync(transaction);
+
+        return TransactionMapping.ToResponse(transaction);
+    }
+
+
+
+    /**
+     * Deletes a transaction from the specified playground.
+     *
+     * @param playgroundId The ID of the playground where the transaction is located.
+     * @param transactionId The ID of the transaction to delete.
+     * @throws NotFoundException If the transaction does not exist in the specified playground.
+     * @return The deleted transaction.
+     */
+    public async Task<Transaction> DeleteAsync(Guid playgroundId, Guid transactionId)
+    {
+        // Ensure the current user is authorized to create a transaction in the specified playground
+        // So we recover its id
+        Guid currentUserId = _currentUser.UserId;
+
+        // Check for permission
+        await _authorizationService.EnsureCanManagePlaygroundAsync(playgroundId, currentUserId);
+
+        Transaction transaction = await _transactionRepository.GetByIdAsync(playgroundId, transactionId) ?? 
+                                  throw new NotFoundException("Transaction not found.");
+
+        await _transactionRepository.DeleteByIdAsync(playgroundId, transactionId);
+
+        return transaction;
+    }
+
 }

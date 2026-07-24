@@ -1,13 +1,13 @@
-﻿using backend_csharp.Application.DTOs.Requests.Transactions;
-using backend_csharp.Application.DTOs.Responses.Transactions;
+﻿using backend_csharp.Application.DTOs.Responses.Transactions;
+using backend_csharp.Domain.Entities.Transactions;
 
 namespace backend_csharp.Application.Interfaces.Transactions;
 
 public interface IApprovalRequestService
 {
-    Task<ApprovalRequestResponse> CreateAsync(CreateApprovalRequest request, Guid currentUserId);
-    Task<ApprovalRequestResponse> ApproveAsync(Guid requestId, Guid adminUserId, string? notes = null);
-    Task<ApprovalRequestResponse> RejectAsync(Guid requestId, Guid adminUserId, string rejectionReason);
-    Task<IEnumerable<ApprovalRequestResponse>> GetPendingAsync(Guid playgroundId, Guid currentUserId);
-    Task<IEnumerable<ApprovalRequestResponse>> GetMyRequestsAsync(Guid userId);
+    Task<ApprovalRequestResponse?> CreateIfNeededAsync(Transaction transaction);
+    Task<ApprovalRequestResponse> GetByIdAsync(Guid id);
+    Task<ApprovalRequestResponse> ApproveAsync(Guid approvalRequestId);
+    Task<ApprovalRequestResponse> RejectAsync(Guid approvalRequestId);
+    Task<IEnumerable<ApprovalRequestResponse>> GetPendingByPlaygroundAsync(Guid playgroundId);
 }

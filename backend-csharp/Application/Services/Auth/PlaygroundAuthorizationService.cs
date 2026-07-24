@@ -38,12 +38,15 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
      * @param playgroundId The ID of the playground.
      * @param userId The ID of the user.
      * @throws UnauthorizedException If the user does not have permission to view the playground.
+     * @returns The PlaygroundMember object representing the user's membership.
      */
-    public async Task EnsureCanViewPlaygroundAsync(Guid playgroundId, Guid userId)
+    public async Task<PlaygroundMember> EnsureCanViewPlaygroundAsync(Guid playgroundId, Guid userId)
     {
         var member = await GetMembershipAsync(playgroundId, userId);
 
         if (!member.Role.CanViewPlayground()) throw new UnauthorizedException("You don't have permission to view this playground.");
+
+        return member;
     }
 
 
@@ -53,12 +56,15 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
      * @param playgroundId The ID of the playground.
      * @param userId The ID of the user.
      * @throws UnauthorizedException If the user does not have permission to create transactions.
+     * @returns The PlaygroundMember object representing the user's membership.
      */
-    public async Task EnsureCanCreateTransactionAsync(Guid playgroundId, Guid userId)
+    public async Task<PlaygroundMember> EnsureCanCreateTransactionAsync(Guid playgroundId, Guid userId)
     {
         var member = await GetMembershipAsync(playgroundId, userId);
 
         if (!member.Role.CanCreateTransactions()) throw new UnauthorizedException("You don't have permission to create transactions.");
+
+        return member;
     }
 
 
@@ -68,12 +74,15 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
      * @param playgroundId The ID of the playground.
      * @param userId The ID of the user.
      * @throws UnauthorizedException If the user does not have permission to approve transactions.
+     * @returns The PlaygroundMember object representing the user's membership.
      */
-    public async Task EnsureCanApproveTransactionAsync(Guid playgroundId, Guid userId)
+    public async Task<PlaygroundMember> EnsureCanApproveTransactionAsync(Guid playgroundId, Guid userId)
     {
         var member = await GetMembershipAsync(playgroundId, userId);
 
         if (!member.Role.CanApproveTransactions()) throw new UnauthorizedException("You don't have permission to approve transactions.");
+
+        return member;
     }
 
 
@@ -83,12 +92,15 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
      * @param playgroundId The ID of the playground.
      * @param userId The ID of the user.
      * @throws UnauthorizedException If the user does not have permission to invite users.
+     * @returns The PlaygroundMember object representing the user's membership.
      */
-    public async Task EnsureCanInviteUsersAsync(Guid playgroundId, Guid userId)
+    public async Task<PlaygroundMember> EnsureCanInviteUsersAsync(Guid playgroundId, Guid userId)
     {
         var member = await GetMembershipAsync(playgroundId, userId);
 
         if (!member.Role.CanInviteUsers()) throw new UnauthorizedException("You don't have permission to invite users.");
+
+        return member;
     }
 
 
@@ -98,11 +110,14 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
      * @param playgroundId The ID of the playground.
      * @param userId The ID of the user.
      * @throws UnauthorizedException If the user does not have permission to manage the playground.
+     * @returns The PlaygroundMember object representing the user's membership.
      */
-    public async Task EnsureCanManagePlaygroundAsync(Guid playgroundId, Guid userId)
+    public async Task<PlaygroundMember> EnsureCanManagePlaygroundAsync(Guid playgroundId, Guid userId)
     {
         var member = await GetMembershipAsync(playgroundId, userId);
 
         if (!member.Role.CanManagePlayground()) throw new UnauthorizedException("Only the playground owner can perform this action.");
+
+        return member;
     }
 }

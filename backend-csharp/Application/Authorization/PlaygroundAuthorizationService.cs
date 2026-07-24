@@ -27,9 +27,10 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
      */
     private async Task<PlaygroundMember> GetMembershipAsync(Guid playgroundId, Guid userId)
     {
-        return await _memberRepository
-            .GetMembershipForAuthorizationAsync(playgroundId, userId)
-            ?? throw new UnauthorizedException("You are not a member of this playground.");
+        var member = await _memberRepository.GetMembershipForAuthorizationAsync(playgroundId, userId) ?? 
+                     throw new UnauthorizedException("You are not a member of this playground.");
+
+        return member;
     }
 
 
@@ -39,10 +40,19 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
      *
      * @param playgroundId The ID of the playground.
      * @param userId The ID of the user.
+     * @return The PlaygroundMember object representing the user's membership.
      */
-    public async Task EnsureCanViewPlaygroundAsync(Guid playgroundId, Guid userId)
+    public async Task<PlaygroundMember> EnsureCanViewPlaygroundAsync(Guid playgroundId, Guid userId)
     {
-        await GetMembershipAsync(playgroundId, userId);
+        var member = await GetMembershipAsync(playgroundId, userId) ?? 
+                     throw new UnauthorizedException("You are not a member of this playground.");
+
+        if (!member.Role.CanViewPlayground())
+        {
+            throw new UnauthorizedException("You don't have permission to view this playground.");
+        }
+
+        return member;
     }
 
 
@@ -52,8 +62,9 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
      *
      * @param playgroundId The ID of the playground.
      * @param userId The ID of the user.
+     * @return The PlaygroundMember object representing the user's membership.
      */
-    public async Task EnsureCanCreateTransactionAsync(Guid playgroundId, Guid userId)
+    public async Task<PlaygroundMember> EnsureCanCreateTransactionAsync(Guid playgroundId, Guid userId)
     {
         var member = await GetMembershipAsync(playgroundId, userId);
 
@@ -61,6 +72,8 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
         {
             throw new UnauthorizedException("You don't have permission to create transactions.");
         }
+
+        return member;
     }
 
 
@@ -70,8 +83,9 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
      *
      * @param playgroundId The ID of the playground.
      * @param userId The ID of the user.
+     * @return The PlaygroundMember object representing the user's membership.
      */
-    public async Task EnsureCanApproveTransactionAsync(Guid playgroundId, Guid userId)
+    public async Task<PlaygroundMember> EnsureCanApproveTransactionAsync(Guid playgroundId, Guid userId)
     {
         var member = await GetMembershipAsync(playgroundId, userId);
 
@@ -79,6 +93,8 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
         {
             throw new UnauthorizedException("You don't have permission to approve transactions.");
         }
+
+        return member;
     }
 
 
@@ -88,8 +104,9 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
      *
      * @param playgroundId The ID of the playground.
      * @param userId The ID of the user.
+     * @return The PlaygroundMember object representing the user's membership.
      */
-    public async Task EnsureCanInviteUsersAsync(Guid playgroundId, Guid userId)
+    public async Task<PlaygroundMember> EnsureCanInviteUsersAsync(Guid playgroundId, Guid userId)
     {
         var member = await GetMembershipAsync(playgroundId, userId);
 
@@ -97,6 +114,8 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
         {
             throw new UnauthorizedException("You don't have permission to invite users.");
         }
+
+        return member;
     }
 
     /**
@@ -105,8 +124,9 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
      *
      * @param playgroundId The ID of the playground.
      * @param userId The ID of the user.
+     * @return The PlaygroundMember object representing the user's membership.
      */
-    public async Task EnsureCanManagePlaygroundAsync(Guid playgroundId, Guid userId)
+    public async Task<PlaygroundMember> EnsureCanManagePlaygroundAsync(Guid playgroundId, Guid userId)
     {
         var member = await GetMembershipAsync(playgroundId, userId);
 
@@ -114,5 +134,7 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
         {
             throw new UnauthorizedException("Only the owner can manage this playground.");
         }
+
+        return member;
     }
 }

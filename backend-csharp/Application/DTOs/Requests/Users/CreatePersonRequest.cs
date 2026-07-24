@@ -9,7 +9,7 @@ public record CreatePersonRequest(
     string Name,
 
     [Required(ErrorMessage = "Age is required"),
-     Range(1, 150, ErrorMessage = "Age must be between 1 and 150.")]
+     Range(0, 150, ErrorMessage = "Age must be between 0 and 150.")]
     int Age,
 
     [Required(ErrorMessage = "PlaygroundId is required")]

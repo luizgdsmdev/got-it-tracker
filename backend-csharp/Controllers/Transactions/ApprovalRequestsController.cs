@@ -1,42 +1,64 @@
 ﻿using backend_csharp.Application.DTOs.Requests.Transactions;
+using backend_csharp.Application.DTOs.Responses.Transactions;
 using backend_csharp.Application.Interfaces.Transactions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend_csharp.Controllers.Transactions;
 
 [ApiController]
-[Route("api/approval-requests")]
+[Route("api/[controller]")]
+[Authorize]
 public class ApprovalRequestsController : ControllerBase
 {
-    private readonly IApprovalRequestService _approvalService;
+    private readonly IApprovalRequestService _approvalRequestService;
 
     public ApprovalRequestsController(IApprovalRequestService approvalService)
     {
-        _approvalService = approvalService;
+        _approvalRequestService = approvalService;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateApprovalRequest request)
+
+
+    [Authorize]
+    [HttpGet("playground/{playgroundId:guid}")]
+    public async Task<ActionResult<IEnumerable<ApprovalRequestResponse>>> GetAllByPlayground(Guid playgroundId)
     {
-        var userId = Guid.NewGuid(); // TODO: JWT
-        var result = await _approvalService.CreateAsync(request, userId);
-        //return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
-        return Ok();
+        var requests = await _approvalRequestService.GetPendingByPlaygroundAsync(playgroundId);
+
+        return Ok(requests);
     }
 
-    [HttpPost("{id}/approve")]
-    public async Task<IActionResult> Approve(Guid id)
+
+
+    [Authorize]
+    [HttpGet("{approvalRequestId:guid}")]
+    public async Task<ActionResult<ApprovalRequestResponse>> GetById(Guid approvalRequestId)
     {
-        var adminId = Guid.NewGuid(); // TODO: JWT
-        var result = await _approvalService.ApproveAsync(id, adminId);
-        return Ok(result);
+        var request = await _approvalRequestService.GetByIdAsync(approvalRequestId);
+
+        return Ok(request);
     }
 
-    [HttpPost("{id}/reject")]
-    public async Task<IActionResult> Reject(Guid id, [FromBody] string reason)
+
+
+    [Authorize]
+    [HttpPut("{approvalRequestId:guid}/approve")]
+    public async Task<ActionResult<ApprovalRequestResponse>> Approve(Guid approvalRequestId)
     {
-        var adminId = Guid.NewGuid();
-        var result = await _approvalService.RejectAsync(id, adminId, reason);
-        return Ok(result);
+        var request = await _approvalRequestService.ApproveAsync(approvalRequestId);
+
+        return Ok(request);
+    }
+
+
+
+    [Authorize]
+    [HttpPut("{approvalRequestId:guid}/reject")]
+    public async Task<ActionResult<ApprovalRequestResponse>> Reject(Guid approvalRequestId)
+    {
+        var request = await _approvalRequestService.RejectAsync(approvalRequestId);
+
+        return Ok(request);
     }
 }

@@ -12,8 +12,9 @@ public record CreateApprovalRequest(
      MaxLength(900, ErrorMessage = "Description must be at most 900 characters long.")]
     string Description,
 
-    [Required(ErrorMessage = "Amount is required"),
-     Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than 0.")]
+    [Required(ErrorMessage = "Amount is required.")]
+    [Range(typeof(decimal), "0.01", "999999999.99",
+     ErrorMessage = "Amount must be greater than zero.")]
     decimal Amount,
 
     [Required(ErrorMessage = "Type is required")]

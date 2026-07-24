@@ -1,8 +1,10 @@
 using backend_csharp.Application.Interfaces.Auth;
 using backend_csharp.Application.Interfaces.PlayGround;
+using backend_csharp.Application.Interfaces.Transactions;
 using backend_csharp.Application.Interfaces.Users;
 using backend_csharp.Application.Services.Auth;
 using backend_csharp.Application.Services.PlayGround;
+using backend_csharp.Application.Services.Transactions;
 using backend_csharp.Application.Services.Users;
 using backend_csharp.Domain.Entities.Users;
 using backend_csharp.Infrastructure.Data;
@@ -35,6 +37,9 @@ builder.Services.AddScoped<IPlayGroundMemberService, PlayGroundMemberService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IPlaygroundAuthorizationService, PlaygroundAuthorizationService>();
+builder.Services.AddScoped<IApprovalRequestService, ApprovalRequestService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 
@@ -43,7 +48,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPlaygroundRepository, PlaygroundRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPlaygroundMemberRepository, PlaygroundMemberRepository>();
-builder.Services.AddScoped<IPlaygroundAuthorizationService, PlaygroundAuthorizationService>();
+builder.Services.AddScoped<IApprovalRequestRepository, ApprovalRequestRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

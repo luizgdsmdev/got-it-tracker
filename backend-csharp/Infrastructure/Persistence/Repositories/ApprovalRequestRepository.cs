@@ -19,8 +19,12 @@ public class ApprovalRequestRepository : IApprovalRequestRepository
      * @param request The approval request entity to be added.
      * @return A task representing the asynchronous operation.
      */
-    public async Task AddAsync(ApprovalRequest request)
-    => await _context.ApprovalRequests.AddAsync(request);
+    public async Task<ApprovalRequest?> CreateAsync(ApprovalRequest request)
+    {
+        await _context.ApprovalRequests.AddAsync(request);
+        return request;
+
+    }
 
 
     /**

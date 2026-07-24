@@ -77,4 +77,20 @@ public static class PlaygroundRoleExtensions
     {
         return role == PlaygroundRole.Owner;
     }
+
+
+    /**
+     * Determines if the specified role can auto-approve transactions in the playground.
+     *
+     * @param role The PlaygroundRole to check.
+     * @return True if the role can auto-approve transactions; otherwise, false.
+     */
+    public static bool CanAutoApproveTransactions(this PlaygroundRole role)
+    {
+        return role is
+            PlaygroundRole.Owner or
+            PlaygroundRole.Manager;
+    }
+
+
 }

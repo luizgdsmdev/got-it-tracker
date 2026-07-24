@@ -9,7 +9,7 @@ public record UpdateUserRequest(
     string Name,
 
     [Required(ErrorMessage = "Age is required"),
-     Range(12, 150, ErrorMessage = "Age must be between 12 and 150.")]
+     Range(0, 150, ErrorMessage = "Age must be between 0 and 150.")]
     int Age,
 
     [Required(ErrorMessage = "A email is required for person"),

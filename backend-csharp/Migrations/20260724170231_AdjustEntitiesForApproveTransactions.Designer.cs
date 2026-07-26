@@ -11,8 +11,8 @@ using backend_csharp.Infrastructure.Data;
 namespace backend_csharp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260723065958_AdjustEntitiesForTransactions")]
-    partial class AdjustEntitiesForTransactions
+    [Migration("20260724170231_AdjustEntitiesForApproveTransactions")]
+    partial class AdjustEntitiesForApproveTransactions
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -241,6 +241,9 @@ namespace backend_csharp.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");

@@ -63,7 +63,12 @@ public class PlayGroundMemberMapping
             member.PersonId, 
             member.IsAdmin, 
             member.JoinedAt, 
-            member.Role);
+            member.Role,
+
+            member.Person?.UserId,
+            member.Person!.Name,
+            member.Person.Age
+            );
     }
 
 

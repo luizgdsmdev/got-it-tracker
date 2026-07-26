@@ -6,6 +6,8 @@ namespace backend_csharp.Application.DTOs.Responses.Transactions;
 public record ApprovalRequestResponse(
     Guid Id,
     Guid PersonId,
+    Guid TransactionId,
+    Guid PlaygroundId,
     string Description,
     decimal Amount,
     TransactionType Type,
@@ -13,7 +15,7 @@ public record ApprovalRequestResponse(
     bool IsPublic,
     DateTime RequestedAt,
     DateTime ReviewedAt,
-    User RequestedBy,
-    User ReviewedBy,
+    Guid? RequestedById,
+    Guid? ReviewedById,
     string? ReasonDescription
 );

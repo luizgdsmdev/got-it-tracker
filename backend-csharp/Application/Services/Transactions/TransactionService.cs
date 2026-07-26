@@ -76,15 +76,13 @@ public class TransactionService : ITransactionService
         // So we recover its id
         Guid currentUserId = _currentUser.UserId;
 
-        // Check for permission
-        PlaygroundMember membership = await _authorizationService
-                                      .EnsureCanCreateTransactionAsync(playgroundId, currentUserId);
-
-
-
         // Check if the person exists and belongs to the playground
         Person person = await _personRepository.GetByIdAsync(request.PersonId) ?? 
                         throw new NotFoundException("Person not found.");
+
+        // Check for permission
+        PlaygroundMember membership = await _authorizationService
+                                      .EnsureCanCreateTransactionAsync(playgroundId, person.Id);
 
         bool belongs = await _memberRepository.ExistsAsync(playgroundId, person.Id);
         if (!belongs) throw new ValidationException("Person does not belong to this playground.");
@@ -105,7 +103,7 @@ public class TransactionService : ITransactionService
 
 
         // If the transaction is pending approval, create an approval request for it
-        await _approvalRequestService.CreateIfNeededAsync(createdTransaction);
+        await _approvalRequestService.CreateIfNeededAsync(createdTransaction, currentUserId);
 
         return TransactionMapping.ToResponse(createdTransaction);
     }

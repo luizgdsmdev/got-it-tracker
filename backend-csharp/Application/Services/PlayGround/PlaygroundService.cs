@@ -8,6 +8,7 @@ using backend_csharp.Domain.Entities.Users;
 using backend_csharp.Domain.Enums;
 using backend_csharp.Domain.Exceptions;
 using backend_csharp.Infrastructure.Persistence.Interfaces;
+using backend_csharp.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend_csharp.Application.Services.PlayGround;
@@ -125,6 +126,31 @@ public class PlaygroundService : IPlaygroundService
 
         return PlayGroundMapping.ToDtoResponseList(playGround!);
     }
+
+
+
+    /**
+     * Retrieves all playgrounds associated with the current user.
+     *
+     * @return A task that represents the asynchronous operation. The task result contains a collection of responses with the playground details.
+     * @throws NotFoundException If no playgrounds are found for the current user.
+     */
+    public async Task<IEnumerable<PlaygroundResponse>> GetByUserAsync()
+    {
+        Guid currentUserId = _currentUser.UserId;
+
+        var playgrounds = await _playgroundRepo.GetByUserIdAsync(currentUserId);
+
+        if (!playgrounds.Any())
+        {
+            throw new NotFoundException("No playgrounds found for the current user.");
+        }
+
+        return PlayGroundMapping.ToDtoResponseList(playgrounds);
+    }
+
+
+
 
     /**
      * Toggles the "Ask for Approval" status of a playground.

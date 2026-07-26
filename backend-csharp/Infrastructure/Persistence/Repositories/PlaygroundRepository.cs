@@ -121,4 +121,23 @@ public class PlaygroundRepository : IPlaygroundRepository
 
         return playground;
     }
+
+
+
+
+    /**
+     * Retrieves all playgrounds associated with a specific user from the database.
+     *
+     * @param userId The unique identifier of the user whose playgrounds to retrieve.
+     * @return A collection of playground entities associated with the specified user.
+     */
+    public async Task<IEnumerable<Playground>> GetByUserIdAsync(Guid userId)
+    {
+        return await _context.Playgrounds
+            .AsNoTracking()
+            .Where(playground =>
+                playground.Members.Any(member =>
+                    member.Person.UserId == userId))
+            .ToListAsync();
+    }
 }

@@ -9,7 +9,8 @@ public interface IPlaygroundMemberRepository
     Task<PlaygroundMember> UpdateAsync(PlaygroundMember member);
     Task<PlaygroundMember> DeleteAsync(Guid playgroundId, Guid id);
     Task<IEnumerable<PlaygroundMember>> GetAllByPlaygroundAsync(Guid playgroundId);
-    Task<PlaygroundMember?> GetMembershipForAuthorizationAsync(Guid playgroundId, Guid userId);
+    Task<IEnumerable<PlaygroundMember>> GetAllByPersonIdAsync(Guid personId);
+    Task<PlaygroundMember?> GetMembershipForAuthorizationAsync(Guid playgroundId, Guid personId);
     Task<bool> ExistsAsync(Guid playgroundId, Guid personId);
 }
 

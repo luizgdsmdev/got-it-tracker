@@ -54,11 +54,27 @@ public class PlaygroundMemberRepository : IPlaygroundMemberRepository
     public async Task<IEnumerable<PlaygroundMember>> GetAllByPlaygroundAsync(Guid playgroundId)
     {
         return await _context.PlaygroundMembers
-            .Where(pm => pm.PlaygroundId == playgroundId)
-            .AsNoTracking()
-            .ToListAsync();
+        .AsNoTracking()
+        .Include(pm => pm.Person)
+        .Where(pm => pm.PlaygroundId == playgroundId)
+        .ToListAsync();
     }
 
+
+
+    /**
+     * Retrieves all playground members associated with a specific person.
+     *
+     * @param personId The unique identifier of the person.
+     * @return A collection of playground member entities associated with the specified person.
+     */
+    public async Task<IEnumerable<PlaygroundMember>> GetAllByPersonIdAsync(Guid personId)
+    {
+        return await _context.PlaygroundMembers
+                    .AsNoTracking()
+                    .Where(pm => pm.PersonId == personId)
+                    .ToListAsync();
+    }
 
     /**
      * Deletes a playground member from the database by their unique identifier.
@@ -106,15 +122,14 @@ public class PlaygroundMemberRepository : IPlaygroundMemberRepository
      * @param userId The unique identifier of the user.
      * @return The playground member entity if found; otherwise, null.
      */
-    public async Task<PlaygroundMember?> GetMembershipForAuthorizationAsync(Guid playgroundId, Guid userId)
+    public async Task<PlaygroundMember?> GetMembershipForAuthorizationAsync(Guid playgroundId, Guid personId)
     {
         return await _context.PlaygroundMembers
             .AsNoTracking()
             .Include(pm => pm.Playground)
-            .Include(pm => pm.Person)
             .FirstOrDefaultAsync(pm =>
                 pm.PlaygroundId == playgroundId &&
-                pm.Person.UserId == userId);
+                pm.PersonId == personId);
     }
 
 

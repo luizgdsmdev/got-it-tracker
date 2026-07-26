@@ -68,4 +68,13 @@ public class PlayGroundMemberController : ControllerBase
         return Ok(member);
     }
 
+
+    [Authorize]
+    [HttpGet("all-members/{playgroundId:guid}")]
+    public async Task<IActionResult> GetAllMembers(Guid playgroundId)
+    {
+        var members = await _playGroundMemberService.GetAllByPlaygroundAsync(playgroundId);
+        return Ok(members);
+    }
+
 }

@@ -43,10 +43,10 @@ public class ApprovalRequestsController : ControllerBase
 
 
     [Authorize]
-    [HttpPut("{approvalRequestId:guid}/approve")]
-    public async Task<ActionResult<ApprovalRequestResponse>> Approve(Guid approvalRequestId)
+    [HttpPut("approve")]
+    public async Task<ActionResult<ApprovalRequestResponse>> Approve([FromBody] AcceptApprovalRequest requestApproval)
     {
-        var request = await _approvalRequestService.ApproveAsync(approvalRequestId);
+        var request = await _approvalRequestService.ApproveAsync(requestApproval);
 
         return Ok(request);
     }
@@ -54,10 +54,10 @@ public class ApprovalRequestsController : ControllerBase
 
 
     [Authorize]
-    [HttpPut("{approvalRequestId:guid}/reject")]
-    public async Task<ActionResult<ApprovalRequestResponse>> Reject(Guid approvalRequestId)
+    [HttpPut("reject")]
+    public async Task<ActionResult<ApprovalRequestResponse>> Reject([FromBody] RejectApprovalRequest requestReject)
     {
-        var request = await _approvalRequestService.RejectAsync(approvalRequestId);
+        var request = await _approvalRequestService.RejectAsync(requestReject);
 
         return Ok(request);
     }

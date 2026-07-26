@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace backend_csharp.Migrations
 {
     /// <inheritdoc />
-    public partial class AdjustEntitiesForTransactions : Migration
+    public partial class AdjustEntitiesForApproveTransactions : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -212,6 +212,7 @@ namespace backend_csharp.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     PlaygroundId = table.Column<Guid>(type: "TEXT", nullable: false),
                     PersonId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    TransactionId = table.Column<Guid>(type: "TEXT", nullable: false),
                     RequestedById = table.Column<Guid>(type: "TEXT", nullable: true),
                     ReviewedById = table.Column<Guid>(type: "TEXT", nullable: true),
                     Description = table.Column<string>(type: "TEXT", nullable: true),

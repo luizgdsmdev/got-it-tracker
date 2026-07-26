@@ -22,6 +22,9 @@ public class ApprovalRequestRepository : IApprovalRequestRepository
     public async Task<ApprovalRequest?> CreateAsync(ApprovalRequest request)
     {
         await _context.ApprovalRequests.AddAsync(request);
+
+        await _context.SaveChangesAsync();
+
         return request;
 
     }
@@ -53,8 +56,12 @@ public class ApprovalRequestRepository : IApprovalRequestRepository
      * @return A collection of pending approval request entities for the specified playground.
      */
     public async Task<IEnumerable<ApprovalRequest>> GetPendingByPlaygroundAsync(Guid playgroundId)
-    => await _context.ApprovalRequests.Where(r => r.PlaygroundId == playgroundId && r.Status == ApprovalStatus.Pending).ToListAsync();
-
+    {
+        return await _context.ApprovalRequests
+            .Where(r => r.PlaygroundId == playgroundId && 
+                   r.Status == ApprovalStatus.Pending)
+            .ToListAsync();
+    }
 
     /**
      * Updates an existing approval request in the database.
@@ -62,9 +69,11 @@ public class ApprovalRequestRepository : IApprovalRequestRepository
      * @param request The approval request entity to be updated.
      * @return A task representing the asynchronous operation.
      */
-    public async Task UpdateAsync(ApprovalRequest request)
+    public async Task<ApprovalRequest?> UpdateAsync(ApprovalRequest request)
     {
         _context.ApprovalRequests.Update(request);
         await _context.SaveChangesAsync();
+
+        return request;
     }
 }

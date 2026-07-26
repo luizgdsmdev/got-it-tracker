@@ -6,6 +6,7 @@ public interface IPlaygroundRepository
 {
     Task<Playground> AddAsync(Playground playground);
     Task<Playground?> GetByIdAsync(Guid id);
+    Task<IEnumerable<Playground>> GetByUserIdAsync(Guid userId);
     Task<IEnumerable<Playground?>> GetByOwnerIdAsync(Guid ownerId);
     Task<Playground?> ToggleAskForApprovalAsync(Guid playgroundId);
     Task<Playground?> UpdateAsync(Guid playgroundId, Playground request);

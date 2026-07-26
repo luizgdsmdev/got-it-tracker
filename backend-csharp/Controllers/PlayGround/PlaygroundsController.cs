@@ -11,10 +11,12 @@ namespace backend_csharp.Controllers.PlayGround;
 public class PlaygroundsController : ControllerBase
 {
     private readonly IPlaygroundService _playgroundService;
+    private readonly IPlayGroundMemberService _playGroundMemberService;
 
-    public PlaygroundsController(IPlaygroundService playgroundService)
+    public PlaygroundsController(IPlaygroundService playgroundService, IPlayGroundMemberService playGroundMemberService)
     {
         _playgroundService = playgroundService;
+        _playGroundMemberService = playGroundMemberService;
     }
 
 
@@ -37,6 +39,20 @@ public class PlaygroundsController : ControllerBase
         var result = await _playgroundService.GetByIdAsync(playGroundId);
         return Ok(result);
     }
+
+
+
+
+    [Authorize]
+    [HttpGet("all")]
+    public async Task<ActionResult<IEnumerable<PlaygroundResponse>>> GetMyPlaygrounds()
+    {
+        var result = await _playgroundService.GetByUserAsync();
+
+        return Ok(result);
+    }
+
+
 
 
 

@@ -49,8 +49,11 @@ public class PlayGroundMemberService : IPlayGroundMemberService
     {
         Guid currentUserId = _currentUser.UserId;
 
+        Person userPerson = await _personService.GetByUserIdAsync(currentUserId) ??
+                            throw new NotFoundException("Person not fund for this user");
+
         // Checks if the current user can invite users
-        await _authorizationService.EnsureCanInviteUsersAsync(playgroundId, currentUserId);
+        await _authorizationService.EnsureCanInviteUsersAsync(playgroundId, userPerson.Id);
 
 
         // Creates the Person
@@ -111,8 +114,11 @@ public class PlayGroundMemberService : IPlayGroundMemberService
     {
         Guid currentUserId = _currentUser.UserId;
 
+        Person userPerson = await _personService.GetByUserIdAsync(currentUserId) ??
+                            throw new NotFoundException("Person not fund for this user");
+
         // Checks if the current user can view the playground
-        await _authorizationService.EnsureCanViewPlaygroundAsync(playgroundId,currentUserId);
+        await _authorizationService.EnsureCanViewPlaygroundAsync(playgroundId, userPerson.Id);
 
         var member = await _playgroundMemberRepository.GetByIdAsync(playgroundId, memberId) ??
                      throw new NotFoundException($"Playground member with ID {memberId} not found in playground {playgroundId}");
@@ -135,7 +141,10 @@ public class PlayGroundMemberService : IPlayGroundMemberService
     {
         Guid currentUserId = _currentUser.UserId;
 
-        await _authorizationService.EnsureCanInviteUsersAsync(playgroundId, currentUserId);
+        Person userPerson = await _personService.GetByUserIdAsync(currentUserId) ??
+                            throw new NotFoundException("Person not fund for this user");
+
+        await _authorizationService.EnsureCanInviteUsersAsync(playgroundId, userPerson.Id);
 
         var removed = await _playgroundMemberRepository.DeleteAsync(playgroundId, memberId);
 
@@ -155,7 +164,10 @@ public class PlayGroundMemberService : IPlayGroundMemberService
     {
         Guid currentUserId = _currentUser.UserId;
 
-        await _authorizationService.EnsureCanViewPlaygroundAsync(playgroundId, currentUserId);
+        Person userPerson = await _personService.GetByUserIdAsync(currentUserId) ??
+                            throw new NotFoundException("Person not fund for this user");
+
+        await _authorizationService.EnsureCanViewPlaygroundAsync(playgroundId, userPerson.Id);
 
         var members = await _playgroundMemberRepository.GetAllByPlaygroundAsync(playgroundId);
 
@@ -178,7 +190,10 @@ public class PlayGroundMemberService : IPlayGroundMemberService
     {
         Guid currentUserId = _currentUser.UserId;
 
-        await _authorizationService.EnsureCanInviteUsersAsync(playgroundId, currentUserId);
+        Person userPerson = await _personService.GetByUserIdAsync(currentUserId) ??
+                            throw new NotFoundException("Person not fund for this user");
+
+        await _authorizationService.EnsureCanInviteUsersAsync(playgroundId, userPerson.Id);
 
         // Get the member to update
         PlaygroundMember member = await _playgroundMemberRepository.GetByIdAsync(playgroundId, memberId) ?? 
@@ -210,7 +225,10 @@ public class PlayGroundMemberService : IPlayGroundMemberService
     {
         Guid currentUserId = _currentUser.UserId;
 
-        await _authorizationService.EnsureCanInviteUsersAsync(playgroundId, currentUserId);
+        Person userPerson = await _personService.GetByUserIdAsync(currentUserId) ??
+                            throw new NotFoundException("Person not fund for this user");
+
+        await _authorizationService.EnsureCanInviteUsersAsync(playgroundId, userPerson.Id);
 
         // Finds the user by email, if not found throws NotFoundException
         var user = await _authService.FindByEmailAsync(request.Email) ?? 

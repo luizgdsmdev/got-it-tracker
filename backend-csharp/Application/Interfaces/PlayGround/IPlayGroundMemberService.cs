@@ -11,7 +11,6 @@ public interface IPlayGroundMemberService
     Task<PlaygroundMemberResponse?> UpdateAsync(Guid playgroundId, Guid memberId, UpdatePlaygroundMemberRequest requests);
     Task<PlaygroundMemberResponse?> DeleteAsync(Guid playgroundId, Guid memberId);
     Task<IEnumerable<PlaygroundMemberResponse?>> GetAllByPlaygroundAsync(Guid playgroundId);
-
     Task<PlaygroundMemberResponse> InviteUserAsync(Guid playgroundId, InviteUserRequest request);
 
 }

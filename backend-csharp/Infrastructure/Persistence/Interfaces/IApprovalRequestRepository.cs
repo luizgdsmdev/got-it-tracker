@@ -8,5 +8,5 @@ public interface IApprovalRequestRepository
     Task<ApprovalRequest?> GetByIdAsync(Guid id);
     Task<IEnumerable<ApprovalRequest>> GetPendingByPlaygroundAsync(Guid playgroundId);
     Task<IEnumerable<ApprovalRequest>> GetByRequestedByAsync(Guid requestedById);
-    Task UpdateAsync(ApprovalRequest request);
+    Task<ApprovalRequest?> UpdateAsync(ApprovalRequest request);
 }

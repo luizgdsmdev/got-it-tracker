@@ -65,7 +65,7 @@ public class PlayGroundMemberService : IPlayGroundMemberService
                                             playgroundId, 
                                             createdPerson.Id, 
                                             false, // IsAdmin is false for guests
-                                            PlaygroundRole.Viewer);// Set manually to Viewer, as guests are always viewers
+                                            PlaygroundRole.Contributor);
 
         PlaygroundMember createdMember = await _playgroundMemberRepository.CreateAsync(PlaygroundMember) ?? 
                                          throw new PersistenceException("Failed to create playground member");
@@ -87,6 +87,15 @@ public class PlayGroundMemberService : IPlayGroundMemberService
      */
     public async Task<PlaygroundMember> CreateOwnerMembershipAsync(Guid playgroundId, Guid personId)
     {
+        Guid currentUserId = _currentUser.UserId;
+
+        Person userPerson = await _personService.GetByUserIdAsync(currentUserId) ??
+                            throw new NotFoundException("Person not fund for this user");
+
+        // Checks if the current user can invite users
+        await _authorizationService.EnsureCanInviteUsersAsync(playgroundId, userPerson.Id);
+
+
         // Mapping
         PlaygroundMember ownerMembership = PlayGroundMemberMapping.ToPlaygroundOwnerMember(
             playgroundId,
@@ -198,8 +207,8 @@ public class PlayGroundMemberService : IPlayGroundMemberService
         // Get the member to update
         PlaygroundMember member = await _playgroundMemberRepository.GetByIdAsync(playgroundId, memberId) ?? 
                                   throw new NotFoundException("Member not found");
-
-        // Update the member's properties
+        //member.Name = request.Name;
+        //member.Age = request.Age;
         member.Role = request.Role;
         member.IsAdmin = request.IsAdmin;
 
@@ -221,7 +230,7 @@ public class PlayGroundMemberService : IPlayGroundMemberService
      * @throws ConflictException If the user is already a member of the playground.
      * @throws PersistenceException If there is an error while creating the playground member.
      */
-    public async Task<PlaygroundMemberResponse> InviteUserAsync(Guid playgroundId, InviteUserRequest request)
+    public async Task<PlaygroundMemberResponse?> InviteUserAsync(Guid playgroundId, InviteUserRequest request)
     {
         Guid currentUserId = _currentUser.UserId;
 
@@ -230,9 +239,12 @@ public class PlayGroundMemberService : IPlayGroundMemberService
 
         await _authorizationService.EnsureCanInviteUsersAsync(playgroundId, userPerson.Id);
 
-        // Finds the user by email, if not found throws NotFoundException
-        var user = await _authService.FindByEmailAsync(request.Email) ?? 
-                         throw new NotFoundException("User not found.");
+        // Finds the user by email, if not found, returns null
+        var user = await _authService.FindByEmailAsync(request.Email);
+        if(user == null)
+        {
+            return null; // or throw new NotFoundException("User not found.");
+        }
 
         // Uses the user ID to find the corresponding person, if not found throws NotFoundException
         var person = await _personService.GetByUserIdAsync(user.Id) 
@@ -242,6 +254,7 @@ public class PlayGroundMemberService : IPlayGroundMemberService
         {
             throw new ConflictException("User is already a member.");
         }
+
 
         PlaygroundMember newMember = PlayGroundMemberMapping.ToPlaygroundMember(
             playgroundId,

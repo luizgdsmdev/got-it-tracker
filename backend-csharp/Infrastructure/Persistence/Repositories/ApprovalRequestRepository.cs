@@ -37,7 +37,11 @@ public class ApprovalRequestRepository : IApprovalRequestRepository
      * @return The approval request entity if found; otherwise, null.
      */
     public async Task<ApprovalRequest?> GetByIdAsync(Guid id)
-    => await _context.ApprovalRequests.FindAsync(id);
+    {
+        return await _context.ApprovalRequests
+        .AsNoTracking()
+        .SingleOrDefaultAsync(p => p.Id == id);
+    }
 
 
     /**
@@ -46,7 +50,11 @@ public class ApprovalRequestRepository : IApprovalRequestRepository
      * @return A collection of all approval request entities.
      */
     public async Task<IEnumerable<ApprovalRequest>> GetByRequestedByAsync(Guid requestedById)
-    => await _context.ApprovalRequests.Where(r => r.RequestedById == requestedById).ToListAsync();
+    { 
+        return await _context.ApprovalRequests
+            .AsNoTracking()
+            .Where(r => r.RequestedById == requestedById).ToListAsync(); 
+    }
 
 
     /**
@@ -58,6 +66,7 @@ public class ApprovalRequestRepository : IApprovalRequestRepository
     public async Task<IEnumerable<ApprovalRequest>> GetPendingByPlaygroundAsync(Guid playgroundId)
     {
         return await _context.ApprovalRequests
+            .AsNoTracking()
             .Where(r => r.PlaygroundId == playgroundId && 
                    r.Status == ApprovalStatus.Pending)
             .ToListAsync();

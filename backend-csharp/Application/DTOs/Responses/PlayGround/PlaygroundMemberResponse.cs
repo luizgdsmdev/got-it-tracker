@@ -12,6 +12,6 @@ public record PlaygroundMemberResponse(
 
     // Person info
     Guid? UserId,
-    string Name,
-    int Age
+    string? Name,
+    int? Age
     );

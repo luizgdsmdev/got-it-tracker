@@ -43,9 +43,9 @@ public class PlayGroundMemberController : ControllerBase
     [HttpPost("{playgroundId:guid}/invite")]
     public async Task<IActionResult> Invite(Guid playgroundId, [FromBody] InviteUserRequest request)
     {
-        var response = await _playGroundMemberService.InviteUserAsync(playgroundId, request);
+        await _playGroundMemberService.InviteUserAsync(playgroundId, request);
 
-        return Ok(response);
+        return Ok();
     }
 
 

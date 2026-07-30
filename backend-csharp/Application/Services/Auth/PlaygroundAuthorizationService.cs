@@ -98,7 +98,7 @@ public class PlaygroundAuthorizationService : IPlaygroundAuthorizationService
     {
         var member = await GetMembershipAsync(playgroundId, userId);
 
-        if (!member.Role.CanInviteUsers()) throw new UnauthorizedException("You don't have permission to invite users.");
+        if (!member.Role.CanInviteUsers()) throw new UnauthorizedException("You don't have permission to invite or update members.");
 
         return member;
     }

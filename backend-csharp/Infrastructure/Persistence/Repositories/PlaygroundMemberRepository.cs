@@ -9,10 +9,12 @@ namespace backend_csharp.Infrastructure.Persistence.Repositories;
 public class PlaygroundMemberRepository : IPlaygroundMemberRepository
 {
     private readonly ApplicationDbContext _context;
+    private readonly ITransactionRepository _transactionRepository;
 
-    public PlaygroundMemberRepository(ApplicationDbContext context)
+    public PlaygroundMemberRepository(ApplicationDbContext context, ITransactionRepository transactionRepository)
     {
         _context = context;
+        _transactionRepository = transactionRepository;
     }
 
 
@@ -24,9 +26,17 @@ public class PlaygroundMemberRepository : IPlaygroundMemberRepository
      */
     public async Task<PlaygroundMember?> CreateAsync(PlaygroundMember member)
     {
-        _context.PlaygroundMembers.Add(member);
-        await _context.SaveChangesAsync();
-        return member;
+         _context.PlaygroundMembers.Add(member);
+
+    await _context.SaveChangesAsync();
+
+    // Reloading the user for tracking
+    return await _context.PlaygroundMembers
+        .AsNoTracking()
+        .Include(pm => pm.Person)
+        .FirstOrDefaultAsync(pm =>
+            pm.PlaygroundId == member.PlaygroundId &&
+            pm.PersonId == member.PersonId);
     }
 
 
@@ -40,8 +50,11 @@ public class PlaygroundMemberRepository : IPlaygroundMemberRepository
     public Task<PlaygroundMember?> GetByIdAsync(Guid playgroundId, Guid id)
     {
         return _context.PlaygroundMembers
-            .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.PlaygroundId == playgroundId && m.PersonId == id);
+        .AsNoTracking()
+        .Include(pm => pm.Person)
+        .FirstOrDefaultAsync(m =>
+            m.PlaygroundId == playgroundId &&
+            m.PersonId == id);
     }
 
 
@@ -86,12 +99,16 @@ public class PlaygroundMemberRepository : IPlaygroundMemberRepository
      */
     public async Task<PlaygroundMember> DeleteAsync(Guid playgroundId, Guid memberId)
     {
-        PlaygroundMember member = await GetByIdAsync(playgroundId, memberId) ??
-                           throw new NotFoundException("Member not found");
+        PlaygroundMember member = await GetByIdAsync(playgroundId, memberId) ?? 
+                                  throw new NotFoundException("Member not found");
+
+        await _transactionRepository.DeleteByMemberAsync(playgroundId, member.PersonId);
+
 
         _context.PlaygroundMembers.Remove(member);
 
         await _context.SaveChangesAsync();
+
 
         return member;
     }
@@ -143,6 +160,7 @@ public class PlaygroundMemberRepository : IPlaygroundMemberRepository
     public async Task<bool> ExistsAsync(Guid playgroundId, Guid personId)
     {
         return await _context.PlaygroundMembers
+                    .AsNoTracking()
                     .AnyAsync(pm =>
                     pm.PlaygroundId == playgroundId &&
                     pm.PersonId == personId);

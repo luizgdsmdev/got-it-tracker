@@ -35,7 +35,9 @@ public class PersonRepository : IPersonRepository
      */
     public async Task<Person?> GetByIdAsync(Guid id)
     {
-        return await _context.People.FindAsync(id);
+        return await _context.People
+        .AsNoTracking()
+        .SingleOrDefaultAsync(p => p.Id == id);
     }
 
 
@@ -47,7 +49,7 @@ public class PersonRepository : IPersonRepository
      */
     public async Task<Person?> GetByUserIdAsync(Guid userId)
     {
-        return await _context.People.FirstOrDefaultAsync(p => p.UserId == userId);
+        return await _context.People.AsNoTracking().FirstOrDefaultAsync(p => p.UserId == userId);
     }
 
 
@@ -100,6 +102,7 @@ public class PersonRepository : IPersonRepository
     public async Task<IEnumerable<Person?>> GetAllByPlaygroundAsync(Guid playgroundId)
     {
         return await _context.People
+            .AsNoTracking()
             .Include(p => p.PlaygroundMemberships)
             .Where(p => p.PlaygroundMemberships.Any(pm => pm.PlaygroundId == playgroundId))
             .ToListAsync();

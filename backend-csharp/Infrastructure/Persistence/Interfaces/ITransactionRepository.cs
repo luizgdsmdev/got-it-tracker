@@ -10,4 +10,5 @@ public interface ITransactionRepository
     Task<IEnumerable<Transaction>> GetByPlaygroundIdAsync(Guid playgroundId);
     Task<IEnumerable<Transaction>> GetByPersonIdAsync(Guid personId);
     Task<Transaction> DeleteByIdAsync(Guid playgroundId, Guid transactionId);
+    Task DeleteByMemberAsync(Guid playgroundId, Guid personId);
 }

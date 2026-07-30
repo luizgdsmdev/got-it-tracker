@@ -76,13 +76,48 @@ public class TransactionService : ITransactionService
         // So we recover its id
         Guid currentUserId = _currentUser.UserId;
 
-        // Check if the person exists and belongs to the playground
+        // Check if the person exists
         Person person = await _personRepository.GetByIdAsync(request.PersonId) ?? 
                         throw new NotFoundException("Person not found.");
 
-        // Check for permission
-        PlaygroundMember membership = await _authorizationService
-                                      .EnsureCanCreateTransactionAsync(playgroundId, person.Id);
+
+        // If the person.UserId is null, it means is a guest person (not a real user)
+        // For this case, the responsability passes to the real user setting up the action
+        // Meaning the current real user must have the permissions necessary to the action being
+        // Made with the guest person entity
+
+        PlaygroundMember membership;
+        Person userPerson;
+
+        if (person.UserId != null)
+        {
+            // Check for permission
+            membership = await _authorizationService.EnsureCanCreateTransactionAsync(playgroundId, person.Id);
+        }
+        else
+        {
+            // Check if the UserPerson exists and belongs to the playground
+            userPerson = await _personRepository.GetByUserIdAsync(currentUserId) ??
+                            throw new NotFoundException("Person not found.");
+
+            if (userPerson.Id != person.Id)
+            {
+                membership = await _authorizationService.EnsureCanCreateTransactionAsync(playgroundId, person.Id);
+            }
+            else
+            {
+                // Check for permission
+                membership = await _authorizationService.EnsureCanCreateTransactionAsync(playgroundId, userPerson.Id);
+            }
+        }
+
+
+        // Validates if the person is minor, in this case is prohibited to create income transactions,
+        // Can only create expense transactions
+        if (person.Age < 18 && request.Type == TransactionType.Income)
+            throw new UnauthorizedException("Minors cannot create this type of transaction.");
+
+
 
         bool belongs = await _memberRepository.ExistsAsync(playgroundId, person.Id);
         if (!belongs) throw new ValidationException("Person does not belong to this playground.");
@@ -119,40 +154,21 @@ public class TransactionService : ITransactionService
      */
     public async Task<TransactionResponse> GetByIdAsync(Guid playgroundId, Guid transactionId)
     {
-        // Ensure the current user is authorized to create a transaction in the specified playground
-        // So we recover its id
+        // Ensure the current user is authorized in the specified playground
+        // So we recover its id, and Person Entity (that holds the permissions)
         Guid currentUserId = _currentUser.UserId;
 
+        Person person = await _personRepository.GetByUserIdAsync(currentUserId) ??
+                throw new NotFoundException("Person not found.");
+
         // Check for permission
-        await _authorizationService.EnsureCanViewPlaygroundAsync(playgroundId, currentUserId);
+        await _authorizationService.EnsureCanViewPlaygroundAsync(playgroundId, person.Id);
 
         // Recover the transaction from the repository
         Transaction transaction = await _transactionRepository.GetByIdAsync(playgroundId, transactionId) ?? 
                                   throw new NotFoundException("Transaction not found.");
 
         return TransactionMapping.ToResponse(transaction);
-    }
-
-
-    /**
-     * Retrieves all transactions associated with the currently authenticated user.
-     *
-     * @return A collection of response objects containing the details of the retrieved transactions.
-     * @throws NotFoundException If no person is found for the current user.
-     */
-    public async Task<IEnumerable<TransactionResponse>> GetAllTransactionsAsync()
-    {
-        // Recover current authenticated user
-        Guid currentUserId = _currentUser.UserId;
-
-        // Recover the Person associated with the authenticated user
-        Person person = await _personRepository.GetByUserIdAsync(currentUserId)
-                        ?? throw new NotFoundException("Person not found for current user.");
-
-        // Recover all transactions from this person
-        IEnumerable<Transaction> transactions = await _transactionRepository.GetByPersonIdAsync(person.Id);
-
-        return TransactionMapping.ToResponse(transactions);
     }
 
 
@@ -166,16 +182,41 @@ public class TransactionService : ITransactionService
      */
     public async Task<IEnumerable<TransactionResponse>> GetAllAsync(Guid playgroundId)
     {
-        // Ensure the current user is authorized to create a transaction in the specified playground
-        // So we recover its id
+        // Ensure the current user is authorized in the specified playground
+        // So we recover its id, and Person Entity (that holds the permissions)
         Guid currentUserId = _currentUser.UserId;
 
+        Person person = await _personRepository.GetByUserIdAsync(currentUserId) ??
+                throw new NotFoundException("Person not found.");
+
         // Check for permission
-        await _authorizationService.EnsureCanViewPlaygroundAsync(playgroundId, currentUserId);
+        await _authorizationService.EnsureCanViewPlaygroundAsync(playgroundId, person.Id);
 
         // Retrieve all transactions for the specified playground
         var transactions = await _transactionRepository.GetByPlaygroundIdAsync(playgroundId) ??
                            throw new NotFoundException("No transactions found for this playground.");
+
+        return TransactionMapping.ToResponse(transactions);
+    }
+
+
+    /**
+     * Retrieves all transactions associated with the currently authenticated user.
+     *
+     * @return A collection of response objects containing the details of the retrieved transactions.
+     * @throws NotFoundException If no person is found for the current user.
+     */
+    public async Task<IEnumerable<TransactionResponse>> GetAllTransactionsAsync()
+    {
+        // Ensure the current user is authorized in the specified playground
+        // So we recover its id, and Person Entity (that holds the permissions)
+        Guid currentUserId = _currentUser.UserId;
+
+        Person person = await _personRepository.GetByUserIdAsync(currentUserId) ??
+                throw new NotFoundException("Person not found.");
+
+        // Recover all transactions from this person
+        IEnumerable<Transaction> transactions = await _transactionRepository.GetByPersonIdAsync(person.Id);
 
         return TransactionMapping.ToResponse(transactions);
     }
@@ -194,21 +235,19 @@ public class TransactionService : ITransactionService
      */
     public async Task<TransactionResponse> UpdateAsync(Guid playgroundId, Guid transactionId, UpdateTransactionRequest request)
     {
-        // Ensure the current user is authorized to create a transaction in the specified playground
-        // So we recover its id
+        // Ensure the current user is authorized in the specified playground
+        // So we recover its id, and Person Entity (that holds the permissions)
         Guid currentUserId = _currentUser.UserId;
 
+        Person person = await _personRepository.GetByUserIdAsync(currentUserId) ??
+                throw new NotFoundException("Person not found.");
 
         // Check for permission
-        await _authorizationService.EnsureCanCreateTransactionAsync(playgroundId, currentUserId);
+        await _authorizationService.EnsureCanCreateTransactionAsync(playgroundId, person.Id);
 
         // Recover the transaction from the repository and validates is ApprovalStatus
         Transaction transaction = await _transactionRepository.GetByIdAsync(playgroundId, transactionId)
                                         ?? throw new NotFoundException("Transaction not found.");
-
-        if (transaction.ApprovalStatus == ApprovalStatus.Approved)
-            throw new ValidationException("Approved transactions cannot be edited.");
-
 
         // Update the transaction properties and persist the changes
         transaction.Description = request.Description;
@@ -233,12 +272,15 @@ public class TransactionService : ITransactionService
      */
     public async Task<Transaction> DeleteAsync(Guid playgroundId, Guid transactionId)
     {
-        // Ensure the current user is authorized to create a transaction in the specified playground
-        // So we recover its id
+        // Ensure the current user is authorized in the specified playground
+        // So we recover its id, and Person Entity (that holds the permissions)
         Guid currentUserId = _currentUser.UserId;
 
+        Person person = await _personRepository.GetByUserIdAsync(currentUserId) ??
+                throw new NotFoundException("Person not found.");
+
         // Check for permission
-        await _authorizationService.EnsureCanManagePlaygroundAsync(playgroundId, currentUserId);
+        await _authorizationService.EnsureCanManagePlaygroundAsync(playgroundId, person.Id);
 
         Transaction transaction = await _transactionRepository.GetByIdAsync(playgroundId, transactionId) ?? 
                                   throw new NotFoundException("Transaction not found.");

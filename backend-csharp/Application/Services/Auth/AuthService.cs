@@ -63,10 +63,10 @@ public class AuthService : IAuthService
         var userRoles = await _userManager.GetRolesAsync(user);
         var authClaims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Name, user.UserName!),
-            new(ClaimTypes.Email, user.Email!),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new(ClaimTypes.Name, user.Name),
+                new(ClaimTypes.Email, user.Email!),
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
 
@@ -244,12 +244,16 @@ public class AuthService : IAuthService
 
 
         // Update the user's properties based on the request
-        user.UserName = request.Name ?? user.UserName;
         user.Name = request.Name ?? user.Name;
         user.Email = request.Email ?? user.Email;
         user.Age = request.Age != 0 ? request.Age : user.Age;
         user.LastUpdatedAt = DateTime.UtcNow;
         user.PasswordHash = request.Password != null ? _userManager.PasswordHasher.HashPassword(user, request.Password) : user.PasswordHash;
+
+        if (request.Email != null)
+        {
+            user.UserName = request.Email ?? user.UserName;
+        }
 
         var updateResult = await _userManager.UpdateAsync(user);
         if (!updateResult.Succeeded)
@@ -290,10 +294,9 @@ public class AuthService : IAuthService
      * @return The User entity corresponding to the provided email address.
      * @throws UnauthorizedException If the user is not found.
      */
-    public async Task<User> FindByEmailAsync(string email)
+    public async Task<User?> FindByEmailAsync(string email)
     {
-        var user = await _userManager.FindByEmailAsync(email)
-                     ?? throw new UnauthorizedException("User not found");
+        var user = await _userManager.FindByEmailAsync(email);
 
         return user;
     }

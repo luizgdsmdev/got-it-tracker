@@ -37,7 +37,9 @@ public class PlaygroundRepository : IPlaygroundRepository
      */
     public async Task<Playground?> GetByIdAsync(Guid id)
     {
-        return await _context.Playgrounds.FindAsync(id);
+        return await _context.Playgrounds
+        .AsNoTracking()
+        .SingleOrDefaultAsync(p => p.Id == id);
     }
 
 
@@ -50,6 +52,7 @@ public class PlaygroundRepository : IPlaygroundRepository
     public async Task<IEnumerable<Playground?>> GetByOwnerIdAsync(Guid ownerId)
     {
         return await _context.Playgrounds
+        .AsNoTracking()
         .Include(p => p.Members)
         .Include(p => p.Transactions)
         .Where(p => p.OwnerId == ownerId)

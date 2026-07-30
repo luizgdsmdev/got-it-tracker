@@ -105,4 +105,24 @@ public class TransactionRepository : ITransactionRepository
 
         return transaction;
     }
+
+
+
+    public async Task DeleteByMemberAsync(Guid playgroundId, Guid personId)
+    {
+        var transactions = await _context.Transactions
+        .Where(t =>
+            t.PlaygroundId == playgroundId &&
+            t.PersonId == personId)
+        .ToListAsync();
+
+
+        if (!transactions.Any())
+            return;
+
+
+        _context.Transactions.RemoveRange(transactions);
+
+        await _context.SaveChangesAsync();
+    }
 }

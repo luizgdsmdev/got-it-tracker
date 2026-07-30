@@ -19,5 +19,5 @@ public interface IAuthService
 
     public Task<ActionResult> RevokeTokenAsync(Guid userId);
 
-    public Task<User> FindByEmailAsync(string email);
+    public Task<User?> FindByEmailAsync(string email);
 }

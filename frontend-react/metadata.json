@@ -1,0 +1,6 @@
+{
+  "name": "Got It",
+  "description": "Cooperative financial space for households. Manage budgets, track shared expenses, set spending limits, and coordinate ledger reports in a serene, modern UI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

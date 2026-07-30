@@ -1,0 +1,1185 @@
+{
+  "info": {
+    "_postman_id": "8fc6f2ad-b2c9-4034-891f-18f39a604631",
+    "name": "Got-It-App",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "42514110"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"name\",\r\n  \"age\": 30,\r\n  \"email\": \"name@gmail.com\",\r\n  \"password\": \"qwQW12!@\"\r\n}\r\n// Response Model\r\n// {\r\n//     \"result\": null,\r\n//     \"value\": {\r\n//         \"id\": \"b1126792-dab2-4e21-8652-aa1502a450f3\",\r\n//         \"name\": \"name\",\r\n//         \"age\": 30,\r\n//         \"email\": \"name@gmail.com\"\r\n//     }\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/Auth/register",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "Auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"name@gmail.com\",\r\n  \"password\": \"qwQW12!@\"\r\n}\r\n\r\n// Response model\r\n// {\r\n//     \"result\": null,\r\n//     \"value\": {\r\n//         \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3ODU5MTc5ZS04ZmU3LTQxMWUtOGM3Mi1jODUyZTI2YjdmMjUiLCJ1bmlxdWVfbmFtZSI6ImFzZGFzZCIsImVtYWlsIjoibXVkZWlAZ21haWwuY29tIiwianRpIjoiZjc0MTI0MmYtZDg5MC00Y2Y4LThmMzItOGQxYWExZmRjZDYyIiwibmJmIjoxNzg0Njg1Mjc2LCJleHAiOjE3ODQ2ODcwNzYsImlhdCI6MTc4NDY4NTI3NiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.j83vQprToNt-Ma1yce05XLC6pNUFsTA-FUwYkdnhVy0\",\r\n//         \"refreshToken\": \"XgLMhuSqriYhJS9P7HLMHUI3YbipiKornuy0FBxCJV8l48F6xNElF/EnV6szH+lF46vNSHV5BvGxFQzFLBMVm53H0i7Qmf4GgpTVcJp4pX1VR8a+vdNYAwdu0SVon3/XDpCTVnwTNU8KC9yXuouV1sOcjKbJD26upcZp5cWyuoI=\",\r\n//         \"expiresAt\": \"2026-07-22T02:24:36Z\",\r\n//         \"user\": {\r\n//             \"id\": \"7859179e-8fe7-411e-8c72-c852e26b7f25\",\r\n//             \"name\": \"name\",\r\n//             \"age\": 28,\r\n//             \"email\": \"name@gmail.com\"\r\n//         }\r\n//     }\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/Auth/login",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "Auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Revoke",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJiMTEyNjc5Mi1kYWIyLTRlMjEtODY1Mi1hYTE1MDJhNDUwZjMiLCJ1bmlxdWVfbmFtZSI6Imx1aXpAZ21haWwuY29tIiwiZW1haWwiOiJsdWl6QGdtYWlsLmNvbSIsImp0aSI6IjI3MjgzN2E2LWM4YmMtNDcxYS1hYWQzLTFjZmI4YThiM2E3YyIsIm5iZiI6MTc4NDY3OTkwMiwiZXhwIjoxNzg0NjgxNzAyLCJpYXQiOjE3ODQ2Nzk5MDIsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImh0dHBzOi8vbG9jYWxob3N0OjcxODkiXX0.5AoCzNu5ysWUUjFR5gar-4o4QWLwpiH_vvo71ykXgMU",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add user id as URL parameter\r\n// https://localhost:7189/api/Auth/revoke/%7BuserId%7D\r\n// Add Bearer token for Auth header\r\n\r\n// Response model\r\n// {\r\n//     \"message\": \"Refresh token revoked successfully.\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/Auth/revoke/b1126792-dab2-4e21-8652-aa1502a450f3",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "Auth",
+                "revoke",
+                "b1126792-dab2-4e21-8652-aa1502a450f3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh-token",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJmMTdjZDg4Ny04N2YxLTQzYmMtODhjOC02MjljNzUyMjQ2MzgiLCJ1bmlxdWVfbmFtZSI6Imx1aXp6QGdtYWlsLmNvbSIsImVtYWlsIjoibHVpenpAZ21haWwuY29tIiwianRpIjoiODJlMmNhNjQtMGRmOC00ZTdkLWI5MDItNWUxZThlNDJmNGVkIiwibmJmIjoxNzg0NzIxNjYyLCJleHAiOjE3ODQ3MjM0NjIsImlhdCI6MTc4NDcyMTY2MiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.YvXn-GXsjD3OGbRFk4j5fg8z2EFvzUMVj9mXD5GIWCc",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"AcessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3ODU5MTc5ZS04ZmU3LTQxMWUtOGM3Mi1jODUyZTI2YjdmMjUiLCJ1bmlxdWVfbmFtZSI6ImFzZGFzZCIsImVtYWlsIjoibXVkZWlAZ21haWwuY29tIiwianRpIjoiZjc0MTI0MmYtZDg5MC00Y2Y4LThmMzItOGQxYWExZmRjZDYyIiwibmJmIjoxNzg0Njg1Mjc2LCJleHAiOjE3ODQ2ODcwNzYsImlhdCI6MTc4NDY4NTI3NiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.j83vQprToNt-Ma1yce05XLC6pNUFsTA-FUwYkdnhVy0\",\r\n        \"refreshToken\": \"XgLMhuSqriYhJS9P7HLMHUI3YbipiKornuy0FBxCJV8l48F6xNElF/EnV6szH+lF46vNSHV5BvGxFQzFLBMVm53H0i7Qmf4GgpTVcJp4pX1VR8a+vdNYAwdu0SVon3/XDpCTVnwTNU8KC9yXuouV1sOcjKbJD26upcZp5cWyuoI=\"\r\n}\r\n\r\n// Response model\r\n// {\r\n//     \"result\": null,\r\n//     \"value\": {\r\n//         \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJiMTEyNjc5Mi1kYWIyLTRlMjEtODY1Mi1hYTE1MDJhNDUwZjMiLCJ1bmlxdWVfbmFtZSI6Imx1aXpAZ21haWwuY29tIiwiZW1haWwiOiJsdWl6QGdtYWlsLmNvbSIsImp0aSI6IjI3MjgzN2E2LWM4YmMtNDcxYS1hYWQzLTFjZmI4YThiM2E3YyIsIm5iZiI6MTc4NDY3OTkwMiwiZXhwIjoxNzg0NjgxNzAyLCJpYXQiOjE3ODQ2Nzk5MDIsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImh0dHBzOi8vbG9jYWxob3N0OjcxODkiXX0.5AoCzNu5ysWUUjFR5gar-4o4QWLwpiH_vvo71ykXgMU\",\r\n//         \"refreshToken\": \"jPKtD1CTe1+L8yCcnNyr2fUhPOCTQAVwazaQEX2ANkrKwcXDnFIvOBlpwI6RimsBLyRS/TpcGjUM4hWgvAy5XZ5zHR3RHuaxW5Oepw+l1GVYWM1x8ND4B8U/QHAGhZGBaLiymG/qtCtV0a/rD1MSWy+2gcOMiG7+zRgNdsDmtyw=\",\r\n//         \"expiresAt\": \"2026-07-22T00:55:02Z\",\r\n//         \"user\": {\r\n//             \"id\": \"b1126792-dab2-4e21-8652-aa1502a450f3\",\r\n//             \"name\": \"name\",\r\n//             \"age\": 30,\r\n//             \"email\": \"name@gmail.com\"\r\n//         }\r\n//     }\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/Auth/refresh-token",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "Auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateByIdUser",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJlMjk0MGRmYi04YmI0LTRiZTAtYjYyNC1mYjhlNzY5NzMwYjAiLCJ1bmlxdWVfbmFtZSI6IkRvbm8iLCJlbWFpbCI6ImRvbm9AZ21haWwuY29tIiwianRpIjoiNDJkYWUwNDMtMmVhMS00ZjJjLTg1MTMtNWIxN2MzNjA1ZDAxIiwibmJmIjoxNzg1NDA1NjkzLCJleHAiOjE3ODU0MDc0OTMsImlhdCI6MTc4NTQwNTY5MywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.TxbLZ1cAy3hsRLc9vkZiFxzzbpnfEtl1E8Q4sSqMyR0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add auth bearer token\r\n{\r\n  \"name\": \"name\",\r\n  \"age\": 27,\r\n  \"email\": \"name@gmail.com\",\r\n  \"password\": \"qwQW12!@\"\r\n}\r\n\r\n// Response Model\r\n// {\r\n//     \"result\": null,\r\n//     \"value\": {\r\n//         \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3ODU5MTc5ZS04ZmU3LTQxMWUtOGM3Mi1jODUyZTI2YjdmMjUiLCJ1bmlxdWVfbmFtZSI6Ik5vdm9OYW1lIiwiZW1haWwiOiJub3ZvQGdtYWlsLmNvbSIsImp0aSI6IjBmNjA4NjMzLTNkMmMtNGQ4MC05YzBlLWU0OWJkNDk4YTVkMSIsIm5iZiI6MTc4NDY4MzEyMCwiZXhwIjoxNzg0Njg0OTIwLCJpYXQiOjE3ODQ2ODMxMjAsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTg5In0.Uu7UTOAU9VnvffDVgV9j8waxVaVBRBWbQ-cv8t3jFQ4\",\r\n//         \"refreshToken\": \"p+W1/Orm+xpGXFINMCJlfCjg6hubAKr6WoemJeEWL5g2MGAjYJF3Ot6E5Lk11p+SGvPbuVV+tc70xMdNimA7VmnNJvWYQRc53/G3leWInVXeoCfI+APhYFa1SMKkd2Ixb69tMdOQUZEHugQHdgqWcO7/z+dLdmKCOH01+LpnNZU=\",\r\n//         \"expiresAt\": \"2026-07-22T01:48:40Z\",\r\n//         \"user\": {\r\n//             \"id\": \"7859179e-8fe7-411e-8c72-c852e26b7f25\",\r\n//             \"name\": \"name\",\r\n//             \"age\": 29,\r\n//             \"email\": \"name@gmail.com\"\r\n//         }\r\n//     }\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/Auth/update-user",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "Auth",
+                "update-user"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "PlayGround",
+      "item": [
+        {
+          "name": "CreatePlayGround",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyYTM0MDNhMC00YzM4LTRiM2MtYTM3My1hZTJkZGY3YjJkZDciLCJ1bmlxdWVfbmFtZSI6Imx1aXpAZ21haWwuY29tIiwiZW1haWwiOiJsdWl6QGdtYWlsLmNvbSIsImp0aSI6Ijc2OGM2OGZjLWY0OTItNGRjNi05ZDE4LTBjZDVlMjBiZWQ5NiIsIm5iZiI6MTc4NDg5NzE2OSwiZXhwIjoxNzg0ODk4OTY5LCJpYXQiOjE3ODQ4OTcxNjksImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTg5In0.3iD0a6kiZJEqJtXEllG_lwp3DguebfNAf9QO7CIWdKw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add Bearer token for Auth header\r\n\r\n{\r\n  \"ownerId\": \"2A3403A0-4C38-4B3C-A373-AE2DDF7B2DD7\",\r\n  \"name\": \"PlayGround title\",\r\n  \"description\": \"My first PlayGround\",\r\n  \"askForApproval\": true\r\n}\r\n\r\n// Response model\r\n// {\r\n//     \"playGroundId\": \"c28bdb86-2442-448e-a5ee-105a2b495f02\",\r\n//     \"ownerId\": \"b1126792-dab2-4e21-8652-aa1502a450f3\",\r\n//     \"description\": \"My first PlayGround\",\r\n//     \"name\": \"PlayGround\",\r\n//     \"askForApproval\": true,\r\n//     \"createdAt\": \"2026-07-22T00:25:48.5893818Z\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/Playgrounds",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "Playgrounds"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetByIdPlayGround",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3ODU5MTc5ZS04ZmU3LTQxMWUtOGM3Mi1jODUyZTI2YjdmMjUiLCJ1bmlxdWVfbmFtZSI6Ik5vdm9OYW1lIiwiZW1haWwiOiJub3ZvRW1haWxAZ21haWwuY29tIiwianRpIjoiYjk5NGQ5MjYtN2RlZi00NjE1LWFkZjctODBlZmVkMmJlNGZiIiwibmJmIjoxNzg0Njg2NTg4LCJleHAiOjE3ODQ2ODgzODgsImlhdCI6MTc4NDY4NjU4OCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.q0l9RLbt_F6yn-ROHXEDMnhpnn3dT8Y5mZPWMFmEtX4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add auth bearer token\r\n// Add playGround ID for URL\r\n\r\n// Response Model\r\n// {\r\n//     \"playGroundId\": \"065d79dd-e34e-44d2-aca4-859cbcfb9cf7\",\r\n//     \"ownerId\": \"b1126792-dab2-4e21-8652-aa1502a450f3\",\r\n//     \"description\": \"My first PlayGround\",\r\n//     \"name\": \"PlayGround\",\r\n//     \"askForApproval\": true,\r\n//     \"createdAt\": \"2026-07-21T23:47:04.1280046\"\r\n// }\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/Playgrounds/f1572d99-7412-4dbc-9f86-c0cdfc8e8ab0",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "Playgrounds",
+                "f1572d99-7412-4dbc-9f86-c0cdfc8e8ab0"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetByUserIdPlayGrounds",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0YTM4ZDI4OS1iNzM0LTQxYTQtOTUwMC1iMjM3ODFkMjJjYTciLCJ1bmlxdWVfbmFtZSI6Ikx1aXoiLCJlbWFpbCI6Imx1aXp6QGdtYWlsLmNvbSIsImp0aSI6IjQ5ZmVjMTQ5LWYwMmYtNGQ2YS1hMGRhLTVlMjc1MjZkNTY3YyIsIm5iZiI6MTc4NTI0NDcxNiwiZXhwIjoxNzg1MjQ2NTE2LCJpYXQiOjE3ODUyNDQ3MTYsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTg5In0.p7L-Ui4__G8cGnUJkfhzWGHjQc1rsomim0anuSaeA5M",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add bearer token for auth header\r\n// Add userId on URL\r\n\r\n// Response Model\r\n// [\r\n//     {\r\n//         \"playGroundId\": \"065d79dd-e34e-44d2-aca4-859cbcfb9cf7\",\r\n//         \"ownerId\": \"b1126792-dab2-4e21-8652-aa1502a450f3\",\r\n//         \"description\": \"My first PlayGround\",\r\n//         \"name\": \"PlayGround\",\r\n//         \"askForApproval\": true,\r\n//         \"createdAt\": \"2026-07-21T23:47:04.1280046\"\r\n//     },\r\n//     {\r\n//         \"playGroundId\": \"50ce8086-0a3b-4085-8808-39c8e9e1b669\",\r\n//         \"ownerId\": \"b1126792-dab2-4e21-8652-aa1502a450f3\",\r\n//         \"description\": \"My first PlayGround\",\r\n//         \"name\": \"PlayGround\",\r\n//         \"askForApproval\": true,\r\n//         \"createdAt\": \"2026-07-22T00:02:05.9000773\"\r\n//     },\r\n//     {\r\n//         \"playGroundId\": \"c28bdb86-2442-448e-a5ee-105a2b495f02\",\r\n//         \"ownerId\": \"b1126792-dab2-4e21-8652-aa1502a450f3\",\r\n//         \"description\": \"My first PlayGround\",\r\n//         \"name\": \"PlayGround\",\r\n//         \"askForApproval\": true,\r\n//         \"createdAt\": \"2026-07-22T00:25:48.5893818\"\r\n//     }\r\n// ]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/Playgrounds/user/03F36C04-1142-4F52-8A45-B62A8DB3DA6C",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "Playgrounds",
+                "user",
+                "03F36C04-1142-4F52-8A45-B62A8DB3DA6C"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "toggleApprovalByIdPlayGround",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3ODU5MTc5ZS04ZmU3LTQxMWUtOGM3Mi1jODUyZTI2YjdmMjUiLCJ1bmlxdWVfbmFtZSI6Ik5vdm9OYW1lIiwiZW1haWwiOiJub3ZvRW1haWxAZ21haWwuY29tIiwianRpIjoiYjk5NGQ5MjYtN2RlZi00NjE1LWFkZjctODBlZmVkMmJlNGZiIiwibmJmIjoxNzg0Njg2NTg4LCJleHAiOjE3ODQ2ODgzODgsImlhdCI6MTc4NDY4NjU4OCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.q0l9RLbt_F6yn-ROHXEDMnhpnn3dT8Y5mZPWMFmEtX4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add auth bearer token\r\n// Add playGround ID for URL\r\n\r\n// Response Model\r\n// {\r\n//     \"playGroundId\": \"065d79dd-e34e-44d2-aca4-859cbcfb9cf7\",\r\n//     \"ownerId\": \"b1126792-dab2-4e21-8652-aa1502a450f3\",\r\n//     \"description\": \"My first PlayGround\",\r\n//     \"name\": \"PlayGround\",\r\n//     \"askForApproval\": false,\r\n//     \"createdAt\": \"2026-07-21T23:47:04.1280046\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/toggle-approval/2e0c479e-29df-4897-b254-17dec8e30f2a",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "toggle-approval",
+                "2e0c479e-29df-4897-b254-17dec8e30f2a"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateByIdPlayGround",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3ODU5MTc5ZS04ZmU3LTQxMWUtOGM3Mi1jODUyZTI2YjdmMjUiLCJ1bmlxdWVfbmFtZSI6Ik5vdm9OYW1lIiwiZW1haWwiOiJub3ZvRW1haWxAZ21haWwuY29tIiwianRpIjoiYjk5NGQ5MjYtN2RlZi00NjE1LWFkZjctODBlZmVkMmJlNGZiIiwibmJmIjoxNzg0Njg2NTg4LCJleHAiOjE3ODQ2ODgzODgsImlhdCI6MTc4NDY4NjU4OCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.q0l9RLbt_F6yn-ROHXEDMnhpnn3dT8Y5mZPWMFmEtX4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add auth bearer token\r\n// Add playGround ID for URL\r\n\r\n{\r\n  \"name\": \"New name\",\r\n  \"description\": \"This is the new description or the playground\",\r\n  \"askForApproval\": true\r\n}\r\n\r\n// Response Model\r\n// {\r\n//     \"playGroundId\": \"686dbeb6-ac56-40b7-bb4e-741f8b252f16\",\r\n//     \"ownerId\": \"7859179e-8fe7-411e-8c72-c852e26b7f25\",\r\n//     \"description\": \"This is the new description or the playground\",\r\n//     \"name\": \"New name\",\r\n//     \"askForApproval\": true,\r\n//     \"createdAt\": \"2026-07-22T00:53:56.1898054\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/Playgrounds/2e0c479e-29df-4897-b254-17dec8e30f2a",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "Playgrounds",
+                "2e0c479e-29df-4897-b254-17dec8e30f2a"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteByIdPlayGround",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3ODU5MTc5ZS04ZmU3LTQxMWUtOGM3Mi1jODUyZTI2YjdmMjUiLCJ1bmlxdWVfbmFtZSI6Ik5vdm9OYW1lIiwiZW1haWwiOiJub3ZvRW1haWxAZ21haWwuY29tIiwianRpIjoiYjk5NGQ5MjYtN2RlZi00NjE1LWFkZjctODBlZmVkMmJlNGZiIiwibmJmIjoxNzg0Njg2NTg4LCJleHAiOjE3ODQ2ODgzODgsImlhdCI6MTc4NDY4NjU4OCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.q0l9RLbt_F6yn-ROHXEDMnhpnn3dT8Y5mZPWMFmEtX4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add auth bearer token\r\n// Add playGround ID for URL\r\n\r\n// Response Model\r\n// {\r\n//     \"value\": \"Playground with ID 686dbeb6-ac56-40b7-bb4e-741f8b252f16 deleted successfully\",\r\n//     \"formatters\": [],\r\n//     \"contentTypes\": [],\r\n//     \"declaredType\": null,\r\n//     \"statusCode\": 200\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/Playgrounds/2e0c479e-29df-4897-b254-17dec8e30f2a",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "Playgrounds",
+                "2e0c479e-29df-4897-b254-17dec8e30f2a"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetAllPlaygrounds",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0YTM4ZDI4OS1iNzM0LTQxYTQtOTUwMC1iMjM3ODFkMjJjYTciLCJ1bmlxdWVfbmFtZSI6Ikx1aXoiLCJlbWFpbCI6Imx1aXp6QGdtYWlsLmNvbSIsImp0aSI6IjQ5ZmVjMTQ5LWYwMmYtNGQ2YS1hMGRhLTVlMjc1MjZkNTY3YyIsIm5iZiI6MTc4NTI0NDcxNiwiZXhwIjoxNzg1MjQ2NTE2LCJpYXQiOjE3ODUyNDQ3MTYsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTg5In0.p7L-Ui4__G8cGnUJkfhzWGHjQc1rsomim0anuSaeA5M",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add bearer token on header\r\n\r\n// Response Model:\r\n// [\r\n//     {\r\n//         \"playGroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//         \"ownerId\": \"3b7390ef-a982-435e-93b6-e155dbcff50d\",\r\n//         \"description\": \"My first PlayGround\",\r\n//         \"name\": \"PlayGround title\",\r\n//         \"askForApproval\": true,\r\n//         \"createdAt\": \"2026-07-23T07:02:14.8546472\"\r\n//     }\r\n// ]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/Playgrounds/all",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "Playgrounds",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "PlayGroundMember",
+      "item": [
+        {
+          "name": "CreateMember",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzYjczOTBlZi1hOTgyLTQzNWUtOTNiNi1lMTU1ZGJjZmY1MGQiLCJ1bmlxdWVfbmFtZSI6Imx1aXpAZ21haWwuY29tIiwiZW1haWwiOiJsdWl6QGdtYWlsLmNvbSIsImp0aSI6IjNiYzk5YWE2LTY0NjQtNDBjNy04YjE2LTEwZmY1ZjBlMzEyMCIsIm5iZiI6MTc4NDc5MDEwMCwiZXhwIjoxNzg0NzkxOTAwLCJpYXQiOjE3ODQ3OTAxMDAsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTg5In0.xhUVO_f4tEE9aZBbwdW48KQIfzvWLoMgleGkdlxzzDU",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add bearer token\r\n// Add playground ID on URL\r\n\r\n{\r\n  \"name\": \"New Member\",\r\n  \"age\": 18\r\n}\r\n\r\n// Response Model\r\n// {\r\n//     \"playGroundId\": \"191c16cb-8e32-4d09-88e9-932fe909e4be\",\r\n//     \"personId\": \"59fcdbdd-b706-4ab1-b299-6f762a1da4a5\",\r\n//     \"isAdmin\": false,\r\n//     \"joinedAt\": \"2026-07-22T12:09:05.8172058Z\",\r\n//     \"role\": 2\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/PlayGroundMember/bf900647-ea84-47db-bb44-b9d036815717",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "PlayGroundMember",
+                "bf900647-ea84-47db-bb44-b9d036815717"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetMember",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJmMTdjZDg4Ny04N2YxLTQzYmMtODhjOC02MjljNzUyMjQ2MzgiLCJ1bmlxdWVfbmFtZSI6Imx1aXp6QGdtYWlsLmNvbSIsImVtYWlsIjoibHVpenpAZ21haWwuY29tIiwianRpIjoiODJlMmNhNjQtMGRmOC00ZTdkLWI5MDItNWUxZThlNDJmNGVkIiwibmJmIjoxNzg0NzIxNjYyLCJleHAiOjE3ODQ3MjM0NjIsImlhdCI6MTc4NDcyMTY2MiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.YvXn-GXsjD3OGbRFk4j5fg8z2EFvzUMVj9mXD5GIWCc",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add playground and member Id on URL\r\n\r\n// Response Model\r\n// {\r\n//     \"playGroundId\": \"191c16cb-8e32-4d09-88e9-932fe909e4be\",\r\n//     \"personId\": \"3d701e3b-c7cb-458f-914a-64f35b3a8175\",\r\n//     \"isAdmin\": false,\r\n//     \"joinedAt\": \"2026-07-22T12:05:51.2368017\",\r\n//     \"role\": 2\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/PlayGroundMember/191C16CB-8E32-4D09-88E9-932FE909E4BE/3D701E3B-C7CB-458F-914A-64F35B3A8175",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "PlayGroundMember",
+                "191C16CB-8E32-4D09-88E9-932FE909E4BE",
+                "3D701E3B-C7CB-458F-914A-64F35B3A8175"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "InviteUser",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIwM2YzNmMwNC0xMTQyLTRmNTItOGE0NS1iNjJhOGRiM2RhNmMiLCJ1bmlxdWVfbmFtZSI6Ikx1aXoiLCJlbWFpbCI6Imx1aXpAZ21haWwuY29tIiwianRpIjoiYjRiNzI4NmMtNmJkMi00Yjg4LWJmY2ItNmQ5ZDZjY2ViMjk0IiwibmJmIjoxNzg1MjQzNTI1LCJleHAiOjE3ODUyNDUzMjUsImlhdCI6MTc4NTI0MzUyNSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.PPZKdiTYuZVPJ5DTG0PHku8K2qmPW9aApg-_bo7kHU8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add playground ID on URL\r\n{\r\n  \"email\": \"name@gmail.com\",\r\n  \"role\": 2 \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/PlayGroundMember/0F8C2FCC-9F13-468B-AF20-F06A03F5427A/invite",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "PlayGroundMember",
+                "0F8C2FCC-9F13-468B-AF20-F06A03F5427A",
+                "invite"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateMember",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyYTM0MDNhMC00YzM4LTRiM2MtYTM3My1hZTJkZGY3YjJkZDciLCJ1bmlxdWVfbmFtZSI6Imx1aXpAZ21haWwuY29tIiwiZW1haWwiOiJsdWl6QGdtYWlsLmNvbSIsImp0aSI6ImMwZGExNzMxLWE2NjktNDg5Mi1hZmRkLTBjN2ZhNjI5ZDE0NCIsIm5iZiI6MTc4NDkxMjE4NiwiZXhwIjoxNzg0OTEzOTg2LCJpYXQiOjE3ODQ5MTIxODYsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTg5In0.0tIdpBdMhFm4v3VlSqIEXCIKWO10fQ5a_FPZhfe16Iw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"role\": 2,\r\n  \"isAdmin\": false\r\n}\r\n\r\n// Response model\r\n// {\r\n//     \"playGroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//     \"personId\": \"b6bff921-e339-4b90-aa33-9b3ffe635cb8\",\r\n//     \"isAdmin\": true,\r\n//     \"joinedAt\": \"2026-07-23T07:03:13.1557767\",\r\n//     \"role\": 3\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/PlayGroundMember/325ADDA7-F204-4919-9EF4-1C33CC89F4F5/52EFEE3E-C896-4FE6-AD4F-A41001B91A39",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "PlayGroundMember",
+                "325ADDA7-F204-4919-9EF4-1C33CC89F4F5",
+                "52EFEE3E-C896-4FE6-AD4F-A41001B91A39"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteMember",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzYjczOTBlZi1hOTgyLTQzNWUtOTNiNi1lMTU1ZGJjZmY1MGQiLCJ1bmlxdWVfbmFtZSI6Imx1aXpAZ21haWwuY29tIiwiZW1haWwiOiJsdWl6QGdtYWlsLmNvbSIsImp0aSI6IjFkOWVkNTE2LWY4ZGUtNDQ2Zi04OWE1LWJkYjg0YjRjMWZlYSIsIm5iZiI6MTc4NDg4NDA2MCwiZXhwIjoxNzg0ODg1ODYwLCJpYXQiOjE3ODQ4ODQwNjAsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTg5In0.MiYYV1_SsuQgWiZrRtyzv5YBkmKqWske81tyM2IoaSI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add playground ID and member ID on URL\r\n\r\n// Response model\r\n// {\r\n//     \"playGroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//     \"personId\": \"b6bff921-e339-4b90-aa33-9b3ffe635cb8\",\r\n//     \"isAdmin\": true,\r\n//     \"joinedAt\": \"2026-07-23T07:03:13.1557767\",\r\n//     \"role\": 3\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/PlayGroundMember/BF900647-EA84-47DB-BB44-B9D036815717/B6BFF921-E339-4B90-AA33-9B3FFE635CB8",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "PlayGroundMember",
+                "BF900647-EA84-47DB-BB44-B9D036815717",
+                "B6BFF921-E339-4B90-AA33-9B3FFE635CB8"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "AllMembersByPlaygroundID",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJkYjQ2MDRlZS0yNTIzLTQyZGUtYmQ5OS01M2RmZTNmYWVjMzQiLCJ1bmlxdWVfbmFtZSI6Ik5vdm9ub21lVUkiLCJlbWFpbCI6Imx1aXpAZ21haWwuY29tIiwianRpIjoiNmMwZmQ0ZTItMDVhYy00NzA0LThmMzctNjAwZjVmMjQyNjVkIiwibmJmIjoxNzg1MDA0MDA5LCJleHAiOjE3ODUwMDU4MDksImlhdCI6MTc4NTAwNDAwOSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.u8aPwzr5VasAuhm9z4tuPsL7QkJC1OAm9I3PFG3Qcwg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Response model\r\n// [\r\n//     {\r\n//         \"playGroundId\": \"c6b112d4-1b1d-40e5-90ff-8429f2436d42\",\r\n//         \"personId\": \"0190ad1f-594f-45a4-b3e5-3897a3c9cdc9\",\r\n//         \"isAdmin\": false,\r\n//         \"joinedAt\": \"2026-07-25T18:01:57.9182885\",\r\n//         \"role\": 1,\r\n//         \"userId\": null,\r\n//         \"name\": \"Guest 1\",\r\n//         \"age\": 22\r\n//     },\r\n//     {\r\n//         \"playGroundId\": \"c6b112d4-1b1d-40e5-90ff-8429f2436d42\",\r\n//         \"personId\": \"1c154a6d-e8cb-47e1-b129-47ae07376eae\",\r\n//         \"isAdmin\": true,\r\n//         \"joinedAt\": \"2026-07-24T17:04:27.0742957\",\r\n//         \"role\": 4,\r\n//         \"userId\": \"db4604ee-2523-42de-bd99-53dfe3faec34\",\r\n//         \"name\": \"name\",\r\n//         \"age\": 30\r\n//     }\r\n// ]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/PlayGroundMember/all-members/C6B112D4-1B1D-40E5-90FF-8429F2436D42",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "PlayGroundMember",
+                "all-members",
+                "C6B112D4-1B1D-40E5-90FF-8429F2436D42"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "CreateTransaction",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIwM2YzNmMwNC0xMTQyLTRmNTItOGE0NS1iNjJhOGRiM2RhNmMiLCJ1bmlxdWVfbmFtZSI6Ikx1aXoiLCJlbWFpbCI6Imx1aXpAZ21haWwuY29tIiwianRpIjoiNmM2NzU0MDctMTRjNi00NDc3LWIwNjMtN2VhNmM0N2M3ZjllIiwibmJmIjoxNzg1MjI2NTY0LCJleHAiOjE3ODUyMjgzNjQsImlhdCI6MTc4NTIyNjU2NCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.sQ-AlJU2lXncOHpQy94Ahdrr3QfU3tR3kUdral_u2S4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add playground ID on URL\r\n// Add bearer token for header\r\n\r\n{\r\n  \"playgroundId\": \"0F8C2FCC-9F13-468B-AF20-F06A03F5427A\",\r\n  \"personId\": \"11AB116A-F27F-498E-BC68-8E22D9F6AA41\",\r\n  \"description\": \"first Transaction\",\r\n  \"amount\": 1344,\r\n  \"type\": 1,\r\n  \"isPublic\": true\r\n}\r\n\r\n// Response model\r\n// {\r\n//     \"id\": \"1af696b2-0440-4a67-b78c-d5c673f7ad81\",\r\n//     \"playgroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//     \"personId\": \"868c5b3b-1110-4c12-bc5d-7fd3ea668fc8\",\r\n//     \"description\": \"First Transaction\",\r\n//     \"amount\": 100,\r\n//     \"type\": 1,\r\n//     \"isPublic\": true,\r\n//     \"approvalStatus\": 1,\r\n//     \"createdAt\": \"2026-07-23T07:12:38.4276244Z\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/transactions/playground/0F8C2FCC-9F13-468B-AF20-F06A03F5427A",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "transactions",
+                "playground",
+                "0F8C2FCC-9F13-468B-AF20-F06A03F5427A"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetAllTransactionsOnPlayGround",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJlMjk0MGRmYi04YmI0LTRiZTAtYjYyNC1mYjhlNzY5NzMwYjAiLCJ1bmlxdWVfbmFtZSI6IkRvbm8iLCJlbWFpbCI6ImRvbm9AZ21haWwuY29tIiwianRpIjoiNDJkYWUwNDMtMmVhMS00ZjJjLTg1MTMtNWIxN2MzNjA1ZDAxIiwibmJmIjoxNzg1NDA1NjkzLCJleHAiOjE3ODU0MDc0OTMsImlhdCI6MTc4NTQwNTY5MywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.TxbLZ1cAy3hsRLc9vkZiFxzzbpnfEtl1E8Q4sSqMyR0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add playground ID on URL\r\n// Add bearer token for header\r\n\r\n// Response model\r\n// [\r\n//     {\r\n//         \"id\": \"47041531-fbbe-4a9a-930e-5dce4dab0234\",\r\n//         \"playgroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//         \"personId\": \"868c5b3b-1110-4c12-bc5d-7fd3ea668fc8\",\r\n//         \"description\": \"First Transaction\",\r\n//         \"amount\": 100.0,\r\n//         \"type\": 1,\r\n//         \"isPublic\": true,\r\n//         \"approvalStatus\": 1,\r\n//         \"createdAt\": \"2026-07-23T07:27:09.3084865\"\r\n//     },\r\n//     {\r\n//         \"id\": \"b0963760-6037-4350-bdcc-0bf9673800e8\",\r\n//         \"playgroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//         \"personId\": \"868c5b3b-1110-4c12-bc5d-7fd3ea668fc8\",\r\n//         \"description\": \"Second Transaction\",\r\n//         \"amount\": 300.0,\r\n//         \"type\": 2,\r\n//         \"isPublic\": false,\r\n//         \"approvalStatus\": 1,\r\n//         \"createdAt\": \"2026-07-23T07:28:01.5935857\"\r\n//     }\r\n// ]\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/transactions/playground/50A920F3-41D2-4353-AC48-FB7957FACFE1",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "transactions",
+                "playground",
+                "50A920F3-41D2-4353-AC48-FB7957FACFE1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetByIdTransaction",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIwM2YzNmMwNC0xMTQyLTRmNTItOGE0NS1iNjJhOGRiM2RhNmMiLCJ1bmlxdWVfbmFtZSI6Ikx1aXoiLCJlbWFpbCI6Imx1aXpAZ21haWwuY29tIiwianRpIjoiNmM2NzU0MDctMTRjNi00NDc3LWIwNjMtN2VhNmM0N2M3ZjllIiwibmJmIjoxNzg1MjI2NTY0LCJleHAiOjE3ODUyMjgzNjQsImlhdCI6MTc4NTIyNjU2NCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.sQ-AlJU2lXncOHpQy94Ahdrr3QfU3tR3kUdral_u2S4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add playground ID and transaction on URL\r\n// Add bearer token for header\r\n\r\n\r\n// Response model\r\n// {\r\n//     \"id\": \"47041531-fbbe-4a9a-930e-5dce4dab0234\",\r\n//     \"playgroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//     \"personId\": \"868c5b3b-1110-4c12-bc5d-7fd3ea668fc8\",\r\n//     \"description\": \"First Transaction\",\r\n//     \"amount\": 100.0,\r\n//     \"type\": 1,\r\n//     \"isPublic\": true,\r\n//     \"approvalStatus\": 1,\r\n//     \"createdAt\": \"2026-07-23T07:27:09.3084865\"\r\n// }\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/transactions/playground/0f8c2fcc-9f13-468b-af20-f06a03f5427a/35A81772-FE56-474C-8419-AADA2C1494EE",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "transactions",
+                "playground",
+                "0f8c2fcc-9f13-468b-af20-f06a03f5427a",
+                "35A81772-FE56-474C-8419-AADA2C1494EE"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateByIdTransaction",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxZGE1MGY0Mi02ZTBhLTQ3NDEtOTEwNS1mNjE2ODMyZTZhYmEiLCJ1bmlxdWVfbmFtZSI6Imx1aXp6QGdtYWlsLmNvbSIsImVtYWlsIjoibHVpenpAZ21haWwuY29tIiwianRpIjoiYmRjYjEyZmQtNWFiMS00YjcxLWJiY2MtOTk0ZTA2MDZmM2Y3IiwibmJmIjoxNzg0ODk3MzMxLCJleHAiOjE3ODQ4OTkxMzEsImlhdCI6MTc4NDg5NzMzMSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkifQ.F59nQHsTM26zs1rFwkfErgE3zX1qGeBom9FGnPoQtHI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add playground and transaction ID on URL\r\n// Add bearer token for header\r\n\r\n{\r\n  \"description\": \"Third\",\r\n  \"amount\": 10,\r\n  \"type\": 2,\r\n  \"transactionDate\": \"2027-07-23T07:27:09.3084865\"\r\n}\r\n\r\n// Response model\r\n// {\r\n//     \"id\": \"47041531-fbbe-4a9a-930e-5dce4dab0234\",\r\n//     \"playgroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//     \"personId\": \"868c5b3b-1110-4c12-bc5d-7fd3ea668fc8\",\r\n//     \"description\": \"New description for transaction\",\r\n//     \"amount\": 10,\r\n//     \"type\": 2,\r\n//     \"isPublic\": true,\r\n//     \"approvalStatus\": 0,\r\n//     \"createdAt\": \"2027-07-23T07:27:09.3084865\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/transactions/playground/52EFEE3E-C896-4FE6-AD4F-A41001B91A39/6d2e7584-94a3-4c04-8407-d8a0e1f77bb7",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "transactions",
+                "playground",
+                "52EFEE3E-C896-4FE6-AD4F-A41001B91A39",
+                "6d2e7584-94a3-4c04-8407-d8a0e1f77bb7"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteByIdTransaction",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzYjczOTBlZi1hOTgyLTQzNWUtOTNiNi1lMTU1ZGJjZmY1MGQiLCJ1bmlxdWVfbmFtZSI6Imx1aXpAZ21haWwuY29tIiwiZW1haWwiOiJsdWl6QGdtYWlsLmNvbSIsImp0aSI6IjNiYzk5YWE2LTY0NjQtNDBjNy04YjE2LTEwZmY1ZjBlMzEyMCIsIm5iZiI6MTc4NDc5MjE0NywiZXhwIjoxNzg0NzkzOTQ3LCJpYXQiOjE3ODQ3OTIxNDcsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE4OSIsImh0dHBzOi8vbG9jYWxob3N0OjcxODkiXX0.DsqYsZfbztCGbPXJXVpQPZmK--yaq_McK8UBvBU2bYM",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add playground and transaction ID on URL\r\n// Add bearer token for header\r\n\r\n// Response model\r\n// {\r\n//     \"id\": \"b0963760-6037-4350-bdcc-0bf9673800e8\",\r\n//     \"playgroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//     \"personId\": \"868c5b3b-1110-4c12-bc5d-7fd3ea668fc8\",\r\n//     \"description\": \"Second Transaction\",\r\n//     \"amount\": 300.0,\r\n//     \"type\": 2,\r\n//     \"isPublic\": false,\r\n//     \"createdAt\": \"2026-07-23T07:28:01.5935857\",\r\n//     \"approvalStatus\": 1,\r\n//     \"playground\": null,\r\n//     \"person\": null\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/transactions/playground/BF900647-EA84-47DB-BB44-B9D036815717/B0963760-6037-4350-BDCC-0BF9673800E8",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "transactions",
+                "playground",
+                "BF900647-EA84-47DB-BB44-B9D036815717",
+                "B0963760-6037-4350-BDCC-0BF9673800E8"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetAllByPersonTransactions",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzYjczOTBlZi1hOTgyLTQzNWUtOTNiNi1lMTU1ZGJjZmY1MGQiLCJ1bmlxdWVfbmFtZSI6Imx1aXpAZ21haWwuY29tIiwiZW1haWwiOiJsdWl6QGdtYWlsLmNvbSIsImp0aSI6ImI3NjU5M2M3LTVmOWUtNDdhNS1iZjcxLTg0MWEwYWNlYjE4NyIsIm5iZiI6MTc4NDg1MTY3OSwiZXhwIjoxNzg0ODUzNDc5LCJpYXQiOjE3ODQ4NTE2NzksImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTg5In0.f9xWcMiovy3irYVQ3IY2gDwghZyNj5NJcSb0bjPSOF8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "\r\n\r\n// Response Model\r\n// [\r\n//     {\r\n//         \"id\": \"47041531-fbbe-4a9a-930e-5dce4dab0234\",\r\n//         \"playgroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//         \"personId\": \"868c5b3b-1110-4c12-bc5d-7fd3ea668fc8\",\r\n//         \"description\": \"New description for transaction\",\r\n//         \"amount\": 10.0,\r\n//         \"type\": 2,\r\n//         \"isPublic\": true,\r\n//         \"approvalStatus\": 1,\r\n//         \"createdAt\": \"2027-07-23T07:27:09.3084865\"\r\n//     },\r\n//     {\r\n//         \"id\": \"991f9afe-e2f6-47bd-8b4a-71305b3d3667\",\r\n//         \"playgroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//         \"personId\": \"868c5b3b-1110-4c12-bc5d-7fd3ea668fc8\",\r\n//         \"description\": \"First Transaction\",\r\n//         \"amount\": 100.0,\r\n//         \"type\": 1,\r\n//         \"isPublic\": true,\r\n//         \"approvalStatus\": 1,\r\n//         \"createdAt\": \"2026-07-24T00:08:44.2396052\"\r\n//     },\r\n//     {\r\n//         \"id\": \"8d08bf41-385f-4a6e-987c-f78f9666b558\",\r\n//         \"playgroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//         \"personId\": \"868c5b3b-1110-4c12-bc5d-7fd3ea668fc8\",\r\n//         \"description\": \"First Transaction\",\r\n//         \"amount\": 100.0,\r\n//         \"type\": 1,\r\n//         \"isPublic\": true,\r\n//         \"approvalStatus\": 1,\r\n//         \"createdAt\": \"2026-07-24T00:08:43.216896\"\r\n//     },\r\n//     {\r\n//         \"id\": \"ec20ecac-26e2-4b49-89d3-5f42b0f47936\",\r\n//         \"playgroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//         \"personId\": \"868c5b3b-1110-4c12-bc5d-7fd3ea668fc8\",\r\n//         \"description\": \"First Transaction\",\r\n//         \"amount\": 100.0,\r\n//         \"type\": 1,\r\n//         \"isPublic\": true,\r\n//         \"approvalStatus\": 1,\r\n//         \"createdAt\": \"2026-07-24T00:08:42.1391018\"\r\n//     },\r\n//     {\r\n//         \"id\": \"2972caa8-7429-4050-8e86-dab053d0a6f2\",\r\n//         \"playgroundId\": \"bf900647-ea84-47db-bb44-b9d036815717\",\r\n//         \"personId\": \"868c5b3b-1110-4c12-bc5d-7fd3ea668fc8\",\r\n//         \"description\": \"First Transaction\",\r\n//         \"amount\": 100.0,\r\n//         \"type\": 1,\r\n//         \"isPublic\": true,\r\n//         \"approvalStatus\": 1,\r\n//         \"createdAt\": \"2026-07-24T00:08:40.7031092\"\r\n//     }\r\n// ]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/transactions/all",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "transactions",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "ApprovalRequests",
+      "item": [
+        {
+          "name": "GetApprovalRequestByPlaygroundId",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyYTM0MDNhMC00YzM4LTRiM2MtYTM3My1hZTJkZGY3YjJkZDciLCJ1bmlxdWVfbmFtZSI6Imx1aXpAZ21haWwuY29tIiwiZW1haWwiOiJsdWl6QGdtYWlsLmNvbSIsImp0aSI6ImVjZTc1M2Q0LTY2OTEtNDlhZS1hMmQxLTk0Njg4ZjBjOGZiZSIsIm5iZiI6MTc4NDkwNzE4OCwiZXhwIjoxNzg0OTA4OTg4LCJpYXQiOjE3ODQ5MDcxODgsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTg5In0.6B3X9gPEqvKvGGUW9AGQTw8DHtk9VY5u5kVRojLIGAA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add playground ID on URL\r\n\r\n// Response Model\r\n// [\r\n//     {\r\n//         \"id\": \"6eb31b3c-78f0-4dfd-8975-05556fd33c13\",\r\n//         \"personId\": \"83fe8ef4-acc9-4eda-9ae0-1843e841a7ce\",\r\n//         \"description\": \"First Transaction\",\r\n//         \"amount\": 100.0,\r\n//         \"type\": 1,\r\n//         \"status\": 0,\r\n//         \"isPublic\": false,\r\n//         \"requestedAt\": \"2026-07-24T11:15:44.0809275\",\r\n//         \"reviewedAt\": \"0001-01-01T00:00:00\",\r\n//         \"requestedBy\": null,\r\n//         \"reviewedBy\": null,\r\n//         \"reasonDescription\": null\r\n//     },\r\n//     {\r\n//         \"id\": \"00b978a7-66c8-4d60-8b7a-75d72b189669\",\r\n//         \"personId\": \"83fe8ef4-acc9-4eda-9ae0-1843e841a7ce\",\r\n//         \"description\": \"Second Transaction\",\r\n//         \"amount\": 100.0,\r\n//         \"type\": 2,\r\n//         \"status\": 0,\r\n//         \"isPublic\": true,\r\n//         \"requestedAt\": \"2026-07-24T11:16:02.3120595\",\r\n//         \"reviewedAt\": \"0001-01-01T00:00:00\",\r\n//         \"requestedBy\": null,\r\n//         \"reviewedBy\": null,\r\n//         \"reasonDescription\": null\r\n//     }\r\n// ]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/ApprovalRequests/playground/52EFEE3E-C896-4FE6-AD4F-A41001B91A39",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "ApprovalRequests",
+                "playground",
+                "52EFEE3E-C896-4FE6-AD4F-A41001B91A39"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetByIdApprovalRequest",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyYTM0MDNhMC00YzM4LTRiM2MtYTM3My1hZTJkZGY3YjJkZDciLCJ1bmlxdWVfbmFtZSI6Imx1aXpAZ21haWwuY29tIiwiZW1haWwiOiJsdWl6QGdtYWlsLmNvbSIsImp0aSI6ImVjZTc1M2Q0LTY2OTEtNDlhZS1hMmQxLTk0Njg4ZjBjOGZiZSIsIm5iZiI6MTc4NDkwNzE4OCwiZXhwIjoxNzg0OTA4OTg4LCJpYXQiOjE3ODQ5MDcxODgsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTg5In0.6B3X9gPEqvKvGGUW9AGQTw8DHtk9VY5u5kVRojLIGAA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Add ApprovalRequestsId on URL\r\n\r\n// Response model\r\n// {\r\n//     \"id\": \"6eb31b3c-78f0-4dfd-8975-05556fd33c13\",\r\n//     \"personId\": \"83fe8ef4-acc9-4eda-9ae0-1843e841a7ce\",\r\n//     \"description\": \"First Transaction\",\r\n//     \"amount\": 100.0,\r\n//     \"type\": 1,\r\n//     \"status\": 0,\r\n//     \"isPublic\": false,\r\n//     \"requestedAt\": \"2026-07-24T11:15:44.0809275\",\r\n//     \"reviewedAt\": \"0001-01-01T00:00:00\",\r\n//     \"requestedBy\": null,\r\n//     \"reviewedBy\": null,\r\n//     \"reasonDescription\": null\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/ApprovalRequests/8BB4B247-0FF4-4169-A63D-85772B9F4BF0",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "ApprovalRequests",
+                "8BB4B247-0FF4-4169-A63D-85772B9F4BF0"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ApproveByIdRequest",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyYTM0MDNhMC00YzM4LTRiM2MtYTM3My1hZTJkZGY3YjJkZDciLCJ1bmlxdWVfbmFtZSI6Imx1aXpAZ21haWwuY29tIiwiZW1haWwiOiJsdWl6QGdtYWlsLmNvbSIsImp0aSI6ImVjZTc1M2Q0LTY2OTEtNDlhZS1hMmQxLTk0Njg4ZjBjOGZiZSIsIm5iZiI6MTc4NDkwNzE4OCwiZXhwIjoxNzg0OTA4OTg4LCJpYXQiOjE3ODQ5MDcxODgsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTg5In0.6B3X9gPEqvKvGGUW9AGQTw8DHtk9VY5u5kVRojLIGAA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"approvalRequestId\": \"8bb4b247-0ff4-4169-a63d-85772b9f4bf0\",\r\n  \"reasonDescription\": \"First Request Approved again\"\r\n}\r\n\r\n// Response model\r\n// {\r\n//     \"id\": \"8bb4b247-0ff4-4169-a63d-85772b9f4bf0\",\r\n//     \"personId\": \"325adda7-f204-4919-9ef4-1c33cc89f4f5\",\r\n//     \"transactionId\": \"6d2e7584-94a3-4c04-8407-d8a0e1f77bb7\",\r\n//     \"playgroundId\": \"52efee3e-c896-4fe6-ad4f-a41001b91a39\",\r\n//     \"description\": \"Second Transaction\",\r\n//     \"amount\": 100.0,\r\n//     \"type\": 2,\r\n//     \"status\": 1,\r\n//     \"isPublic\": true,\r\n//     \"requestedAt\": \"2026-07-24T12:49:47.3954298\",\r\n//     \"reviewedAt\": \"2026-07-24T13:58:18.1733378Z\",\r\n//     \"requestedById\": \"1da50f42-6e0a-4741-9105-f616832e6aba\",\r\n//     \"reviewedById\": \"2a3403a0-4c38-4b3c-a373-ae2ddf7b2dd7\",\r\n//     \"reasonDescription\": \"First Request Approved\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/ApprovalRequests/approve",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "ApprovalRequests",
+                "approve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RejectByIdApprovalRequest",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyYTM0MDNhMC00YzM4LTRiM2MtYTM3My1hZTJkZGY3YjJkZDciLCJ1bmlxdWVfbmFtZSI6Imx1aXpAZ21haWwuY29tIiwiZW1haWwiOiJsdWl6QGdtYWlsLmNvbSIsImp0aSI6ImVjZTc1M2Q0LTY2OTEtNDlhZS1hMmQxLTk0Njg4ZjBjOGZiZSIsIm5iZiI6MTc4NDkwNzE4OCwiZXhwIjoxNzg0OTA4OTg4LCJpYXQiOjE3ODQ5MDcxODgsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxODkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTg5In0.6B3X9gPEqvKvGGUW9AGQTw8DHtk9VY5u5kVRojLIGAA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "\r\n{\r\n  \"rejectRequestId\": \"8bb4b247-0ff4-4169-a63d-85772b9f4bf0\",\r\n  \"reasonDescription\": \"First rejection description\"\r\n}\r\n\r\n// Response model\r\n// {\r\n//     \"id\": \"8bb4b247-0ff4-4169-a63d-85772b9f4bf0\",\r\n//     \"personId\": \"325adda7-f204-4919-9ef4-1c33cc89f4f5\",\r\n//     \"transactionId\": \"6d2e7584-94a3-4c04-8407-d8a0e1f77bb7\",\r\n//     \"playgroundId\": \"52efee3e-c896-4fe6-ad4f-a41001b91a39\",\r\n//     \"description\": \"Second Transaction\",\r\n//     \"amount\": 100.0,\r\n//     \"type\": 2,\r\n//     \"status\": 2,\r\n//     \"isPublic\": true,\r\n//     \"requestedAt\": \"2026-07-24T12:49:47.3954298\",\r\n//     \"reviewedAt\": \"2026-07-24T15:54:58.293323Z\",\r\n//     \"requestedById\": \"1da50f42-6e0a-4741-9105-f616832e6aba\",\r\n//     \"reviewedById\": \"2a3403a0-4c38-4b3c-a373-ae2ddf7b2dd7\",\r\n//     \"reasonDescription\": \"First rejection description\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7189/api/ApprovalRequests/reject",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7189",
+              "path": [
+                "api",
+                "ApprovalRequests",
+                "reject"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "json_web_token_0mez",
+      "secret": true
+    }
+  ]
+}
